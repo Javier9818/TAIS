@@ -54,11 +54,11 @@
     >
 
       <template v-slot:cell(actions)="row">
-        <b-button size="sm" @click="info(row.item, row.index, $event.target)" class="mr-1">
+        <!-- <b-button size="sm" @click="info(row.item, row.index, $event.target)" class="mr-1">
           Info modal
-        </b-button>
+        </b-button> -->
         <b-button size="sm" @click="redirect(row.item.id)" class="btn-success">
-            Ir a panel
+            Administrar
         </b-button>
         <b-button size="sm" @click="desactivate(row.item.id, row.item.estado)" :class="row.item.estado===1 ? 'btn-danger': 'btn-warning'">
             {{row.item.estado===1 ? 'Desactivar': 'Activar'}}
@@ -159,7 +159,7 @@ import Swal from 'sweetalert2'
             location.href=`/empresa/${id}`
         },
        store: function(data) {
-           this.items = [{...data, estado:true}, ...this.items]
+           this.items = [{...data, estado:1}, ...this.items]
        },
       info(item, index, button) {
         this.infoModal.title = `Row index: ${index}`
