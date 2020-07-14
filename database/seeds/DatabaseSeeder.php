@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
         DB::insert('insert into scopes (id, description) values (?, ?)', [2, 'Gestionar Proveedores']);
         DB::insert('insert into scopes (id, description) values (?, ?)', [3, 'Gestionar Clientes']);
         DB::insert('insert into scopes (id, description) values (?, ?)', [4, 'Gestionar Cadena de Suministro']);
-        DB::insert('insert into scopes (id, description) values (?, ?)', [5, 'Super usuario']);
+        //DB::insert('insert into scopes (id, description) values (?, ?)', [5, 'Super usuario']);
 
     }
 }

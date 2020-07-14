@@ -15,8 +15,8 @@ class CreateCadenaSuministrosTable extends Migration
     {
         Schema::create('cadena_suministros', function (Blueprint $table) {
             $table->id();
-            $table->integer('empresa_id');
-            $table->string('descripcion', 100);
+            $table->integer('unidad_negocio_id');
+            $table->string('descripcion');
             $table->boolean('estado')->default(true);
             $table->timestamps();
         });
