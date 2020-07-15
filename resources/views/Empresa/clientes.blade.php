@@ -11,7 +11,7 @@
 <div class="container">
     <div class="row justify-content-center align-items-center mt-3">
         <h5 class="card-title text-left">Clientes registrados</h5>
-        <table-clientes></table-clientes>
+        <table-entidades entidad="cliente"></table-entidades>
     </div>
 </div>
 @endsection
@@ -19,6 +19,6 @@
 @section('scripts')
     <script>
         let empresa = @json($empresa);
-        let clientes = @json($clientes);
+        let entidades = @json($clientes);
     </script>
 @endsection

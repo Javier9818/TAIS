@@ -21,6 +21,22 @@
                 <li>
                     <a href="/empresa/{{$empresa}}/proveedores" class="{{ $isSelected('1', '3') ? 'active' : '' }}">Proveedores</a>
                 </li>
+                <li>
+                    <a href="/empresa/{{$empresa}}/proveedores" class="{{ $isSelected('1', '4') ? 'active' : '' }}">Unidades de negocio</a>
+                </li>
+            </ul>
+
+            <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="{{ $isTab('2') ? 'true' : 'false' }}" class="dropdown-toggle">
+                <i class="fas fa-copy"></i>
+                Cadena de Suministro
+            </a>
+            <ul class="collapse list-unstyled {{ $isTab('2') ? 'show' : '' }}" id="pageSubmenu2">
+                <li>
+                    <a href="/empresa/{{$empresa}}/clientes" class="{{ $isSelected('2', '1') ? 'active' : '' }}">Administrar</a>
+                </li>
+                <li>
+                    <a href="/empresa/{{$empresa}}/proveedores" class="{{ $isSelected('2', '2') ? 'active' : '' }}">Generar</a>
+                </li>
             </ul>
         </li>
     </ul>

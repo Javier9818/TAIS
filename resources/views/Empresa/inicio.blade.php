@@ -12,6 +12,7 @@
     <div class="row justify-content-center align-items-center mt-3">
         <h5 class="card-title text-left">Empresa "{{$empresa->nombre}}"</h5>
     </div>
+    <form-empresa edit='true'></form-empresa>
 </div>
 @endsection
 

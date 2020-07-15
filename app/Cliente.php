@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cliente extends Model
 {
-    protected $fillable = ['descripcion', 'imagen', 'ruc', 'empresa_id', 'nombre'];
+    protected $fillable = ['entidad_id'];
     protected $table = 'clientes';
 }

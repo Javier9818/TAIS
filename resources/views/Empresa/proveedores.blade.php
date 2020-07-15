@@ -12,7 +12,7 @@
 <div class="container">
     <div class="row justify-content-center align-items-center mt-3">
         <h5 class="card-title text-left">Proveedores registrados</h5>
-        <table-proveedores></table-proveedores>
+        <table-entidades entidad="proveedor"></table-entidades>
     </div>
 </div>
 @endsection
@@ -20,6 +20,6 @@
 @section('scripts')
     <script>
         let empresa = @json($empresa);
-        let proveedores = @json($proveedores);
+        let entidades = @json($proveedores);
     </script>
 @endsection

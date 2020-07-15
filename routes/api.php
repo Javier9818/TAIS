@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/empresa','EmpresaController@store');
+Route::put('/empresa/{id}','EmpresaController@update');
 Route::post('/empresa/{id}','EmpresaController@destroy');
 
 Route::post('/cliente','ClienteController@store');

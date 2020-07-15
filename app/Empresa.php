@@ -8,13 +8,8 @@ class Empresa extends Model
 {
     protected $fillable = ['ruc', 'nombre', 'direccion', 'descripcion', 'celular', 'estado'];
 
-    public function clientes()
+    public function entidades()
     {
-        return $this->hasMany('App\Cliente', 'empresa_id');
-    }
-
-    public function proveedores()
-    {
-        return $this->hasMany('App\Proveedor', 'empresa_id');
+        return $this->hasMany('App\Entidad', 'empresa_id');
     }
 }

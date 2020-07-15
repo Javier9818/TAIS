@@ -8,6 +8,11 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+
+import Vuelidate from 'vuelidate'
+Vue.use(Vuelidate)
+
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -25,10 +30,8 @@ Vue.component('form-empresa', require('./components/admin/FormEmpresa.vue').defa
 Vue.component('table-users', require('./components/admin/TableUsers.vue').default);
 Vue.component('form-user', require('./components/admin/FormUser.vue').default);
 
-Vue.component('table-clientes', require('./components/empresa/TableClientes.vue').default);
-Vue.component('table-proveedores', require('./components/empresa/TableProveedores.vue').default);
-Vue.component('form-cliente', require('./components/empresa/FormCliente.vue').default);
-Vue.component('form-proveedor', require('./components/empresa/FormProveedor.vue').default);
+Vue.component('table-entidades', require('./components/empresa/TableEntidades.vue').default);
+Vue.component('form-entidad', require('./components/empresa/FormEntidad.vue').default);;
 
 
 

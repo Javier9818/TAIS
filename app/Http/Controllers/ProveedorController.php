@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Proveedor;
+use App\Entidad;
 use Illuminate\Http\Request;
 
 class ProveedorController extends Controller
@@ -35,14 +36,20 @@ class ProveedorController extends Controller
      */
     public function store(Request $request)
     {
-        $proveedor = Proveedor::create([
-            "razon_social" => $request->razon_social,
+        $empresa = Entidad::create([
+            "nombre" => $request->nombre,
             "descripcion" => $request->descripcion,
             "ruc" => $request->ruc,
+            "celular" => $request->celular,
+            "email" => $request->email,
             "empresa_id" => $request->empresa_id
         ]);
+        
+        Proveedor::create([
+            "entidad_id" => $empresa->id
+        ]);
 
-        return response()->json(["proveedor" => $proveedor], 200);
+        return response()->json(["entidad" => $empresa], 200);
     }
 
     /**
@@ -76,13 +83,15 @@ class ProveedorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $proveedor = Proveedor::find($id)->update([
-            "razon_social" => $request->razon_social,
+        $proveedor = Entidad::find($id)->update([
+            "nombre" => $request->nombre,
             "descripcion" => $request->descripcion,
-            "ruc" => $request->ruc
+            "ruc" => $request->ruc,
+            "celular" => $request->celular,
+            "email" => $request->email
         ]);
 
-        return response()->json(["proveedor" => $proveedor], 200);
+        return response()->json(["entidad" => $proveedor], 200);
     }
 
     /**

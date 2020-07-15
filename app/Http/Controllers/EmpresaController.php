@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Empresa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EmpresaController extends Controller
 {
@@ -60,14 +61,22 @@ class EmpresaController extends Controller
     public function showClientes($id)
     {
         $empresa = Empresa::find($id);
-        $clientes = $empresa->clientes;
+        $clientes = DB::table('entidad')
+            ->join('clientes', 'clientes.entidad_id', '=', 'entidad.id')
+            ->where('entidad.empresa_id', '=', $id)
+            ->select('entidad.*')
+            ->get();
         return view('empresa.clientes', ["empresa" => $empresa, "clientes" => $clientes]);
     }
 
     public function showProveedores($id)
     {
         $empresa = Empresa::find($id);
-        $proveedores = $empresa->proveedores;
+        $proveedores = DB::table('entidad')
+            ->join('proveedores', 'proveedores.entidad_id', '=', 'entidad.id')
+            ->where('entidad.empresa_id', '=', $id)
+            ->select('entidad.*')
+            ->get();
         return view('empresa.proveedores', ["empresa" => $empresa, "proveedores" => $proveedores]);
     }
 
@@ -91,7 +100,14 @@ class EmpresaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $empresa = Empresa::find($id)->update([
+            "ruc" => $request->ruc,
+            "nombre" => $request->nombre,
+            "direccion" => $request->direccion,
+            "descripcion" => $request->descripcion
+        ]);
+
+        return response()->json(["message"=>"Registrado correctamente"], 200);
     }
 
     /**

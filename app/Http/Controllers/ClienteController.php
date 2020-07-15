@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Cliente;
+use App\Entidad;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
@@ -35,14 +36,20 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        $cliente = Cliente::create([
+        $empresa = Entidad::create([
             "nombre" => $request->nombre,
             "descripcion" => $request->descripcion,
             "ruc" => $request->ruc,
+            "celular" => $request->celular,
+            "email" => $request->email,
             "empresa_id" => $request->empresa_id
         ]);
+        
+        Cliente::create([
+            "entidad_id" => $empresa->id
+        ]);
 
-        return response()->json(["cliente" => $cliente], 200);
+        return response()->json(["entidad" => $empresa], 200);
     }
 
     /**
@@ -76,13 +83,14 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $cliente = Cliente::find($id)->update([
+        $cliente = Entidad::find($id)->update([
             "nombre" => $request->nombre,
             "descripcion" => $request->descripcion,
-            "ruc" => $request->ruc
+            "ruc" => $request->ruc,
+            "celular" => $request->celular,
+            "email" => $request->email
         ]);
-
-        return response()->json(["cliente" => $cliente], 200);
+        return response()->json(["entidad" => $cliente], 200);
     }
 
     /**
