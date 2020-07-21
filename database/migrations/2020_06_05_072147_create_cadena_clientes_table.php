@@ -14,11 +14,11 @@ class CreateCadenaClientesTable extends Migration
     public function up()
     {
         Schema::create('cadena_clientes', function (Blueprint $table) {
-            $table->id();
+            // $table->id();
             $table->integer('cadena_suministro_id');
             $table->integer('cliente_id');
-            $table->integer('cliente_padre');
-            $table->integer('nivel_cliente_id');
+            $table->integer('cliente_padre')->nullable();
+            $table->integer('nivel');
             $table->timestamps();
         });
     }

@@ -18,8 +18,9 @@ class CreateEntidadTable extends Migration
             $table->string('ruc', 11)->nullable();
             $table->string('nombre');
             $table->string('descripcion')->nullable();
-            $table->string('celular', 11)->nullable();;
-            $table->string('email')->nullable();;
+            $table->string('celular', 11)->nullable();
+            $table->string('email')->nullable();
+            $table->string('foto', 21)->nullable();
             $table->integer('empresa_id');
             $table->timestamps();
         });

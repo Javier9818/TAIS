@@ -29,4 +29,15 @@ Route::post('/cliente/{id}','ClienteController@destroy');
 Route::post('/proveedor','ProveedorController@store');
 Route::put('/proveedor/{id}','ProveedorController@update');
 
+Route::post('/unidad-negocio','UnidadNegocioController@store');
+Route::put('/unidad-negocio/{id}','UnidadNegocioController@update');
+
+Route::get('/clientes-cadena-libres/{unidad}/{comodin}','CadenaSuministrosController@clientesLibres');
+Route::get('/niveles-clientes-cadena/{unidad}','CadenaSuministrosController@nivelesClientes');
+Route::post('/niveles-clientes-cadena/{unidad}','CadenaSuministrosController@addNivelesClientes');
+Route::get('/clientes-padre-cadena/{unidad}/{nivel}','CadenaSuministrosController@listarClientesPadre');
+
+Route::post('/cadena_clientes/{unidad}', 'CadenaSuministrosController@agregaCliente');
+Route::get('/cadena_clientes/{unidad}', 'CadenaSuministrosController@listarClientes');
+
 Route::post('/user','UserController@store');

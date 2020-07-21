@@ -22,7 +22,7 @@
                     <a href="/empresa/{{$empresa}}/proveedores" class="{{ $isSelected('1', '3') ? 'active' : '' }}">Proveedores</a>
                 </li>
                 <li>
-                    <a href="/empresa/{{$empresa}}/proveedores" class="{{ $isSelected('1', '4') ? 'active' : '' }}">Unidades de negocio</a>
+                    <a href="/empresa/{{$empresa}}/unidades-negocio" class="{{ $isSelected('1', '4') ? 'active' : '' }}">Unidades de negocio</a>
                 </li>
             </ul>
 
@@ -32,10 +32,10 @@
             </a>
             <ul class="collapse list-unstyled {{ $isTab('2') ? 'show' : '' }}" id="pageSubmenu2">
                 <li>
-                    <a href="/empresa/{{$empresa}}/clientes" class="{{ $isSelected('2', '1') ? 'active' : '' }}">Administrar</a>
+                    <a href="/empresa/{{$empresa}}/administrar-cadena" class="{{ $isSelected('2', '1') ? 'active' : '' }}">Administrar</a>
                 </li>
                 <li>
-                    <a href="/empresa/{{$empresa}}/proveedores" class="{{ $isSelected('2', '2') ? 'active' : '' }}">Generar</a>
+                    <a href="/empresa/{{$empresa}}/generar-cadena" class="{{ $isSelected('2', '2') ? 'active' : '' }}">Generar</a>
                 </li>
             </ul>
         </li>

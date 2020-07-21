@@ -31,9 +31,15 @@ Vue.component('table-users', require('./components/admin/TableUsers.vue').defaul
 Vue.component('form-user', require('./components/admin/FormUser.vue').default);
 
 Vue.component('table-entidades', require('./components/empresa/TableEntidades.vue').default);
-Vue.component('form-entidad', require('./components/empresa/FormEntidad.vue').default);;
+Vue.component('form-entidad', require('./components/empresa/FormEntidad.vue').default);
 
+Vue.component('table-unidades-negocio', require('./components/empresa/TableUnidadesNegocio.vue').default);
+Vue.component('form-unidad-negocio', require('./components/empresa/FormUnidadNegocio.vue').default);
 
+Vue.component('componente-administrar-cadena', require('./components/empresa/cadena_suministro/Administrar.vue').default);
+
+Vue.component('componente-cadena-cliente', require('./components/empresa/cadena_suministro/Clientes.vue').default);
+Vue.component('form-cadena-cliente', require('./components/empresa/cadena_suministro/FormCliente.vue').default);
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'

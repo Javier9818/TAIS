@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Empresa;
+use App\UnidadNegocio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -78,6 +79,20 @@ class EmpresaController extends Controller
             ->select('entidad.*')
             ->get();
         return view('empresa.proveedores', ["empresa" => $empresa, "proveedores" => $proveedores]);
+    }
+
+    public function showUnidadesNegocio($id){
+        $empresa = Empresa::find($id);
+        $unidades_negocio = DB::table('unidad_negocio')
+            ->where('unidad_negocio.empresa_id', '=', $id)
+            ->get();
+        return view('empresa.unidades_negocio', ["empresa" => $empresa, "unidades_negocio" => $unidades_negocio]);
+    }
+
+    public function showAdministrarCadena($id){
+        $empresa = Empresa::find($id);
+        $unidades_negocio = UnidadNegocio::all();
+        return view('empresa.administrar_cadena', ["empresa" => $empresa, "unidades_negocio" => $unidades_negocio]);
     }
 
     /**

@@ -17,7 +17,7 @@ class CreateUnidadNegociosTable extends Migration
             $table->id();
             $table->string('producto');
             $table->string('descripcion');
-            $table->boolean('estado');
+            $table->boolean('estado')->default(true);
             $table->integer('empresa_id');
             $table->timestamps();
         });

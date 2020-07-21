@@ -19,6 +19,8 @@ Route::get('/users', 'UserController@index')->name('users');
 Route::get('/empresa/{id}', 'EmpresaController@show');
 Route::get('/empresa/{id}/clientes', 'EmpresaController@showClientes');
 Route::get('/empresa/{id}/proveedores', 'EmpresaController@showProveedores');
+Route::get('/empresa/{id}/unidades-negocio', 'EmpresaController@showUnidadesNegocio');
+Route::get('/empresa/{id}/administrar-cadena', 'EmpresaController@showAdministrarCadena');
 Route::get('/aux',  function () {return view('welcome');});
 Auth::routes();
 

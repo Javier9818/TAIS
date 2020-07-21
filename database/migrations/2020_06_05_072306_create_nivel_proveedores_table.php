@@ -15,6 +15,8 @@ class CreateNivelProveedoresTable extends Migration
     {
         Schema::create('nivel_proveedores', function (Blueprint $table) {
             $table->id();
+            $table->integer('numero');
+            $table->integer('cadena_suministro_id');
             $table->timestamps();
         });
     }
