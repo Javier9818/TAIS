@@ -40,6 +40,8 @@ Vue.component('componente-administrar-cadena', require('./components/empresa/cad
 
 Vue.component('componente-cadena-cliente', require('./components/empresa/cadena_suministro/Clientes.vue').default);
 Vue.component('form-cadena-cliente', require('./components/empresa/cadena_suministro/FormCliente.vue').default);
+Vue.component('componente-cadena-proveedor', require('./components/empresa/cadena_suministro/Proveedores.vue').default);
+Vue.component('form-cadena-proveedor', require('./components/empresa/cadena_suministro/FormProveedor.vue').default);
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'

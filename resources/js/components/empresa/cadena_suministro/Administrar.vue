@@ -17,7 +17,20 @@
                 No ha seleccionado una unidad de negocio.
             </div>
             <div class="detalles_cadena" v-else>
-                <componente-cadena-cliente :unidad='unidad_negocio'></componente-cadena-cliente>
+                <b-card no-body>
+                  <b-tabs pills card lazy>
+                    <b-tab title="Clientes" active>
+                      <b-card-text>
+                       <componente-cadena-cliente :unidad='unidad_negocio'></componente-cadena-cliente>
+                      </b-card-text>
+                    </b-tab>
+                    <b-tab title="Proveedores">
+                      <b-card-text>
+                        <componente-cadena-proveedor :unidad='unidad_negocio'></componente-cadena-proveedor>
+                      </b-card-text>
+                    </b-tab>
+                  </b-tabs>
+                </b-card>
             </div>
       </section>
   </div>

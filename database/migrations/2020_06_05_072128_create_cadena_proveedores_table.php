@@ -14,7 +14,7 @@ class CreateCadenaProveedoresTable extends Migration
     public function up()
     {
         Schema::create('cadena_proveedores', function (Blueprint $table) {
-            // $table->id();
+            $table->id();
             $table->integer('cadena_suministro_id');
             $table->integer('proveedor_id');
             $table->integer('proveedor_padre')->nullable();

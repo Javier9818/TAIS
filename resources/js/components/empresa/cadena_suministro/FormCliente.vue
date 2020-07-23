@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-6">
                 <label class="mt-2">Cliente</label>
-                <b-overlay :show="loading_clientes">
+                <b-overlay :show="loading_clientes" v-if="dataForm.mode === 'create'">
                   <b-form-select 
                       v-model="form.cliente" 
                       :options="clientes"
@@ -19,6 +19,7 @@
                   </template>
                   </b-form-select>
                 </b-overlay>
+                <h4 v-else>{{dataForm.content.cliente}}</h4>
             </div>
 
             <div class="col-md-6">
@@ -97,11 +98,26 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
       }
     },
     mounted(){
-        let {content} = this.dataForm;
-        this.loadClientes(content.unidad, false);
+        let {content, mode} = this.dataForm;
         this.loadLevels(content.unidad);
+        if(mode === 'edit'){
+          this.loadDataForm(content);
+        }else{
+           this.loadClientes(content.unidad, false);
+        }
     },
     methods: {
+      loadDataForm: async function (content){
+        this.form = {
+            cliente: content.clienteId,
+            nivel: content.nivel,
+            cliente_padre: content.cliente_padre,
+            unidad: content.unidad
+          }
+          this.loading = true;
+          await this.loadClientesPadre(content.nivel);
+          this.loading = false;
+      },
       addLevel: function(){
         let {content} = this.dataForm;
         this.loading_levels = true
@@ -114,16 +130,27 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
               Swal.fire('Error', 'Ha sucedido un error', 'error');
           });
       },
-      loadClientesPadre: function(id){
-        let {content} = this.dataForm;
+      loadClientesPadre: async function(id){
+        this.loading_clientes_padre = true;
+        let {content, mode} = this.dataForm;
         if(id === 1) {
           this.clientesPadre = [{id:'d', nombre: `Empresa: ${empresa.nombre}`}];
           this.form.cliente_padre = 'd';
+          this.loading_clientes_padre = false;
         }else{
-          this.loading_clientes_padre = true;
-          axios.get(`/api/clientes-padre-cadena/${content.unidad}/${id - 1}`).then( ({data}) => {
+          await axios.get(`/api/clientes-padre-cadena/${content.unidad}/${id - 1}`).then( ({data}) => {
               this.clientesPadre = data.clientes;
-              this.form.cliente_padre = null;
+              if(mode === 'edit'){
+                if(id === content.nivel) this.form.cliente_padre = content.cliente_padre;
+                else this.form.cliente_padre = null;
+                
+                if(id - 1 === content.nivel) //Para evitar que el mismo cliente se autoasigne
+                  this.clientesPadre.map( (c, i) => {
+                        if(c.id === content.clienteId) this.clientesPadre.splice(i, 1)
+                  });
+              }else
+                this.form.cliente_padre = null;
+              
           }).catch( ()=> {
               Swal.fire('Error', 'Ha sucedido un error', 'error');
           }).finally(this.loading_clientes_padre = false);
@@ -147,9 +174,9 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
       },
       onSubmit(evt) {
         this.loading = true;
-        let {content} = this.dataForm;
-        if(this.dataForm.mode === 'create') this.store(content.unidad);
-        else if(this.dataForm.mode === 'edit') this.update();
+        let {content, mode} = this.dataForm;
+        if(mode === 'create') this.store(content.unidad);
+        else if(mode === 'edit') this.update();
         
       },
       store(unidad_negocio){
@@ -172,10 +199,10 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
         });
       },
       update(){
-        axios.put(`/api/${this.entidad}/${this.dataForm.content.id}`, this.form).then( ({data}) => {
+        axios.put(`/api/cadena_clientes`, this.form).then( ({data}) => {
             this.$emit('click');
             this.loading = false;
-            this.$emit('update', this.form);
+            this.$emit('update', true);
             Swal.fire('Éxito', 'Se han actualizado los cambios', 'success');
         });
       },

@@ -19,12 +19,12 @@
       >
 
         <template v-slot:cell(actions)="row">
-          <b-button size="sm" @click="info(row.item, row.index, $event.target)" class="mr-1">
+          <b-button size="sm" @click="info(row.item, row.index, $event.target)" class="mr-1" title="Editar">
               Editar
           </b-button>
-          <!-- <b-button size="sm" @click="desactivate(row.item.id, row.item.estado)" :class="row.item.estado===1 ? 'btn-danger': 'btn-warning'">
-              {{row.item.estado===1 ? 'Desactivar': 'Activar'}}
-          </b-button> -->
+          <b-button size="sm" @click="desactivate(row.item.clienteId)" class="btn-danger" title="Eliminar">
+             <i class="fas fa-trash-alt"></i>
+          </b-button>
         </template>
       </b-table>
     </b-overlay>
@@ -108,7 +108,10 @@ import Swal from 'sweetalert2'
     watch:{
       unidad: function(newValue, oldValue){
         this.loadClientes(newValue);
-      }
+      },
+      items: function(){
+          this.totalRows = this.items.length
+      } 
     },
     methods: {
       loadClientes: function(unidad){
@@ -127,14 +130,33 @@ import Swal from 'sweetalert2'
             this.infoModal.title = `Agregar cliente a cadena`,
             this.$root.$emit('bv::show::modal', 'formCliente')
         },
-        // desactivate(id, estado){
-        //     axios.post(`/api/empresa/${id}`).then( ({data}) => {
-        //         Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
-        //         this.items.map((item) => {
-        //             if(item.id === id) item.estado = estado === 1 ? 0 : 1;
-        //         });
-        //     }).catch(()=>{ire('Error', 'Ha ocurrido algún error', 'error');});
-        // },
+        desactivate(id){
+          Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Tú no puedes revertir esto",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, borrar cliente!'
+          }).then((result) => {
+            if (result.value) {
+              axios.delete(`/api/cadena_clientes/${this.unidad}/${id}`).then( ({data}) => {
+                  if (data.error)
+                    Swal.fire('ERROR', data.message, 'error');
+                  else{
+                    this.items.map((item, i) => {
+                        if(item.clienteId === id) this.items.splice(i, 1)
+                    });
+                    Swal.fire('ÉXITO!', data.message, 'success');
+                  }
+                  
+              }).catch(()=>{Swal.fire('Error', 'Ha ocurrido algún error', 'error');});
+            }
+          })
+
+            
+        },
         redirect(id){
             location.href=`/empresa/${id}`
         },
@@ -143,17 +165,15 @@ import Swal from 'sweetalert2'
            this.$root.$emit('bv::hide::modal', 'formCliente')
        },
        update: function(data) {
-           this.items.map( (item) => {
-               if(item.id === data.id) {item.nombre = data.nombre; item.ruc = data.ruc; item.descripcion = data.descripcion};
-           });
+          this.loadClientes(this.unidad)
        },
       info(item, index, button) {
-        // this.infoModal.title = `Row index: ${index}`
-        // this.infoModal.content = JSON.stringify(item, null, 2)
-        // console.log(item)
-        this.infoModal.content = item
+        this.infoModal.content = { 
+          unidad: this.unidad,
+          ...item
+        }
         this.infoModal.mode = 'edit'
-        this.infoModal.title = `Editar ${this.entidad}`,
+        this.infoModal.title = `Editar cliente en cadena`,
         this.$root.$emit('bv::show::modal', 'formCliente', button)
       },
       resetInfoModal() {
