@@ -60,10 +60,11 @@ import Swal from 'sweetalert2'
         loading_clientes:false,
         items: [],
         fields: [
+        //  { key: 'clienteId', label: 'ID', sortable: true },
          { key: 'cliente', label: 'Nombre', sortable: true },
          { key: 'nivel', label: 'Nivel', sortable: true, class: 'text-center' },
          { 
-           key: 'cliente_padre', 
+           key: 'nombrePadre', 
            label: 'Provee a',
            formatter: (value, key, item) => {
               return (value === 'd' || value === null) ? `Empresa: ${empresa.nombre}` : value;

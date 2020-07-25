@@ -21,6 +21,7 @@ Route::get('/empresa/{id}/clientes', 'EmpresaController@showClientes');
 Route::get('/empresa/{id}/proveedores', 'EmpresaController@showProveedores');
 Route::get('/empresa/{id}/unidades-negocio', 'EmpresaController@showUnidadesNegocio');
 Route::get('/empresa/{id}/administrar-cadena', 'EmpresaController@showAdministrarCadena');
+Route::get('/empresa/{id}/generar-cadena', 'EmpresaController@showGenerarCadena');
 Route::get('/aux',  function () {return view('welcome');});
 Auth::routes();
 

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Cliente;
 use App\Empresa;
+use App\Proveedor;
 use App\UnidadNegocio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -92,7 +94,15 @@ class EmpresaController extends Controller
     public function showAdministrarCadena($id){
         $empresa = Empresa::find($id);
         $unidades_negocio = UnidadNegocio::all();
-        return view('empresa.administrar_cadena', ["empresa" => $empresa, "unidades_negocio" => $unidades_negocio]);
+        $proveedores = DB::table('proveedores')->join('entidad', 'proveedores.entidad_id', '=', 'entidad.id')->get();
+        $clientes =  DB::table('clientes')->join('entidad', 'clientes.entidad_id', '=', 'entidad.id')->get();
+        return view('empresa.administrar_cadena', ["empresa" => $empresa, "unidades_negocio" => $unidades_negocio, "proveedores" => $proveedores, "clientes" => $clientes]);
+    }
+
+    public function showGenerarCadena($id){
+        $empresa = Empresa::find($id);
+        $unidades_negocio = UnidadNegocio::all();
+        return view('empresa.generar', ["empresa" => $empresa, "unidades_negocio" => $unidades_negocio]);
     }
 
     /**

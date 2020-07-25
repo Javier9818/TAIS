@@ -191,7 +191,8 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
               cliente: cliente.nombre,
               clienteId: this.form.cliente,
               nivel: this.form.nivel,
-              cliente_padre: this.form.cliente_padre
+              cliente_padre: this.form.cliente_padre,
+              nombrePadre: data.padre === null ?  null : data.padre.nombre
             }); //DATA DEL CLIENTE AGREGADO
             Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
         }).catch( () => {
@@ -200,10 +201,15 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
       },
       update(){
         axios.put(`/api/cadena_clientes`, this.form).then( ({data}) => {
+          if(data.error)
+              Swal.fire('Error!', data.message, 'error');
+            else{
+              this.$emit('update', true);
+              Swal.fire('Éxito', 'Se han actualizado los cambios', 'success');
+            }
+        }).finally( ()=>{
             this.$emit('click');
             this.loading = false;
-            this.$emit('update', true);
-            Swal.fire('Éxito', 'Se han actualizado los cambios', 'success');
         });
       },
       onReset(evt) {

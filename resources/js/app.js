@@ -43,6 +43,9 @@ Vue.component('form-cadena-cliente', require('./components/empresa/cadena_sumini
 Vue.component('componente-cadena-proveedor', require('./components/empresa/cadena_suministro/Proveedores.vue').default);
 Vue.component('form-cadena-proveedor', require('./components/empresa/cadena_suministro/FormProveedor.vue').default);
 
+Vue.component('componente-generar-cadena', require('./components/empresa/cadena_suministro/GeneraCadena.vue').default);
+Vue.component('componente-grafico-cadena', require('./components/empresa/cadena_suministro/Cadena.vue').default);
+
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
