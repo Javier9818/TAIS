@@ -46,6 +46,7 @@ class ClienteController extends Controller
         ]);
         
         Cliente::create([
+            "id" => $empresa->id,
             "entidad_id" => $empresa->id
         ]);
 

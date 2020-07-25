@@ -56,4 +56,7 @@ Route::delete('/cadena_proveedores/{unidad}/{id}', 'CadenaSuministrosController@
 Route::get('/cadena_proveedores/{unidad}', 'CadenaSuministrosController@listarProveedores');
 Route::put('/cadena_proveedores', 'CadenaSuministrosController@updateProveedor');
 
+//**PARA EL GRÁFICO DE CADENA */
+Route::get('/entidades-cadena/{unidad}', 'CadenaSuministrosController@getEntidadesCadena');
+
 Route::post('/user','UserController@store');

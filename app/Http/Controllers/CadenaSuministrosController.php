@@ -295,4 +295,23 @@ class CadenaSuministrosController extends Controller
         // return response()->json(["mesagge" => true], 200);
         
     }
+
+    public function getEntidadesCadena($unidad_negocio){
+        $cadena = DB::table('cadena_suministros')->where('unidad_negocio_id', '=', $unidad_negocio)->get()[0];
+        $clientes = DB::table('cadena_clientes')
+                    ->join('clientes', 'cadena_clientes.cliente_id', '=', 'clientes.id')
+                    ->join('entidad', 'entidad.id', '=', 'clientes.entidad_id')
+                    ->where('cadena_clientes.cadena_suministro_id', $cadena->id)
+                    ->selectRaw('clientes.id as id, entidad.nombre as name, cadena_clientes.cliente_padre as padre')
+                    ->get();
+
+        $proveedores = DB::table('cadena_proveedores')
+        ->join('proveedores', 'cadena_proveedores.proveedor_id', '=', 'proveedores.id')
+        ->join('entidad', 'entidad.id', '=', 'proveedores.entidad_id')
+        ->where('cadena_proveedores.cadena_suministro_id', $cadena->id)
+        ->selectRaw('proveedores.id ,  entidad.nombre as name,  cadena_proveedores.proveedor_padre as padre')
+        ->get();
+        
+        return response()->json(["clientes" => $clientes, "proveedores" => $proveedores]);
+    }
 }

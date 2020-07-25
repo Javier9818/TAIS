@@ -46,6 +46,7 @@ class ProveedorController extends Controller
         ]);
         
         Proveedor::create([
+            "id" => $empresa->id,
             "entidad_id" => $empresa->id
         ]);
 

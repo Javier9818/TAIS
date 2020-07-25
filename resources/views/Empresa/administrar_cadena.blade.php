@@ -19,9 +19,5 @@
     <script>
         let empresa = @json($empresa);
         let unidades_negocio = @json($unidades_negocio);
-        let proveedoresAll = @json($proveedores);
-        let clientesAll = @json($clientes);
-        console.log(proveedoresAll);
-        console.log(clientesAll);
     </script>
 @endsection

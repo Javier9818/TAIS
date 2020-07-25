@@ -182,9 +182,11 @@
     myDiagram.model = go.Model.fromJson(content_json);
     
     }
-  </script>
-    <script>
-        let empresa = @json($empresa);
-        let unidades_negocio = @json($unidades_negocio);
-    </script>
+</script>
+
+<script>
+    let empresa = @json($empresa);
+    let unidades_negocio = @json($unidades_negocio);
+    // console.log(empresa)
+</script>
 @endsection

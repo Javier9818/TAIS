@@ -191,7 +191,8 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
               cliente: proveedor.nombre,
               clienteId: this.form.cliente,
               nivel: this.form.nivel,
-              proveedor_padre: this.form.cliente_padre
+              proveedor_padre: this.form.cliente_padre,
+              nombrePadre: data.padre === null ?  null : data.padre.nombre
             }); //DATA DEL CLIENTE AGREGADO
             Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
         }).catch( () => {
