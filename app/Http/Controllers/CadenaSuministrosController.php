@@ -18,11 +18,11 @@ class CadenaSuministrosController extends Controller
         $cadena = DB::table('cadena_suministros')->where('unidad_negocio_id', '=', $unidad_negocio)->get()[0];
         $clientes = DB::table('clientes')
                     ->join('entidad', 'clientes.entidad_id', '=', 'entidad.id')
-                    ->whereNotExists(function($query) use($cadena){
-                        $query->select(DB::raw(1))
-                        ->from('cadena_clientes')
-                        ->whereRaw('cadena_clientes.cliente_id = clientes.id and cadena_clientes.cadena_suministro_id = ?', [$cadena->id]);  //and cadena_clientes.cliente_id != comodin
-                    })
+                    // ->whereNotExists(function($query) use($cadena){
+                    //     $query->select(DB::raw(1))
+                    //     ->from('cadena_clientes')
+                    //     ->whereRaw('cadena_clientes.cliente_id = clientes.id and cadena_clientes.cadena_suministro_id = ?', [$cadena->id]);  //and cadena_clientes.cliente_id != comodin
+                    // })
                     ->selectRaw('clientes.*, entidad.nombre')
                     ->get();
         
@@ -73,7 +73,7 @@ class CadenaSuministrosController extends Controller
                 ->join('entidad', 'entidad.id', '=', 'clientes.entidad_id')
                 ->select('entidad.*')
                 ->first();
-        $cliente = CadenaCliente::create([
+        $cliente = CadenaCliente::updateOrCreate([
             "cadena_suministro_id" => $cadena->id,
             "cliente_id" => $request->cliente,
             "cliente_padre" => $cliente_padre,
@@ -108,12 +108,17 @@ class CadenaSuministrosController extends Controller
         else{
             $cliente = CadenaCliente::where('cadena_suministro_id', $cadena->id)
                     ->where('cliente_id', $request->cliente)
-                    ->first();
-                    
-            $cliente->cliente_padre = $cliente_padre;
-            $cliente->nivel = $request->nivel;;
-            $cliente->save();
-            return response()->json(["mesagge" => true], 200);
+                    ->get();
+            if(count($cliente) === 1){
+                $cliente = $cliente[0];
+                $cliente->cliente_padre = $cliente_padre;
+                $cliente->nivel = $request->nivel;;
+                $cliente->save();
+                return response()->json(["mesagge" => true], 200);
+            }else{
+                return response()->json(["error"=> true, "message" => "El cliente seleccionado tiene más de un proveedor."]);
+            }
+            
         }
 
         // $cliente = CadenaCliente::where('cadena_suministro_id', $cadena->id)
@@ -152,18 +157,27 @@ class CadenaSuministrosController extends Controller
         }
         
     }
-
+    
+    public function verifyCliente($unidad_negocio, $cliente){
+        $cadena = DB::table('cadena_suministros')->where('unidad_negocio_id', '=', $unidad_negocio)->get()[0];
+        $cliente = CadenaCliente::where('cliente_id', $cliente)->where('cadena_suministro_id', $cadena->id)->first();
+        if($cliente){
+            return response()->json(["exists" => true, "nivel" => $cliente->nivel]);
+        }else{
+            return response()->json(["exists" => false]);
+        }
+    }
     /** PROVEEDORES EN CADENA */
 
     public function proveedoresLibres($unidad_negocio, $comodin){
         $cadena = DB::table('cadena_suministros')->where('unidad_negocio_id', '=', $unidad_negocio)->get()[0];
         $proveedores = DB::table('proveedores')
                     ->join('entidad', 'proveedores.entidad_id', '=', 'entidad.id')
-                    ->whereNotExists(function($query) use($cadena){
-                        $query->select(DB::raw(1))
-                        ->from('cadena_proveedores')
-                        ->whereRaw('cadena_proveedores.proveedor_id = proveedores.id and cadena_proveedores.cadena_suministro_id = ?', [$cadena->id]);  //and cadena_clientes.cliente_id != comodin
-                    })
+                    // ->whereNotExists(function($query) use($cadena){
+                    //     $query->select(DB::raw(1))
+                    //     ->from('cadena_proveedores')
+                    //     ->whereRaw('cadena_proveedores.proveedor_id = proveedores.id and cadena_proveedores.cadena_suministro_id = ?', [$cadena->id]);  //and cadena_clientes.cliente_id != comodin
+                    // })
                     ->selectRaw('proveedores.*, entidad.nombre')
                     ->get();
         
@@ -214,7 +228,7 @@ class CadenaSuministrosController extends Controller
                 ->join('entidad', 'entidad.id', '=', 'proveedores.entidad_id')
                 ->select('entidad.*')
                 ->first();
-        $proveedor = CadenaProveedor::create([
+        $proveedor = CadenaProveedor::updateOrCreate([
             "cadena_suministro_id" => $cadena->id,
             "proveedor_id" => $request->cliente,
             "proveedor_padre" => $proveedor_padre,
@@ -264,12 +278,19 @@ class CadenaSuministrosController extends Controller
         else{
             $proveedor = CadenaProveedor::where('cadena_suministro_id', $cadena->id)
                     ->where('proveedor_id', $request->cliente)
-                    ->first();
+                    ->get();
+            
+            if(count($proveedor) === 1){
+                $proveedor = $proveedor[0];
+                $proveedor->proveedor_padre = $proveedor_padre;
+                $proveedor->nivel = $request->nivel;;
+                $proveedor->save();
+                return response()->json(["mesagge" => true], 200);
+            }else{
+                return response()->json(["error"=> true, "message" => "El proveedor seleccionado provee a más de un proveedor."]);
+            }
                     
-            $proveedor->proveedor_padre = $proveedor_padre;
-            $proveedor->nivel = $request->nivel;;
-            $proveedor->save();
-            return response()->json(["mesagge" => true], 200);
+            
         }
 
         // $proveedor = CadenaProveedor::where('cadena_suministro_id', $cadena->id)
@@ -313,5 +334,15 @@ class CadenaSuministrosController extends Controller
         ->get();
         
         return response()->json(["clientes" => $clientes, "proveedores" => $proveedores]);
+    }
+
+    public function verifyProveedor($unidad_negocio, $proveedor){
+        $cadena = DB::table('cadena_suministros')->where('unidad_negocio_id', '=', $unidad_negocio)->get()[0];
+        $proveedor = CadenaProveedor::where('proveedor_id', $proveedor)->where('cadena_suministro_id', $cadena->id)->first();
+        if($proveedor){
+            return response()->json(["exists" => true, "nivel" => $proveedor->nivel]);
+        }else{
+            return response()->json(["exists" => false]);
+        }
     }
 }

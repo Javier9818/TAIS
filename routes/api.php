@@ -44,6 +44,8 @@ Route::get('/cadena_clientes/{unidad}', 'CadenaSuministrosController@listarClien
 Route::put('/cadena_clientes', 'CadenaSuministrosController@updateCliente');
 Route::delete('/cadena_clientes/{unidad}/{id}', 'CadenaSuministrosController@deleteCliente');
 
+Route::get('/verifyCliente/{unidad}/{cliente}', 'CadenaSuministrosController@verifyCliente');
+
 
 /** PROVEEDORES EN CADENA */
 Route::get('/proveedores-cadena-libres/{unidad}/{comodin}','CadenaSuministrosController@proveedoresLibres');
@@ -55,6 +57,8 @@ Route::post('/cadena_proveedores/{unidad}', 'CadenaSuministrosController@agregaP
 Route::delete('/cadena_proveedores/{unidad}/{id}', 'CadenaSuministrosController@deleteProveedor');
 Route::get('/cadena_proveedores/{unidad}', 'CadenaSuministrosController@listarProveedores');
 Route::put('/cadena_proveedores', 'CadenaSuministrosController@updateProveedor');
+
+Route::get('/verifyProveedor/{unidad}/{proveedor}', 'CadenaSuministrosController@verifyProveedor');
 
 //**PARA EL GRÁFICO DE CADENA */
 Route::get('/entidades-cadena/{unidad}', 'CadenaSuministrosController@getEntidadesCadena');

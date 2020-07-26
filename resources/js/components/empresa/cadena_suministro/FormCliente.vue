@@ -13,6 +13,7 @@
                       text-field="nombre"
                       class="mt-1"
                       required
+                      @change="verifyCliente()"
                       >
                   <template v-slot:first>
                       <b-form-select-option :value="null" disabled>-- Porfavor selecciona una opción --</b-form-select-option>
@@ -23,7 +24,8 @@
             </div>
 
             <div class="col-md-6">
-                <label>Nivel <button class="btn btn-danger btn-sm text-white ml-2 mb-1" @click="addLevel()" type="button">+</button> </label>
+                <label>Nivel <button v-if="!blockLevel" class="btn btn-danger btn-sm text-white ml-2 mb-1" @click="addLevel()" type="button">+</button> </label>
+                <br>
                 <b-overlay :show="loading_levels" class="d-inline-block">  
                   <b-form-select 
                   v-model="form.nivel" 
@@ -81,6 +83,7 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
     data() {
       return {
         empresa,
+        blockLevel: false,
         loading:false,
         loading_clientes: false,
         loading_levels: false,
@@ -103,10 +106,25 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
         if(mode === 'edit'){
           this.loadDataForm(content);
         }else{
-           this.loadClientes(content.unidad, false);
+          this.loadClientes(content.unidad, false);
         }
     },
     methods: {
+      verifyCliente: function(){
+        this.loading_levels = true;
+        let {content} = this.dataForm;
+        axios.get(`/api/verifyCliente/${content.unidad}/${this.form.cliente}`).then(({data}) => {
+          if(data.exists){
+            this.niveles = [{numero: data.nivel}];
+            this.form.nivel = null;
+            this.blockLevel = true;
+          }else{
+            this.blockLevel = false;
+            this.loadLevels(content.unidad);
+          }
+           this.loading_levels = false;
+        });
+      },
       loadDataForm: async function (content){
         this.form = {
             cliente: content.clienteId,
@@ -181,20 +199,27 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
       },
       store(unidad_negocio){
         axios.post(`/api/cadena_clientes/${unidad_negocio}`, this.form).then( ({data}) => {
-            this.$emit('click');
             let cliente_cadena = data.cliente, cliente;
-            this.clientes.forEach((c) => {
-              if (c.id === cliente_cadena.cliente_id) cliente = c;
-            });
-            this.loading = false;
-            this.$emit('store', {
-              cliente: cliente.nombre,
-              clienteId: this.form.cliente,
-              nivel: this.form.nivel,
-              cliente_padre: this.form.cliente_padre,
-              nombrePadre: data.padre === null ?  null : data.padre.nombre
-            }); //DATA DEL CLIENTE AGREGADO
-            Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
+            if(Object.keys(cliente_cadena).length > 0)
+            {
+              this.$emit('click');
+              this.clientes.forEach((c) => {
+                if (c.id === cliente_cadena.cliente_id) cliente = c;
+              });
+              this.loading = false;
+              this.$emit('store', {
+                cliente: cliente.nombre,
+                clienteId: this.form.cliente,
+                nivel: this.form.nivel,
+                cliente_padre: this.form.cliente_padre,
+                nombrePadre: data.padre === null ?  null : data.padre.nombre
+              }); //DATA DEL CLIENTE AGREGADO
+              Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
+            }else{
+              this.loading = false;
+              Swal.fire('Alerta!', 'Esta combinación ya existe en la cadena', 'warning');
+            }
+            
         }).catch( () => {
           Swal.fire('Error', 'Ha sucedido un error', 'error');
         });

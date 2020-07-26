@@ -13,6 +13,7 @@
                       text-field="nombre"
                       class="mt-1"
                       required
+                      @change="verifyCliente"
                       >
                   <template v-slot:first>
                       <b-form-select-option :value="null" disabled>-- Porfavor selecciona una opción --</b-form-select-option>
@@ -23,7 +24,8 @@
             </div>
 
             <div class="col-md-6">
-                <label>Nivel <button class="btn btn-danger btn-sm text-white ml-2 mb-1" @click="addLevel()" type="button">+</button> </label>
+                <label>Nivel <button v-if="!blockLevel" class="btn btn-danger btn-sm text-white ml-2 mb-1" @click="addLevel()" type="button">+</button> </label>
+                <br>
                 <b-overlay :show="loading_levels" class="d-inline-block">  
                   <b-form-select 
                   v-model="form.nivel" 
@@ -59,6 +61,22 @@
         </b-overlay>
       </b-form-group>
 
+      <div class="row">
+        <div class="col-6 mb-4">
+          <multiselect 
+          v-model="form.cliente_padres" 
+          tag-placeholder="Add this as new tag" 
+          placeholder="Search or add a tag" 
+          label="nombre" 
+          track-by="id" 
+          :options="clientesPadre" 
+          :multiple="true" 
+          :taggable="true" 
+          @tag="addTag"
+          ></multiselect>
+        </div>
+      </div>
+
 
 
       <b-button type="submit" variant="primary">{{dataForm.mode === 'create' ? 'Registrar' : 'Actualizar'}}</b-button>
@@ -69,18 +87,22 @@
 </template>
 
 <script>
-
+import Multiselect from 'vue-multiselect'
 import Swal from 'sweetalert2'
 import {validationMixin} from 'vuelidate'
 import {required, numeric, minValue, maxValue, maxLength, minLength, email, helpers} from 'vuelidate/lib/validators'
 const text = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ.\u00f1\u00d1\s]*$/)
 const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
   export default {
+     components: {
+      Multiselect
+    },
     mixins: [validationMixin],
     props:['dataForm'],
     data() {
       return {
         empresa,
+        blockLevel: false,
         loading:false,
         loading_clientes: false,
         loading_levels: false,
@@ -93,7 +115,8 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
         form:{
           cliente: null,
           nivel: null,
-          cliente_padre: null
+          cliente_padre: null,
+          cliente_padres:[]
         }
       }
     },
@@ -107,6 +130,21 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
         }
     },
     methods: {
+      verifyCliente: function(){
+        this.loading_levels = true;
+        let {content} = this.dataForm;
+        axios.get(`/api/verifyProveedor/${content.unidad}/${this.form.cliente}`).then(({data}) => {
+          if(data.exists){
+            this.niveles = [{numero: data.nivel}];
+            this.form.nivel = null;
+            this.blockLevel = true;
+          }else{
+            this.blockLevel = false;
+            this.loadLevels(content.unidad);
+          }
+           this.loading_levels = false;
+        });
+      },
       loadDataForm: async function (content){
         this.form = {
             cliente: content.clienteId,
@@ -227,6 +265,9 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
         this.$nextTick(() => {
           this.show = true
         })
+      },
+      addTag (newTag) {
+        console.log(newTag)
       }
     }
   }

@@ -78,11 +78,12 @@
        axios.get(`/api/entidades-cadena/${this.unidad_negocio}`).then(({data}) => {
           const { clientes, proveedores} = data;
           proveedores.forEach(c => {
-            nodeDataArray.push({
-              "key": c.id, 
-              "type":"Group", 
-              "name": c.name
-            });
+            if (nodeDataArray.findIndex(e =>  e.key === c.id ) === -1)
+              nodeDataArray.push({
+                "key": c.id, 
+                "type":"Group", 
+                "name": c.name
+              });
             linkDataArray.push({
               "from": c.id,
               "frompid":"OUT" ,
@@ -91,18 +92,21 @@
           });
 
           clientes.forEach(c => {
-            nodeDataArray.push({
-              "key": c.id, 
-              "type":"Group", 
-              "name": c.name
-            });
+            if (nodeDataArray.findIndex(e =>  e.key === c.id ) === -1)
+              nodeDataArray.push({
+                "key": c.id, 
+                "type":"Group", 
+                "name": c.name
+              });
             linkDataArray.push({
               "from": c.padre === null ? 0 : c.padre,
               "frompid":"OUT" ,
               "to":c.id
             });
           });
-       }).finally( () => {
+
+       })
+       .finally( () => {
          this.content = { 
           "class": "go.GraphLinksModel",
             "nodeCategoryProperty": "type",
