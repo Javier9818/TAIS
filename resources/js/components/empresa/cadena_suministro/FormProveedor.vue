@@ -13,7 +13,6 @@
                       text-field="nombre"
                       class="mt-1"
                       required
-                      @change="verifyCliente"
                       >
                   <template v-slot:first>
                       <b-form-select-option :value="null" disabled>-- Porfavor selecciona una opción --</b-form-select-option>
@@ -24,7 +23,7 @@
             </div>
 
             <div class="col-md-6">
-                <label>Nivel <button v-if="!blockLevel" class="btn btn-danger btn-sm text-white ml-2 mb-1" @click="addLevel()" type="button">+</button> </label>
+                <label>Nivel <button  class="btn btn-danger btn-sm text-white ml-2 mb-1" @click="addLevel()" type="button">+</button> </label>
                 <br>
                 <b-overlay :show="loading_levels" class="d-inline-block">  
                   <b-form-select 
@@ -46,38 +45,21 @@
       <hr>
 
       <b-form-group id="input-group-1" label="Provee a" label-for="cliente_two" class="col-md-6">
+        <input type="checkbox" @change="comodin()" v-model="comodin_value">
         <b-overlay :show="loading_clientes_padre" class="d-inline-block">
-          <b-form-select 
-              v-model="form.cliente_padre" 
-              :options="clientesPadre"
-              value-field="id"
-              text-field="nombre"
-              required
-          >
-          <template v-slot:first>
-              <b-form-select-option :value="null" disabled>-- Porfavor selecciona una opción --</b-form-select-option>
-          </template>
-          </b-form-select>
+          <multiselect 
+            v-model="form.cliente_padres" 
+            tag-placeholder="Add this as new tag" 
+            placeholder="Search or add a tag" 
+            label="nombre" 
+            track-by="id" 
+            :options="clientesPadre" 
+            :multiple="true" 
+            :taggable="true" 
+            @tag="addTag"
+          ></multiselect>
         </b-overlay>
       </b-form-group>
-
-      <div class="row">
-        <div class="col-6 mb-4">
-          <multiselect 
-          v-model="form.cliente_padres" 
-          tag-placeholder="Add this as new tag" 
-          placeholder="Search or add a tag" 
-          label="nombre" 
-          track-by="id" 
-          :options="clientesPadre" 
-          :multiple="true" 
-          :taggable="true" 
-          @tag="addTag"
-          ></multiselect>
-        </div>
-      </div>
-
-
 
       <b-button type="submit" variant="primary">{{dataForm.mode === 'create' ? 'Registrar' : 'Actualizar'}}</b-button>
       <b-button variant="danger" @click="$emit('click')">Cancelar</b-button>
@@ -102,6 +84,7 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
     data() {
       return {
         empresa,
+        comodin_value: false,
         blockLevel: false,
         loading:false,
         loading_clientes: false,
@@ -130,6 +113,11 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
         }
     },
     methods: {
+      comodin: function(){
+        if(this.comodin_value)
+           this.clientesPadre.push({nombre: empresa.nombre, id: null});
+      
+      },
       verifyCliente: function(){
         this.loading_levels = true;
         let {content} = this.dataForm;
@@ -150,7 +138,8 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
             cliente: content.clienteId,
             nivel: content.nivel,
             cliente_padre: content.proveedor_padre,
-            unidad: content.unidad
+            unidad: content.unidad,
+            cliente_padres:content.proveedores_padre //e
           }
           this.loading = true;
           await this.loadProveedoresPadre(content.nivel);
@@ -173,7 +162,7 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
         let {content, mode} = this.dataForm;
         if(id === 1) {
           this.clientesPadre = [{id:'d', nombre: `Empresa: ${empresa.nombre}`}];
-          this.form.cliente_padre = 'd';
+          this.form.cliente_padres = [{id:'d', nombre: `Empresa: ${empresa.nombre}`}];
           this.loading_clientes_padre = false;
         }else{
           await axios.get(`/api/proveedores-padre-cadena/${content.unidad}/${id - 1}`).then( ({data}) => {
@@ -187,7 +176,7 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
                         if(c.id === content.clienteId) this.clientesPadre.splice(i, 1)
                   });
               }else
-                this.form.cliente_padre = null;
+                this.form.cliente_padres = [];
               
           }).catch( ()=> {
               Swal.fire('Error', 'Ha sucedido un error', 'error');
@@ -211,11 +200,12 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
           }).finally(this.loading_levels = false);
       },
       onSubmit(evt) {
-        this.loading = true;
-        let {content, mode} = this.dataForm;
-        if(mode === 'create') this.store(content.unidad);
-        else if(mode === 'edit') this.update();
-        
+        if(this.form.cliente_padres.length > 0){
+          this.loading = true;
+          let {content, mode} = this.dataForm;
+          if(mode === 'create') this.store(content.unidad);
+          else if(mode === 'edit') this.update();
+        }
       },
       store(unidad_negocio){
         axios.post(`/api/cadena_proveedores/${unidad_negocio}`, this.form).then( ({data}) => {
@@ -230,7 +220,8 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
               clienteId: this.form.cliente,
               nivel: this.form.nivel,
               proveedor_padre: this.form.cliente_padre,
-              nombrePadre: data.padre === null ?  null : data.padre.nombre
+              proveedores_padre: this.form.cliente_padres, //e
+              nombrePadre: data.padre === null ?  null : data.padre //e
             }); //DATA DEL CLIENTE AGREGADO
             Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
         }).catch( () => {

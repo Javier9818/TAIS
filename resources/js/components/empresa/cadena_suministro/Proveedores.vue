@@ -118,7 +118,26 @@ import Swal from 'sweetalert2'
       loadProveedores(unidad){
         this.loading_clientes = true;
         axios.get(`/api/cadena_proveedores/${unidad}`).then( ({data}) => {
-          this.items = data.proveedores;
+          let {proveedores} = data;
+          var aux;
+          proveedores.map(e => {
+            aux = e.padres
+             if(e.padres === null){
+               e.nombrePadre = `Empresa: ${empresa.nombre}`
+               e.proveedores_padre = [{nombre: empresa.nombre, id: null}];
+             }else{
+                e.proveedores_padre = []
+                e.nombrePadre = ''
+                console.log(aux)
+                aux.split(',').map( (obj) => {
+                  var a = obj.split('-')
+                  e.nombrePadre = e.nombrePadre + `${a[0]} - `
+                  e.proveedores_padre.push({id: parseInt(a[1]), nombre: a[0]})
+                })
+             }
+             
+          });
+          this.items = proveedores;
         }).catch( ()=> {
               Swal.fire('Error', 'Ha sucedido un error', 'error');
           }).finally( () => {

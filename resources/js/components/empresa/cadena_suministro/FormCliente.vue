@@ -47,17 +47,17 @@
 
       <b-form-group id="input-group-1" label="Es cliente de" label-for="cliente_two" class="col-md-6">
         <b-overlay :show="loading_clientes_padre" class="d-inline-block">
-          <b-form-select 
-              v-model="form.cliente_padre" 
-              :options="clientesPadre"
-              value-field="id"
-              text-field="nombre"
-              required
-          >
-          <template v-slot:first>
-              <b-form-select-option :value="null" disabled>-- Porfavor selecciona una opción --</b-form-select-option>
-          </template>
-          </b-form-select>
+          <multiselect 
+            v-model="form.cliente_padres" 
+            tag-placeholder="Add this as new tag" 
+            placeholder="Search or add a tag" 
+            label="nombre" 
+            track-by="id" 
+            :options="clientesPadre" 
+            :multiple="true" 
+            :taggable="true" 
+            @tag="addTag"
+          ></multiselect>
         </b-overlay>
       </b-form-group>
 
@@ -72,12 +72,16 @@
 
 <script>
 
+import Multiselect from 'vue-multiselect'
 import Swal from 'sweetalert2'
 import {validationMixin} from 'vuelidate'
 import {required, numeric, minValue, maxValue, maxLength, minLength, email, helpers} from 'vuelidate/lib/validators'
 const text = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ.\u00f1\u00d1\s]*$/)
 const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
   export default {
+     components: {
+      Multiselect
+    },
     mixins: [validationMixin],
     props:['dataForm'],
     data() {
@@ -96,7 +100,8 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
         form:{
           cliente: null,
           nivel: null,
-          cliente_padre: null
+          cliente_padre: null,
+          cliente_padres:[]
         }
       }
     },
@@ -130,7 +135,8 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
             cliente: content.clienteId,
             nivel: content.nivel,
             cliente_padre: content.cliente_padre,
-            unidad: content.unidad
+            unidad: content.unidad,
+            cliente_padres:content.clientes_padre //e
           }
           this.loading = true;
           await this.loadClientesPadre(content.nivel);
@@ -153,7 +159,7 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
         let {content, mode} = this.dataForm;
         if(id === 1) {
           this.clientesPadre = [{id:'d', nombre: `Empresa: ${empresa.nombre}`}];
-          this.form.cliente_padre = 'd';
+          this.form.cliente_padres = [{id:'d', nombre: `Empresa: ${empresa.nombre}`}];
           this.loading_clientes_padre = false;
         }else{
           await axios.get(`/api/clientes-padre-cadena/${content.unidad}/${id - 1}`).then( ({data}) => {
@@ -167,7 +173,7 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
                         if(c.id === content.clienteId) this.clientesPadre.splice(i, 1)
                   });
               }else
-                this.form.cliente_padre = null;
+                this.form.cliente_padres = [];
               
           }).catch( ()=> {
               Swal.fire('Error', 'Ha sucedido un error', 'error');
@@ -191,11 +197,12 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
           }).finally(this.loading_levels = false);
       },
       onSubmit(evt) {
-        this.loading = true;
-        let {content, mode} = this.dataForm;
-        if(mode === 'create') this.store(content.unidad);
-        else if(mode === 'edit') this.update();
-        
+         if(this.form.cliente_padres.length > 0){
+           this.loading = true;
+          let {content, mode} = this.dataForm;
+          if(mode === 'create') this.store(content.unidad);
+          else if(mode === 'edit') this.update();
+         }
       },
       store(unidad_negocio){
         axios.post(`/api/cadena_clientes/${unidad_negocio}`, this.form).then( ({data}) => {
@@ -212,7 +219,8 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
                 clienteId: this.form.cliente,
                 nivel: this.form.nivel,
                 cliente_padre: this.form.cliente_padre,
-                nombrePadre: data.padre === null ?  null : data.padre.nombre
+                clientes_padre: this.form.cliente_padres, //e
+                nombrePadre: data.padre === null ?  null : data.padre
               }); //DATA DEL CLIENTE AGREGADO
               Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
             }else{
@@ -249,6 +257,9 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
         this.$nextTick(() => {
           this.show = true
         })
+      },
+      addTag (newTag) {
+        console.log(newTag)
       }
     }
   }
