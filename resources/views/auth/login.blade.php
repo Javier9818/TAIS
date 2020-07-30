@@ -42,8 +42,8 @@
                      </div>
                 </div>
                 {{-- <a href="#">Forgot Password?</a> --}}
-                <!-- <input type="submit" class="btn" value="Iniciar Sesión"> -->
-                <a href="/home" class="btn" value="Iniciar Sesión"></a>
+                <input type="submit" class="btn" value="Iniciar Sesión">
+                <!-- <a href="/home" class="btn" value="Iniciar Sesión"></a> -->
             </form>
         </div>
     </div>

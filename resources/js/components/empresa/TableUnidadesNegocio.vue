@@ -43,9 +43,9 @@
         <b-button size="sm" @click="info(row.item, row.index, $event.target)" class="mr-1">
             Editar
         </b-button>
-        <!-- <b-button size="sm" @click="desactivate(row.item.id, row.item.estado)" :class="row.item.estado===1 ? 'btn-danger': 'btn-warning'">
+        <b-button size="sm" @click="desactivate(row.item.id, row.item.estado)" :class="row.item.estado===1 ? 'btn-danger': 'btn-warning'">
             {{row.item.estado===1 ? 'Desactivar': 'Activar'}}
-        </b-button> -->
+        </b-button>
       </template>
     </b-table>
     <b-col sm="7" md="6" class="my-1">
@@ -138,14 +138,14 @@ import Swal from 'sweetalert2'
             this.infoModal.title = `Registrar unidad de negocio`,
             this.$root.$emit('bv::show::modal', 'formCliente')
         },
-        // desactivate(id, estado){
-        //     axios.post(`/api/empresa/${id}`).then( ({data}) => {
-        //         Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
-        //         this.items.map((item) => {
-        //             if(item.id === id) item.estado = estado === 1 ? 0 : 1;
-        //         });
-        //     }).catch(()=>{ire('Error', 'Ha ocurrido algún error', 'error');});
-        // },
+        desactivate(id, estado){
+            axios.delete(`/api/unidad-negocio/${id}`).then( ({data}) => {
+                Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
+                this.items.map((item) => {
+                    if(item.id === id) item.estado = estado === 1 ? 0 : 1;
+                });
+            }).catch(()=>{ire('Error', 'Ha ocurrido algún error', 'error');});
+        },
         redirect(id){
             location.href=`/empresa/${id}`
         },

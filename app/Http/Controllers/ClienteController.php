@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CadenaCliente;
 use App\Cliente;
 use App\Entidad;
 use Illuminate\Http\Request;
@@ -102,6 +103,11 @@ class ClienteController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(CadenaCliente::where('cliente_id', $id)->exists())
+            return response()->json(["error" => true, "message" => "El cliente pertenece a una cadena de suministro."]);
+        else{
+            Cliente::find($id)->delete();
+            return response()->json(["error" => false, "message" => "Cliente borrado correctamente."]);
+        }
     }
 }

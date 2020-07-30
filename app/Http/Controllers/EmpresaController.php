@@ -93,7 +93,7 @@ class EmpresaController extends Controller
 
     public function showAdministrarCadena($id){
         $empresa = Empresa::find($id);
-        $unidades_negocio = UnidadNegocio::all();
+        $unidades_negocio = UnidadNegocio::where('estado', true)->get();
         // $proveedores = DB::table('proveedores')->join('entidad', 'proveedores.entidad_id', '=', 'entidad.id')->get();
         // $clientes =  DB::table('clientes')->join('entidad', 'clientes.entidad_id', '=', 'entidad.id')->get();
         return view('empresa.administrar_cadena', ["empresa" => $empresa, "unidades_negocio" => $unidades_negocio]);
@@ -101,7 +101,7 @@ class EmpresaController extends Controller
 
     public function showGenerarCadena($id){
         $empresa = Empresa::find($id);
-        $unidades_negocio = UnidadNegocio::all();
+        $unidades_negocio = UnidadNegocio::where('estado', true)->get();
         return view('empresa.generar', ["empresa" => $empresa, "unidades_negocio" => $unidades_negocio]);
     }
 

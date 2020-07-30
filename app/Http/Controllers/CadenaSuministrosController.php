@@ -6,6 +6,7 @@ use App\CadenaCliente;
 use App\CadenaProveedor;
 use App\Cliente;
 use App\Entidad;
+use App\Historial;
 use App\NivelCliente;
 use App\NivelProveedor;
 use Illuminate\Http\Request;
@@ -343,5 +344,22 @@ class CadenaSuministrosController extends Controller
         }else{
             return response()->json(["exists" => false]);
         }
+    }
+
+    /** -------------------------------- HISTORIAL */
+    
+    public function setHistorial(Request $request){
+        $historia = Historial::create([
+            "unidad_negocio_id" => $request->unidad_negocio,
+            "contenido" => $request->content,
+            "comentario" => $request->historia
+        ]);
+
+        return response()->json(["historia" => $historia], 200);
+    }
+
+    public function getHistorial($unidad){
+        $historias = Historial::where('unidad_negocio_id', $unidad)->orderBy('created_at', 'desc') ->get();
+        return response()->json(["historias" => $historias], 200);
     }
 }

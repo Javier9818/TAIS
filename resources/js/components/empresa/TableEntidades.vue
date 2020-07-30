@@ -43,9 +43,9 @@
         <b-button size="sm" @click="info(row.item, row.index, $event.target)" class="mr-1">
             Editar
         </b-button>
-        <!-- <b-button size="sm" @click="desactivate(row.item.id)" class="btn-danger" title="Eliminar">
+        <b-button size="sm" @click="desactivate(row.item.id)" class="btn-danger" title="Eliminar">
           <i class="fas fa-trash-alt"></i>
-        </b-button> -->
+        </b-button>
       </template>
     </b-table>
     <b-col sm="7" md="6" class="my-1">
@@ -132,17 +132,25 @@ import Swal from 'sweetalert2'
         desactivate(id){
           if(this.entidad === 'cliente')
               axios.delete(`/api/cliente/${id}`).then( ({data}) => {
-                  Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
-                  this.items.map((item) => {
-                      if(item.id === id) item.estado = estado === 1 ? 0 : 1;
+                if(data.error){
+                    Swal.fire('Error', data.message, 'error');
+                }else{
+                  Swal.fire('Éxito', 'El cliente se eliminó correctamente', 'success');
+                  this.items.map((item, i) => {
+                      if(item.id === id) this.items.splice(i, 1);
                   });
+                }
               }).catch(()=>{ire('Error', 'Ha ocurrido algún error', 'error');});
           else if(this.entidad === 'proveedor')
             axios.delete(`/api/proveedor/${id}`).then( ({data}) => {
-                    Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
-                    this.items.map((item) => {
-                        if(item.id === id) item.estado = estado === 1 ? 0 : 1;
-                    });
+                   if(data.error){
+                        Swal.fire('Error', data.message, 'error');
+                    }else{
+                      Swal.fire('Éxito', 'El proveedor se eliminó correctamente', 'success');
+                      this.items.map((item, i) => {
+                          if(item.id === id) this.items.splice(i, 1);
+                      });
+                    }
                 }).catch(()=>{ire('Error', 'Ha ocurrido algún error', 'error');});
         },
         redirect(id){

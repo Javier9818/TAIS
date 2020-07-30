@@ -46,8 +46,15 @@ Vue.component('form-cadena-proveedor', require('./components/empresa/cadena_sumi
 Vue.component('componente-generar-cadena', require('./components/empresa/cadena_suministro/GeneraCadena.vue').default);
 Vue.component('componente-grafico-cadena', require('./components/empresa/cadena_suministro/Cadena.vue').default);
 
-import 'bootstrap/dist/css/bootstrap.css'
+Vue.component('componente-historial-cadena', require('./components/empresa/cadena_suministro/Historial.vue').default);
+
+
+
+
+
+import 'bootstrap/dist/css/bootstrap.css' 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 Vue.use(BootstrapVue)
@@ -61,4 +68,15 @@ Vue.use(IconsPlugin)
 
 const app = new Vue({
     el: '#app',
+    data: {
+       
+    },
+        
+    events: {
+        'timeline-delete-item': function(id) {
+            this.timeline = _.remove(this.timeline, function(item) { 
+                return item.id != id 
+            });
+        }
+    }
 });

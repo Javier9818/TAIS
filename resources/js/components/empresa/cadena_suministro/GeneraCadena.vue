@@ -17,19 +17,53 @@
             <div class="row justify-content-center align-items-center content-message" v-if="unidad_negocio===null">
                 No ha seleccionado una unidad de negocio.
             </div>
-            
-            <componente-grafico-cadena v-else :content="content"></componente-grafico-cadena>
-            
+            <div v-else>
+              <div class="detalles_cadena">
+                  <b-card no-body>
+                    <b-tabs pills card lazy>
+                      <b-tab title="Gráfico" active>
+                        <b-card-text>
+                            <b-button v-b-modal.historia class="btn btn-primary ml-3 my-2"><i class="fas fa-save"></i> Guardar en historial</b-button>
+                            <componente-grafico-cadena :content="content"/>
+                            <b-modal id="historia" title="Detalles de historia" size="lg" scrollable hide-footer>
+                                <b-overlay :show="loading">
+                                  <label for="historia-input">Comentario de historia</label>
+                                  <input type="text" id="historia-input" class="form-control" v-model="historia">
+                                  <p v-if="$v.historia.$error" class="help text-danger">Este campo es inválido</p>  
+                                  <button class="btn btn-success mt-2" @click="saveHistory">Guardar</button>
+                                </b-overlay>
+                            </b-modal>
+                        </b-card-text>
+                      </b-tab>
+                      <b-tab title="Historial">
+                        <b-card-text>
+                            <componente-historial-cadena :unidad="unidad_negocio" />
+                        </b-card-text>
+                      </b-tab>
+                    </b-tabs>
+                  </b-card>
+              </div>
+              
+              
+            </div>
       </section>
   </div>
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+import {validationMixin} from 'vuelidate'
+import {required, numeric, minValue, maxValue, maxLength, minLength, email, helpers} from 'vuelidate/lib/validators'
+const text = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ.\u00f1\u00d1\s]*$/)
+const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
   export default {
+    mixins: [validationMixin],
     data() {
       return {
         options: unidades_negocio,
+        loading: false,
         unidad_negocio: null,
+        historia:"",
         content:{ "class": "go.GraphLinksModel",
                 "nodeCategoryProperty": "type",
                 "linkFromPortIdProperty": "frompid",
@@ -71,7 +105,35 @@
         }
       }
     },
+    validations:{
+        historia:{
+          required,
+          text,
+          minLength: minLength(4)
+        }
+    },
     methods: {
+      saveHistory(){
+          this.$v.$touch()
+          if(!this.$v.$invalid){
+            this.loading = true
+            var content = JSON.stringify(this.content);
+            axios.post('/api/cadena-historial', {
+              unidad_negocio: this.unidad_negocio,
+              historia: this.historia,
+              content: content
+            }).then( ({data}) => {
+                Swal.fire('Éxito!', 'Se guardó historia correctamente', 'success').then( () => {
+                  this.$root.$emit('bv::hide::modal', 'historia')
+                  this.historia = ""
+                });
+            }).catch( () => {
+               Swal.fire('Error', 'Ha sucedido un error', 'error');
+            }).finally( () => {
+               this.loading = false
+            });
+          }
+      },
      loadDataCadena(){
        let nodeDataArray = [{"key": 0, "type": "Project", "name": empresa.nombre }];
        let linkDataArray = [];

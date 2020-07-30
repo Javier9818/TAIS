@@ -24,13 +24,16 @@ Route::post('/empresa/{id}','EmpresaController@destroy');
 
 Route::post('/cliente','ClienteController@store');
 Route::put('/cliente/{id}','ClienteController@update');
-Route::post('/cliente/{id}','ClienteController@destroy');
+Route::delete('/cliente/{id}', 'ClienteController@destroy');
+
 
 Route::post('/proveedor','ProveedorController@store');
 Route::put('/proveedor/{id}','ProveedorController@update');
+Route::delete('/proveedor/{id}', 'ProveedorController@destroy');
 
 Route::post('/unidad-negocio','UnidadNegocioController@store');
 Route::put('/unidad-negocio/{id}','UnidadNegocioController@update');
+Route::delete('/unidad-negocio/{id}','UnidadNegocioController@destroy');
 
 
 /** CLIENTES EN CADENA */
@@ -62,5 +65,10 @@ Route::get('/verifyProveedor/{unidad}/{proveedor}', 'CadenaSuministrosController
 
 //**PARA EL GRÁFICO DE CADENA */
 Route::get('/entidades-cadena/{unidad}', 'CadenaSuministrosController@getEntidadesCadena');
+Route::post('/cadena-historial', 'CadenaSuministrosController@setHistorial');
+Route::get('/cadena-historial/{unidad}', 'CadenaSuministrosController@getHistorial');
+
+
+
 
 Route::post('/user','UserController@store');

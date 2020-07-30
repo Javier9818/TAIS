@@ -16,10 +16,12 @@
     },
     mounted(){
       init(this.content);
+      console.log(this.content)
     },
     watch:{
       content: function(newValue){
         load(newValue);
+        console.log(newValue)
       }
     }
   }

@@ -111,6 +111,10 @@ class UnidadNegocioController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $unidad = UnidadNegocio::find($id);
+        $unidad->estado = !$unidad->estado;
+        $unidad ->save();
+
+        return response()->json(["message" => "Unidad desactivada correctamente."]);
     }
 }

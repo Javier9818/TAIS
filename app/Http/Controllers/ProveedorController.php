@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CadenaProveedor;
 use App\Proveedor;
 use App\Entidad;
 use Illuminate\Http\Request;
@@ -103,6 +104,11 @@ class ProveedorController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(CadenaProveedor::where('proveedor_id', $id)->exists())
+            return response()->json(["error" => true, "message" => "El proveedor pertenece a una cadena de suministro."]);
+        else{
+            Proveedor::find($id)->delete();
+            return response()->json(["error" => false, "message" => "Proveedor borrado correctamente."]);
+        }
     }
 }
