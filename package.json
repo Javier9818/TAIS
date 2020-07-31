@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "bootstrap-vue": "^2.15.0",
+        "jspdf": "^1.5.3",
         "sweetalert2": "^9.14.0",
         "timeline-vuejs": "^1.1.4",
         "vue-multiselect": "^2.1.6",

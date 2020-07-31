@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,6 +24,9 @@ Route::get('/empresa/{id}/unidades-negocio', 'EmpresaController@showUnidadesNego
 Route::get('/empresa/{id}/administrar-cadena', 'EmpresaController@showAdministrarCadena');
 Route::get('/empresa/{id}/generar-cadena', 'EmpresaController@showGenerarCadena');
 Route::get('/aux',  function () {return view('welcome');});
-Auth::routes();
+
+Route::post('/login', 'Auth\LoginController@authenticate')->name('login');
+Route::post('/logout', function(){ Auth::logout(); return redirect('/');})->name('logout');
+//Auth::routes();
 
 

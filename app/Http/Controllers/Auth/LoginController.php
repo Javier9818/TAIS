@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -36,5 +39,20 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function authenticate(Request $request)
+    {
+        if (Auth::attempt(["email" => $request->email, "password" => $request->password])) {
+            $user = Auth::user();
+            if($user->isAdmin) return redirect(route('home'));
+            else if($user->isCustomer){
+                // $empresa = DB::select('select * from users_empresas where user_id = ?', [$user->id])[0]->empresa_id;
+                // session(['empresa' => $empresa]);
+                return redirect()->intended('/empresa/1');
+            }
+            else return redirect()->intended('/');
+        }else
+            return redirect('/')->withErrors(['login-error' => 'Usuario o contraseña incorrectos']);
     }
 }
