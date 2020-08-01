@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <div class="login-content">
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="/login">
                 @csrf
                 <img src="{{ asset('assets/img/avatar.svg') }}">
                 <h2 class="title">Bienvenido</h2>
@@ -22,9 +22,9 @@
                       <div class="div">
                         <input id="email" type="email" class="input" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Correo electrónico">
                         @error('email')
-                            {{-- <span class="invalid-feedback" role="alert">
+                            <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
-                            </span> --}}
+                            </span>
                         @enderror
                       </div>
                    </div>
@@ -35,9 +35,9 @@
                       <div class="div">
                             <input id="password" type="password" class="input" name="password" required autocomplete="current-password" placeholder="Contraseña">
                             @error('password')
-                                {{-- <span class="invalid-feedback" role="alert">
+                                <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
-                                </span> --}}
+                                </span>
                             @enderror
                      </div>
                 </div>

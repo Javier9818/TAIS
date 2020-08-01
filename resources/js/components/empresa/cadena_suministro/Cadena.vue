@@ -13,7 +13,7 @@
 <script>
   import jsPDF from 'jspdf';
   export default {
-    props:['content'],
+    props:['content', 'title'],
     data() {
       return {
         image: null
@@ -25,7 +25,7 @@
             size : new go.Size (842,595)
         })
         var a = document.createElement('a');
-        a.download = 'Cadena de suministro';
+        a.download = `${this.title}`;
         a.target = '_blank';
         a.href= imagenImp.src;
         a.click();
@@ -39,17 +39,21 @@
         var alto = doc.internal.pageSize.getHeight();
         doc.setFontType('bold');
         doc.setFontSize(16);
-        doc.text(largo/3+17, 45, "Mapa de Cadena de Suministros");
+        doc.text(largo/3+17, 45, `${this.title}`);
         doc.addImage(imagenImp, 'jpg', 30, 90, 742, 495);
-        doc.save("Reporte-1.pdf");
+        doc.save(`${this.title}`);
       }
     },
     mounted(){
       init(this.content);
+      console.log(this.meta);
     },
     watch:{
       content: function(newValue){
         load(newValue);
+      },
+      meta: function(newValue){
+        console.log(newValue)
       }
     }
   }

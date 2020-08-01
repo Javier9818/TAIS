@@ -18,8 +18,8 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->boolean('isAdmin')->nullable();
-            $table->boolean('isCustomer')->nullable();
+            $table->boolean('isAdmin')->default(false);
+            $table->boolean('isCustomer')->default(false);
             $table->string('photo', 22)->nullable();
             $table->integer('person_id');
             $table->integer('empresa_id')->nullable();

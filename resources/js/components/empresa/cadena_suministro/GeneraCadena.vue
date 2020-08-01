@@ -24,7 +24,7 @@
                       <b-tab title="Gráfico" active>
                         <b-card-text>
                             <b-button v-b-modal.historia class="btn btn-primary ml-3 my-2"><i class="fas fa-save"></i> Guardar en historial</b-button>
-                            <componente-grafico-cadena :content="content"/>
+                            <componente-grafico-cadena :content="content" title = "Mapa cadena de suministro"/>
                             <b-modal id="historia" title="Detalles de historia" size="lg" scrollable hide-footer>
                                 <b-overlay :show="loading">
                                   <label for="historia-input">Comentario de historia</label>
@@ -37,7 +37,7 @@
                       </b-tab>
                       <b-tab title="Historial">
                         <b-card-text>
-                            <componente-historial-cadena :unidad="unidad_negocio" />
+                            <componente-historial-cadena :unidad="unidad_negocio"/>
                         </b-card-text>
                       </b-tab>
                     </b-tabs>
@@ -111,6 +111,9 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
           text,
           minLength: minLength(4)
         }
+    },
+    mounted(){
+      console.log(unidades_negocio)
     },
     methods: {
       saveHistory(){

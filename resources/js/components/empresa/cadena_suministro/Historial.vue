@@ -19,7 +19,7 @@
        </b-overlay>
        <b-modal id="historia" :title="modal.title" size="lg" scrollable hide-footer>
             <div class="container">
-                <componente-grafico-cadena :content="modal.content"/>
+                <componente-grafico-cadena :content="modal.content" :title="modal.title"/>
             </div>
         </b-modal>
   </b-list-group>

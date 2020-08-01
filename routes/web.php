@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+// Auth::routes();
+Route::post('/login', 'Auth\LoginController@authenticate')->name('login');
+Route::post('/logout', function(){ Auth::logout(); return redirect('/');})->name('logout');
 
 Route::get('/', function () {return view('auth.login');});
 Route::get('/home', 'EmpresaController@index')->name('home');
@@ -25,8 +28,7 @@ Route::get('/empresa/{id}/administrar-cadena', 'EmpresaController@showAdministra
 Route::get('/empresa/{id}/generar-cadena', 'EmpresaController@showGenerarCadena');
 Route::get('/aux',  function () {return view('welcome');});
 
-Route::post('/login', 'Auth\LoginController@authenticate')->name('login');
-Route::post('/logout', function(){ Auth::logout(); return redirect('/');})->name('logout');
-//Auth::routes();
+
+
 
 
