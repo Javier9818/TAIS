@@ -25,6 +25,52 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::before(function ($user) {
+            if ($user->isAdmin) return true;
+        });
+
+        Gate::define('gestionar-panel-general', function($user){
+            return $user->isAdmin;
+        });
+
+        Gate::define('gestionar-panel-empresa', function($user, $idEmpresa){
+            return ($user->isCustomer && $user->empresa_id == $idEmpresa);
+        });
+
+        Gate::define('gestionar-clientes', function($user){
+            $permisos = $user->permisoUser;
+            foreach ($permisos as $key => $permiso) {
+                if($permiso->id === 3)
+                return true;
+            }
+            return false;
+        });
+
+        Gate::define('gestionar-proveedores', function($user){
+            $permisos = $user->permisoUser;
+            foreach ($permisos as $key => $permiso) {
+                if($permiso->id === 2)
+                return true;
+            }
+            return false;
+        });
+
+        Gate::define('gestionar-unidades-negocio', function($user){
+            $permisos = $user->permisoUser;
+            foreach ($permisos as $key => $permiso) {
+                if($permiso->id === 5)
+                return true;
+            }
+            return false;
+        });
+
+        Gate::define('gestionar-cadena', function($user){
+            $permisos = $user->permisoUser;
+            foreach ($permisos as $key => $permiso) {
+                if($permiso->id === 4)
+                return true;
+            }
+            return false;
+        });
     }
 }

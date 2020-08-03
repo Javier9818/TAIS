@@ -57,12 +57,15 @@ class EmpresaController extends Controller
      */
     public function show($id)
     {
+        $this->authorize('gestionar-panel-empresa', $id);
         $empresa = Empresa::find($id);
         return view('empresa.inicio', ["empresa" => $empresa]);
     }
 
     public function showClientes($id)
     {
+        $this->authorize('gestionar-panel-empresa', $id);
+        $this->authorize('gestionar-clientes');
         $empresa = Empresa::find($id);
         $clientes = DB::table('entidad')
             ->join('clientes', 'clientes.entidad_id', '=', 'entidad.id')
@@ -74,6 +77,9 @@ class EmpresaController extends Controller
 
     public function showProveedores($id)
     {
+        $this->authorize('gestionar-panel-empresa', $id);
+        $this->authorize('gestionar-proveedores');
+
         $empresa = Empresa::find($id);
         $proveedores = DB::table('entidad')
             ->join('proveedores', 'proveedores.entidad_id', '=', 'entidad.id')
@@ -84,6 +90,8 @@ class EmpresaController extends Controller
     }
 
     public function showUnidadesNegocio($id){
+        $this->authorize('gestionar-panel-empresa', $id);
+        $this->authorize('gestionar-unidades-negocio');
         $empresa = Empresa::find($id);
         $unidades_negocio = DB::table('unidad_negocio')
             ->where('unidad_negocio.empresa_id', '=', $id)
@@ -92,6 +100,8 @@ class EmpresaController extends Controller
     }
 
     public function showAdministrarCadena($id){
+        $this->authorize('gestionar-panel-empresa', $id);
+        $this->authorize('gestionar-cadena');
         $empresa = Empresa::find($id);
         $unidades_negocio = UnidadNegocio::where('estado', true)->get();
         // $proveedores = DB::table('proveedores')->join('entidad', 'proveedores.entidad_id', '=', 'entidad.id')->get();
@@ -100,6 +110,8 @@ class EmpresaController extends Controller
     }
 
     public function showGenerarCadena($id){
+        $this->authorize('gestionar-panel-empresa', $id);
+        $this->authorize('gestionar-cadena');
         $empresa = Empresa::find($id);
         $unidades_negocio = UnidadNegocio::where('estado', true)->get();
         return view('empresa.generar', ["empresa" => $empresa, "unidades_negocio" => $unidades_negocio]);

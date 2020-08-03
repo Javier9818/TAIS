@@ -42,6 +42,16 @@
                             <li class="nav-item active">
                                 <a class="nav-link" href="/home">Inicio</a>
                             </li>
+
+                            @auth
+                            <li class="nav-item active">
+                                <a class="nav-link" href="javascript:void(0)"  onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">Cerrar Sesión</a>
+                            </li>
+                            <form id="logout-form" action="/logout" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                            @endauth
                             <!-- <li class="nav-item">
                                 <a class="nav-link" href="#">Page</a>
                             </li>

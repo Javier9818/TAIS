@@ -21,11 +21,6 @@
                       </div>
                       <div class="div">
                         <input id="email" type="email" class="input" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Correo electrónico">
-                        @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
                       </div>
                    </div>
                    <div class="input-div pass">
@@ -34,17 +29,18 @@
                       </div>
                       <div class="div">
                             <input id="password" type="password" class="input" name="password" required autocomplete="current-password" placeholder="Contraseña">
-                            @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
                      </div>
                 </div>
                 {{-- <a href="#">Forgot Password?</a> --}}
                 <input type="submit" class="btn" value="Iniciar Sesión">
                 <!-- <a href="/home" class="btn" value="Iniciar Sesión"></a> -->
+                @error('login-error')
+                    <p style="color:red;">
+                    {{ $message }}
+                    </p>
+                @enderror
             </form>
+           
         </div>
     </div>
     <script src="https://kit.fontawesome.com/a81368914c.js"></script>

@@ -18,4 +18,7 @@ class User extends Authenticatable
         'password',
     ];
 
+    public function permisoUser(){
+        return $this->belongsToMany('App\Scope');
+    }
 }

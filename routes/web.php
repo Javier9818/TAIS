@@ -18,15 +18,15 @@ Route::post('/login', 'Auth\LoginController@authenticate')->name('login');
 Route::post('/logout', function(){ Auth::logout(); return redirect('/');})->name('logout');
 
 Route::get('/', function () {return view('auth.login');});
-Route::get('/home', 'EmpresaController@index')->name('home');
-Route::get('/users', 'UserController@index')->name('users');
+Route::get('/home', 'EmpresaController@index')->name('home')->middleware('can:gestionar-panel-general');
+Route::get('/users', 'UserController@index')->name('users')->middleware('can:gestionar-panel-general');
 Route::get('/empresa/{id}', 'EmpresaController@show');
 Route::get('/empresa/{id}/clientes', 'EmpresaController@showClientes');
 Route::get('/empresa/{id}/proveedores', 'EmpresaController@showProveedores');
 Route::get('/empresa/{id}/unidades-negocio', 'EmpresaController@showUnidadesNegocio');
 Route::get('/empresa/{id}/administrar-cadena', 'EmpresaController@showAdministrarCadena');
 Route::get('/empresa/{id}/generar-cadena', 'EmpresaController@showGenerarCadena');
-Route::get('/aux',  function () {return view('welcome');});
+// Route::get('/aux',  function () {return view('welcome');});
 
 
 

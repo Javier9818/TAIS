@@ -51,10 +51,12 @@ class LoginController extends Controller
             else if($user->isCustomer){
                 // $empresa = DB::select('select * from users_empresas where user_id = ?', [$user->id])[0]->empresa_id;
                 // session(['empresa' => $empresa]);
-                return redirect()->intended('/empresa/1');
+                return redirect()->intended('/empresa/'.$user->empresa_id);
             }
             else return redirect()->intended('/');
         }else
             return redirect('/')->withErrors(['login-error' => 'Usuario o contraseña incorrectos']);
     }
+
+    
 }

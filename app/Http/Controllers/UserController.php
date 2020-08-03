@@ -9,6 +9,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -64,13 +65,13 @@ class UserController extends Controller
             "isAdmin" => $tipoUser,
             "isCustomer" => !$tipoUser,
             // "photo" => $request->descripcion,
-            "password" => Crypt::encrypt($request->password),
+            "password" => Hash::make($request->password),
             "person_id" => $persona->id,
             "empresa_id" => $request->empresa
         ]);
 
         foreach ($request->scopes as $key => $value) {
-            DB::insert('insert into scope_users (scope_id, user_id) values (?, ?)', [$value, $user->id]);
+            DB::insert('insert into scope_user(scope_id, user_id) values (?, ?)', [$value, $user->id]);
         }
 
         $request->id = $user->id;
