@@ -66,6 +66,21 @@ class CadenaSuministrosController extends Controller
         return response()->json(["clientes" => $clientes], 200);
     }
 
+    public function listarClientesPadreComodin($unidad_negocio, $nivel){
+        $cadena = DB::table('cadena_suministros')->where('unidad_negocio_id', '=', $unidad_negocio)->get()[0];
+        $clientes = DB::table('clientes')
+        ->join('entidad', 'clientes.entidad_id', '=', 'entidad.id')
+        ->whereExists(function($query) use($cadena, $nivel){
+            $query->select(DB::raw(1))
+            ->from('cadena_clientes')
+            ->whereRaw('cadena_clientes.cliente_id = clientes.id and cadena_clientes.cadena_suministro_id = ? and cadena_clientes.nivel < ?', [$cadena->id, $nivel]);  //and cadena_clientes.cliente_id != comodin
+        })
+        ->selectRaw('clientes.id as id , entidad.nombre as nombre')
+        ->get();
+
+        return response()->json(["clientes" => $clientes], 200);
+    }
+
     public function agregaCliente($unidad_negocio, Request $request){
         $cadena = DB::table('cadena_suministros')->where('unidad_negocio_id', '=', $unidad_negocio)->get()[0];
 
@@ -94,7 +109,7 @@ class CadenaSuministrosController extends Controller
                     ->join('clientes', 'cc.cliente_id', '=', 'clientes.id')
                     ->join('entidad', 'entidad.id', '=', 'clientes.entidad_id')
                     ->selectRaw('entidad.nombre as cliente, clientes.id as clienteId, cc.nivel as nivel,cc.nivel as clientes_padre,cc.nivel as nombrePadre,
-                    GROUP_CONCAT((SELECT CONCAT(e.nombre, "-" ,p.id) FROM clientes p JOIN entidad e ON p.entidad_id = e.id WHERE p.id = cc.cliente_padre)) as padres')
+                    GROUP_CONCAT((SELECT IF(cc.cliente_padre is null, 0, (SELECT CONCAT(e.nombre, "-" ,p.id) FROM clientes p JOIN entidad e ON p.entidad_id = e.id WHERE p.id = cc.cliente_padre)))) as padres')
                     ->whereRaw('cc.cadena_suministro_id = ?', [$cadena->id])
                     ->groupByRaw('clientes.id, entidad.nombre, cc.nivel')
                     ->get();
@@ -201,6 +216,21 @@ class CadenaSuministrosController extends Controller
 
         return response()->json(["proveedores" => $proveedores], 200);
     }
+    
+    public function listarProvedoresPadreComodin($unidad_negocio, $nivel){
+        $cadena = DB::table('cadena_suministros')->where('unidad_negocio_id', '=', $unidad_negocio)->get()[0];
+        $proveedores = DB::table('proveedores')
+        ->join('entidad', 'proveedores.entidad_id', '=', 'entidad.id')
+        ->whereExists(function($query) use($cadena, $nivel){
+            $query->select(DB::raw(1))
+            ->from('cadena_proveedores')
+            ->whereRaw('cadena_proveedores.proveedor_id = proveedores.id and cadena_proveedores.cadena_suministro_id = ? and cadena_proveedores.nivel < ?', [$cadena->id, $nivel]);  //and cadena_clientes.cliente_id != comodin
+        })
+        ->selectRaw('proveedores.*, entidad.nombre')
+        ->get();
+
+        return response()->json(["proveedores" => $proveedores], 200);
+    }
 
     public function agregaProveedor($unidad_negocio, Request $request){//e
         $cadena = DB::table('cadena_suministros')->where('unidad_negocio_id', '=', $unidad_negocio)->get()[0];
@@ -242,7 +272,7 @@ class CadenaSuministrosController extends Controller
                     ->join('proveedores', 'cc.proveedor_id', '=', 'proveedores.id')
                     ->join('entidad', 'entidad.id', '=', 'proveedores.entidad_id')
                     ->selectRaw('entidad.nombre as cliente, proveedores.id as clienteId, cc.nivel as nivel,cc.nivel as proveedores_padre,cc.nivel as nombrePadre,
-                    GROUP_CONCAT((SELECT CONCAT(e.nombre, "-" ,p.id)  FROM proveedores p JOIN entidad e ON p.entidad_id = e.id WHERE p.id = cc.proveedor_padre)) as padres')
+                    GROUP_CONCAT((SELECT IF(cc.proveedor_padre is null, 0, (SELECT CONCAT(e.nombre, "-" ,p.id)  FROM proveedores p JOIN entidad e ON p.entidad_id = e.id WHERE p.id = cc.proveedor_padre)) )) as padres')
                     ->whereRaw('cc.cadena_suministro_id = ?', [$cadena->id])
                     ->groupByRaw('proveedores.id, entidad.nombre, cc.nivel')
                     ->get();
@@ -323,14 +353,14 @@ class CadenaSuministrosController extends Controller
                     ->join('clientes', 'cadena_clientes.cliente_id', '=', 'clientes.id')
                     ->join('entidad', 'entidad.id', '=', 'clientes.entidad_id')
                     ->where('cadena_clientes.cadena_suministro_id', $cadena->id)
-                    ->selectRaw('clientes.id as id, entidad.nombre as name, cadena_clientes.cliente_padre as padre')
+                    ->selectRaw('clientes.id as id, entidad.nombre as name, cadena_clientes.cliente_padre as padre, entidad.foto as foto')
                     ->get();
 
         $proveedores = DB::table('cadena_proveedores')
         ->join('proveedores', 'cadena_proveedores.proveedor_id', '=', 'proveedores.id')
         ->join('entidad', 'entidad.id', '=', 'proveedores.entidad_id')
         ->where('cadena_proveedores.cadena_suministro_id', $cadena->id)
-        ->selectRaw('proveedores.id ,  entidad.nombre as name,  cadena_proveedores.proveedor_padre as padre')
+        ->selectRaw('proveedores.id ,  entidad.nombre as name,  cadena_proveedores.proveedor_padre as padre, entidad.foto as foto')
         ->get();
         
         return response()->json(["clientes" => $clientes, "proveedores" => $proveedores]);

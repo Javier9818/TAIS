@@ -23,8 +23,11 @@ class UserController extends Controller
         $users = DB::table('users')
             ->leftJoin("empresas", "users.empresa_id", "=", "empresas.id")
             ->join("persons", "persons.id", "=", "users.person_id")
-            ->selectRaw('users.email, users.id, users.isAdmin, empresas.id as empresa, empresas.nombre as name_empresa,
-                persons.names, persons.last_name_pat as appaterno, persons.last_name_mat as apmaterno, persons.address')
+            ->leftjoin("scope_user", "scope_user.user_id", "=", "users.id")
+            ->selectRaw('users.email, users.id, users.isCustomer as tipoUser, empresas.id as empresa, empresas.nombre as name_empresa,
+                persons.names, persons.last_name_pat as appaterno, persons.last_name_mat as apmaterno, persons.address,
+                GROUP_CONCAT(scope_user.scope_id) as scopes')
+            ->groupBy('users.id')
             ->get();
         $empresas = Empresa::all();
         $scopes = Scope::all();
@@ -78,6 +81,8 @@ class UserController extends Controller
         return response()->json(["user" => $request->all()], 200);
     }
 
+    
+
     /**
      * Display the specified resource.
      *
@@ -107,9 +112,35 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $user = User::find($request->id);
+        $persona = Person::find($user->person_id);
+
+        $tipoUser = ($request->tipoUser == '0' || $request->tipoUser == 0) ? true: false;
+
+        $persona->update([
+            "names" => $request->names,
+            "last_name_pat" => $request->appaterno,
+            "last_name_mat" => $request->apmaterno,
+            // "phone" => $request->phone,
+            "address" => $request->address,
+        ]);
+
+        $user->update([
+            "email" => $request->email,
+            "isAdmin" => $tipoUser,
+            "isCustomer" => !$tipoUser,
+            "empresa_id" => $request->empresa
+        ]);
+
+        DB::table('scope_user')->where('user_id', "=", $request->id) ->delete();
+
+        foreach ($request->scopes ?? [] as $key => $value) {
+            DB::insert('insert into scope_user(scope_id, user_id) values (?, ?)', [$value, $request->id]);
+        }
+
+        return response()->json(["user" => $request->all()], 200);
     }
 
     /**
@@ -120,6 +151,13 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $persona = Person::find($user->person_id);
+
+        $persona->delete();
+        $user->delete();
+        DB::table('scope_user')->where('user_id', "=", $id) ->delete();
+
+        return response()->json(["message" => true], 200);
     }
 }

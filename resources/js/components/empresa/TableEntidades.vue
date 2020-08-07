@@ -1,7 +1,7 @@
 <template>
   <b-container fluid> 
     <!-- User Interface controls -->
-    <b-row class="mb-3">
+    <!-- <b-row class="mb-3">
       <b-col lg="6" class="my-1">
         <b-form-group
           label="Buscar"
@@ -21,7 +21,7 @@
           </b-input-group>
         </b-form-group>
       </b-col>
-    </b-row>
+    </b-row> -->
     <!-- Main table element -->
     <b-table
       show-empty

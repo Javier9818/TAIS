@@ -94,6 +94,7 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
         options:[],
         clientes:[],
         clientesPadre:[],
+        clientesPadreCopy:[],
         niveles:[],
         form:{
           cliente: null,
@@ -114,9 +115,23 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
     },
     methods: {
       comodin: function(){
-        if(this.comodin_value)
-           this.clientesPadre.push({nombre: empresa.nombre, id: null});
-      
+        this.loading_clientes_padre = true;
+        let {nivel} = this.form;
+        let {content} = this.dataForm;
+        this.clientesPadreCopy = [...this.clientesPadre];
+        if(this.comodin_value && nivel !== null)
+          axios.get(`/api/proveedores-padre-comodin/${content.unidad}/${nivel-1}`).then( ({data}) => {
+            this.clientesPadre.push(...data.proveedores);
+          }).then( () => {
+            this.clientesPadre.push({nombre: empresa.nombre, id: null});
+          }).finally( () => {
+             this.loading_clientes_padre = false;
+          });
+        else{
+           this.clientesPadre = [...this.clientesPadreCopy];
+           this.loading_clientes_padre = false;
+        }
+         
       },
       verifyCliente: function(){
         this.loading_levels = true;

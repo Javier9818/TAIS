@@ -46,6 +46,7 @@
       <hr>
 
       <b-form-group id="input-group-1" label="Es cliente de" label-for="cliente_two" class="col-md-6">
+        <input type="checkbox" @change="comodin()" v-model="comodin_value">
         <b-overlay :show="loading_clientes_padre" class="d-inline-block">
           <multiselect 
             v-model="form.cliente_padres" 
@@ -87,6 +88,7 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
     data() {
       return {
         empresa,
+        comodin_value: false,
         blockLevel: false,
         loading:false,
         loading_clientes: false,
@@ -96,6 +98,7 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
         options:[],
         clientes:[],
         clientesPadre:[],
+        clientesPadreCopy:[],
         niveles:[],
         form:{
           cliente: null,
@@ -115,6 +118,25 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
         }
     },
     methods: {
+      comodin: function(){
+        this.loading_clientes_padre = true;
+        let {nivel} = this.form;
+        let {content} = this.dataForm;
+        this.clientesPadreCopy = [...this.clientesPadre];
+        if(this.comodin_value && nivel !== null)
+          axios.get(`/api/clientes-padre-comodin/${content.unidad}/${nivel-1}`).then( ({data}) => {
+            this.clientesPadre.push(...data.clientes);
+          }).then( () => {
+            this.clientesPadre.push({nombre: empresa.nombre, id: null});
+          }).finally( () => {
+             this.loading_clientes_padre = false;
+          });
+        else{
+           this.clientesPadre = [...this.clientesPadreCopy];
+           this.loading_clientes_padre = false;
+        }
+         
+      },
       verifyCliente: function(){
         this.loading_levels = true;
         let {content} = this.dataForm;

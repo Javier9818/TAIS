@@ -5,6 +5,7 @@
 
 @section('styles')
     <script src="https://unpkg.com/gojs@2.1/release/go.js"></script>
+    <script src="https://gojs.net/latest/extensions/DoubleTreeLayout.js"></script>
 @endsection
 
 @section('sidenav')
@@ -83,10 +84,15 @@
         return panel;
       }
 
+      function findHeadShot(picture) {
+        if (picture === null) return "/assets/img/empty.jpg"; // There are only 16 images on the server
+        return "/storage/images/entidad/" + picture
+      }
+
       function makeTemplate(typename, icon, background, inports, outports) {
         var node = F(go.Node, "Spot",
           F(go.Panel, "Auto",
-            { width: 100, height: 120 },
+            { width: 100, height: 100 },
             F(go.Shape, "Rectangle",
               {
                 fill: background, stroke: null, strokeWidth: 0,
@@ -101,8 +107,8 @@
             //       stroke: "white",
             //       font: "bold 11pt sans-serif"
             //     }),
-              F(go.Picture, icon,
-                { row: 1, width: 55, height: 55 }),
+              // F(go.Picture, icon,
+              //   { row: 1, width: 55, height: 55 }),
               F(go.TextBlock,
                 {
                   row: 2,
@@ -112,7 +118,14 @@
                   stroke: "white",
                   font: "bold 9pt sans-serif"
                 },
-                new go.Binding("text", "name").makeTwoWay())
+                new go.Binding("text", "name").makeTwoWay()),
+                F(go.Picture,
+                {
+                  name: "Picture",
+                  desiredSize: new go.Size(50, 50),
+                  margin: new go.Margin(6, 8, 6, 10),
+                },
+                new go.Binding("source", "picture", findHeadShot)),
             )
           ),
           F(go.Panel, "Vertical",
@@ -151,6 +164,10 @@
         [makePort("", true)],
         [makePort("OUT", false)]);
 
+        makeTemplate("Group2", "images/55x55.png", "sienna",
+        [makePort("", true)],
+        [makePort("OUT", false)]);
+
       makeTemplate("Sort", "images/55x55.png", "sienna",
         [makePort("", true)],
         [makePort("OUT", false)]);
@@ -172,14 +189,98 @@
       load(content_json);
     }
 
+    // function init() {
+      //   if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
+      //   var F = go.GraphObject.make;  // for conciseness in defining templates in this function
+
+      //   myDiagram =
+      //     F(go.Diagram, "myDiagramDiv",
+      //       {
+      //         layout: F(DoubleTreeLayout,
+      //           {
+      //             //vertical: true,  // default directions are horizontal
+      //             // choose whether this subtree is growing towards the right or towards the left:
+      //             directionFunction: function(n) { return n.data && n.data.dir !== "left"; }
+      //             // controlling the parameters of each TreeLayout:
+      //             //bottomRightOptions: { nodeSpacing: 0, layerSpacing: 20 },
+      //             //topLeftOptions: { alignment: go.TreeLayout.AlignmentStart },
+      //           })
+      //       });
+
+      //   // define all of the gradient brushes
+      //   var graygrad = F(go.Brush, "Linear", { 0: "#F5F5F5", 1: "#F1F1F1" });
+      //   var bluegrad = F(go.Brush, "Linear", { 0: "#CDDAF0", 1: "#91ADDD" });
+      //   var yellowgrad = F(go.Brush, "Linear", { 0: "#FEC901", 1: "#FEA200" });
+      //   var lavgrad = F(go.Brush, "Linear", { 0: "#EF9EFA", 1: "#A570AD" });
+
+      //   myDiagram.nodeTemplate =
+      //     F(go.Node, "Auto",
+      //       { isShadowed: true },
+      //       // define the node's outer shape
+      //       F(go.Shape, "RoundedRectangle",
+      //         { fill: graygrad, stroke: "#D8D8D8" },  // default fill is gray
+      //         new go.Binding("fill", "color")),
+      //       // define the node's text
+      //       F(go.TextBlock,
+      //         { margin: 5, font: "bold 11px Helvetica, bold Arial, sans-serif" },
+      //         new go.Binding("text", "key"))
+      //     );
+
+      //   myDiagram.linkTemplate =
+      //     F(go.Link,  // the whole link panel
+      //       { selectable: false },
+      //       $(go.Shape));  // the link shape
+
+      //   // create the model for the double tree; could be eiher TreeModel or GraphLinksModel
+      //   myDiagram.model = new go.TreeModel([
+      //     { key: "Root", color: lavgrad },
+      //     { key: "Left1", parent: "Root", dir: "left", color: bluegrad },
+      //     { key: "leaf1", parent: "Left1" },
+      //     { key: "leaf2", parent: "Left1" },
+      //     { key: "Left2", parent: "Left1", color: bluegrad },
+      //     { key: "leaf3", parent: "Left2" },
+      //     { key: "leaf4", parent: "Left2" },
+      //     { key: "leaf5", parent: "Left1" },
+      //     { key: "Right1", parent: "Root", dir: "right", color: yellowgrad },
+      //     { key: "Right2", parent: "Right1", color: yellowgrad },
+      //     { key: "leaf11", parent: "Right2" },
+      //     { key: "leaf12", parent: "Right2" },
+      //     { key: "leaf13", parent: "Right2" },
+      //     { key: "leaf14", parent: "Right1" },
+      //     { key: "leaf15", parent: "Right1" },
+      //     { key: "Right3", parent: "Root", dir: "right", color: yellowgrad },
+      //     { key: "leaf16", parent: "Right3" },
+      //     { key: "leaf17", parent: "Right3" }
+      //   ]);
+    // }
+
     // Show the diagram's model in JSON format that the user may edit
     function save() {
       document.getElementById("mySavedModel").value = myDiagram.model.toJson();
       myDiagram.isModified = false;
     }
     function load(content_json) {
-    //   myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
-    myDiagram.model = go.Model.fromJson(content_json);
+      myDiagram.model = go.Model.fromJson(content_json);
+      // myDiagram.model = new go.TreeModel([
+      //     { key: "Root" },
+      //     { key: "Left1", parent: "Root", dir: "left" },
+      //     { key: "leaf1", parent: "Left1" },
+      //     { key: "leaf2", parent: "Left1" },
+      //     { key: "Left2", parent: "Left1"},
+      //     { key: "leaf3", parent: "Left2" },
+      //     { key: "leaf4", parent: "Left2" },
+      //     { key: "leaf5", parent: "Left1" },
+      //     { key: "Right1", parent: "Root", dir: "right"},
+      //     { key: "Right2", parent: "Right1" },
+      //     { key: "leaf11", parent: "Right2" },
+      //     { key: "leaf12", parent: "Right2" },
+      //     { key: "leaf13", parent: "Right2" },
+      //     { key: "leaf14", parent: "Right1" },
+      //     { key: "leaf15", parent: "Right1" },
+      //     { key: "Right3", parent: "Root", dir: "right"},
+      //     { key: "leaf16", parent: "Right3" },
+      //     { key: "leaf17", parent: "Right3" }
+      //   ]);
     
     }
 </script>

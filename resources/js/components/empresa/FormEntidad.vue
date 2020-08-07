@@ -26,6 +26,13 @@
         <b-form-input id="nombre" v-model="form.email" type="email" required placeholder="Ingrese el email de la empresa"></b-form-input>
         <p v-if="$v.form.email.$error" class="help text-danger">Este campo es inválido</p>  
       </b-form-group>
+      <b-form-group id="input-group-5" label="Foto" label-for="foto">
+        <b-aspect :aspect="3" v-if="form.foto !== null && !edit">
+          <b-img :src="form.foto ? '/storage/images/entidad/'+form.foto : '/assets/img/empty.jpg'" fluid alt="Responsive image" width="70%"></b-img>
+          <a href="javascript:void(0)" @click="edit=true">Cambiar</a>
+        </b-aspect>
+         <input type="file" name="image" @change="getImage" accept="image/*" v-else>
+      </b-form-group>
 
       <b-button type="submit" variant="primary">{{dataForm.mode === 'create' ? 'Registrar' : 'Actualizar'}}</b-button>
       <b-button variant="danger" @click="$emit('click')">Cancelar</b-button>
@@ -39,15 +46,18 @@
 import Swal from 'sweetalert2'
 import {validationMixin} from 'vuelidate'
 import {required, numeric, minValue, maxValue, maxLength, minLength, email, helpers} from 'vuelidate/lib/validators'
+import PictureInput from 'vue-picture-input'
 const text = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ.\u00f1\u00d1\s]*$/)
-const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
+const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
   export default {
     mixins: [validationMixin],
     props:['dataForm', 'entidad'],
     data() {
       return {
         loading: false,
+        edit:false,
         form: {
+          image:null,
           ruc:'',
           nombre:'',
           descripcion:'',
@@ -57,6 +67,9 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
         }
       }
     },
+    components: {
+            PictureInput
+        },
      validations:{
           form:{
             ruc:{
@@ -67,7 +80,8 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
             },
             nombre:{
               required,
-              nombreText
+              nombreText,
+              minLength: minLength(2),
             },
             celular:{
               required,
@@ -90,6 +104,22 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
         if(this.dataForm.mode === 'edit'){this.form = {...this.dataForm.content}}
     },
     methods: {
+      getImage(e){
+        let image = e.target.files[0];
+        let reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = e => {
+            this.form.image = e.target.result;
+        }
+        this.loaded = true;
+    }, 
+     onChange (image) {
+      if (image) {
+         this.image = image;
+      } else {
+          console.log('FileReader API not supported: use the <form>, Luke!')
+      }
+      },
       onSubmit(evt) {
         evt.preventDefault();
         this.$v.$touch()
@@ -132,3 +162,9 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
     }
   }
 </script>
+
+<style scoped>
+  .group{
+    height: 500px !important;
+  }
+</style>

@@ -57,8 +57,8 @@
         <b-button size="sm" @click="info(row.item, row.index, $event.target)" class="mr-1">
             Editar
         </b-button>
-        <b-button size="sm" @click="desactivate(row.item.id, row.item.estado)" :class="row.item.estado===1 ? 'btn-danger': 'btn-warning'">
-            {{row.item.estado===1 ? 'Desactivar': 'Activar'}}
+        <b-button size="sm" @click="desactivate(row.item.id)" class="btn-danger">
+            <i class="fas fa-trash-alt"></i>
         </b-button>
       </template>
     </b-table>
@@ -74,16 +74,16 @@
     </b-col>
 
     <!-- Info modal -->
-    <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
-      <pre>{{ infoModal.content }}</pre>
-    </b-modal>
+    <!-- <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
+      <form-user @click="$bvModal.hide('formUser')" @store="store" :dataForm ="infoModal"></form-user>
+    </b-modal> -->
     <div class="contenedor">
-        <button class="botonF1" @click="$bvModal.show('formUser')">
+        <button class="botonF1" @click="newElement()">
             <span>+</span>
         </button>
     </div>
-    <b-modal id="formUser" title="Nuevo Usuario" size="lg" scrollable hide-footer>
-      <form-user @click="$bvModal.hide('formUser')" @store="store"></form-user>
+    <b-modal id="formUser" :title="infoModal.title" size="lg" scrollable hide-footer>
+      <form-user @click="$bvModal.hide('formUser')" @store="store" @update="update" :dataForm ="infoModal"></form-user>
     </b-modal>
   </b-container>
 
@@ -127,7 +127,8 @@ import Swal from 'sweetalert2'
         infoModal: {
           id: 'info-modal',
           title: '',
-          content: ''
+          content: '',
+          mode: 'create'
         }
       }
     },
@@ -142,21 +143,38 @@ import Swal from 'sweetalert2'
       }
     },
     created(){
-        this.items = users;
-        console.log(users);
+        users.forEach( e => {
+          this.items.push({
+            ...e,
+            scopes: e.scopes ? e.scopes.split(",") : e.scopes
+          })
+        })
     },
     mounted() {
       // Set the initial number of items
       this.totalRows = this.items.length
     },
     methods: {
-        desactivate(id, estado){
-            axios.post(`/api/empresa/${id}`).then( ({data}) => {
-                Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
-                this.items.map((item) => {
-                    if(item.id === id) item.estado = estado === 1 ? 0 : 1;
-                });
-            }).catch(()=>{ire('Error', 'Ha ocurrido algún error', 'error');});
+        desactivate(id){
+           Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Tú no puedes revertir esto",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, borrar usuario!'
+          }).then((result) => {
+            if (result.value) {
+                axios.delete(`/api/user/${id}`).then( ({data}) => {
+                  Swal.fire('Éxito', 'Se ha eliminado el usuario', 'success');
+                  this.items.map((item, i) => {
+                      if(item.id === id) this.items.splice(i,1);
+                  });
+                }).catch(()=>{Swal.fire('Error', 'Ha ocurrido algún error', 'error');});
+            }
+          })
+            
         },
         redirect(id){
             location.href=`/empresa/${id}`
@@ -164,11 +182,27 @@ import Swal from 'sweetalert2'
        store: function(data) {
            this.items = [{...data, estado:true}, ...this.items]
        },
+       update: function(data) {
+         console.log(data)
+         this.items.map( (e) => {
+           if(e.id === data.id)
+              e = data
+         });
+       },
       info(item, index, button) {
-        this.infoModal.title = `Row index: ${index}`
-        this.infoModal.content = JSON.stringify(item, null, 2)
-        this.$root.$emit('bv::show::modal', this.infoModal.id, button)
+        this.infoModal.content = { 
+          ...item
+        }
+        this.infoModal.mode = 'edit'
+        this.infoModal.title = `Editar usuario`,
+        this.$root.$emit('bv::show::modal', 'formUser', button)
       },
+      newElement(){
+            this.infoModal.content = { }
+            this.infoModal.mode = 'create'
+            this.infoModal.title = `Nuevo usuario`,
+            this.$root.$emit('bv::show::modal', 'formUser')
+        },
       resetInfoModal() {
         this.infoModal.title = ''
         this.infoModal.content = ''

@@ -147,7 +147,8 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
               nodeDataArray.push({
                 "key": c.id, 
                 "type":"Group", 
-                "name": c.name
+                "name": c.name,
+                "picture":c.foto
               });
             linkDataArray.push({
               "from": c.id,
@@ -160,8 +161,9 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
             if (nodeDataArray.findIndex(e =>  e.key === c.id ) === -1)
               nodeDataArray.push({
                 "key": c.id, 
-                "type":"Group", 
-                "name": c.name
+                "type":"Group2", 
+                "name": c.name,
+                "picture":c.foto
               });
             linkDataArray.push({
               "from": c.padre === null ? 0 : c.padre,

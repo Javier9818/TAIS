@@ -46,6 +46,7 @@
     },
     mounted(){
       init(this.content);
+      // init();
       console.log(this.meta);
     },
     watch:{

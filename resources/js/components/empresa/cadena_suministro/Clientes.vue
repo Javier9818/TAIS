@@ -122,17 +122,23 @@ import Swal from 'sweetalert2'
            var aux;
           clientes.map(e => {
             aux = e.padres
-             if(e.padres === null){
+             if(e.padres === "0"){
                e.nombrePadre = `Empresa: ${empresa.nombre}`
                e.clientes_padre = [{nombre: empresa.nombre, id: null}];
              }else{
                 e.clientes_padre = []
                 e.nombrePadre = ''
-                console.log(aux)
+                
                 aux.split(',').map( (obj) => {
-                  var a = obj.split('-')
-                  e.nombrePadre = e.nombrePadre + `${a[0]} - `
-                  e.clientes_padre.push({id: parseInt(a[1]), nombre: a[0]})
+                   if(obj === "0"){
+                      e.nombrePadre = e.nombrePadre + `Empresa: ${empresa.nombre} -`
+                      e.clientes_padre.push({nombre: empresa.nombre, id: null});
+                   }else{
+                     var a = obj.split('-')
+                    e.nombrePadre = e.nombrePadre + `${a[0]} - `
+                    e.clientes_padre.push({id: parseInt(a[1]), nombre: a[0]})
+                   }
+                  
                 })
              }
              

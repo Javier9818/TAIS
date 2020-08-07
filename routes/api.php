@@ -18,6 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+
 Route::post('/empresa','EmpresaController@store');
 Route::put('/empresa/{id}','EmpresaController@update');
 Route::post('/empresa/{id}','EmpresaController@destroy');
@@ -41,6 +43,7 @@ Route::get('/clientes-cadena-libres/{unidad}/{comodin}','CadenaSuministrosContro
 Route::get('/niveles-clientes-cadena/{unidad}','CadenaSuministrosController@nivelesClientes');
 Route::post('/niveles-clientes-cadena/{unidad}','CadenaSuministrosController@addNivelesClientes');
 Route::get('/clientes-padre-cadena/{unidad}/{nivel}','CadenaSuministrosController@listarClientesPadre');
+Route::get('/clientes-padre-comodin/{unidad}/{nivel}','CadenaSuministrosController@listarClientesPadreComodin');
 
 Route::post('/cadena_clientes/{unidad}', 'CadenaSuministrosController@agregaCliente');
 Route::get('/cadena_clientes/{unidad}', 'CadenaSuministrosController@listarClientes');
@@ -55,6 +58,7 @@ Route::get('/proveedores-cadena-libres/{unidad}/{comodin}','CadenaSuministrosCon
 Route::get('/niveles-proveedores-cadena/{unidad}','CadenaSuministrosController@nivelesProveedores');
 Route::post('/niveles-proveedores-cadena/{unidad}','CadenaSuministrosController@addNivelesProveedores');
 Route::get('/proveedores-padre-cadena/{unidad}/{nivel}','CadenaSuministrosController@listarProvedoresPadre');
+Route::get('/proveedores-padre-comodin/{unidad}/{nivel}','CadenaSuministrosController@listarProvedoresPadreComodin');
 
 Route::post('/cadena_proveedores/{unidad}', 'CadenaSuministrosController@agregaProveedor');
 Route::delete('/cadena_proveedores/{unidad}/{id}', 'CadenaSuministrosController@deleteProveedor');
@@ -72,3 +76,5 @@ Route::get('/cadena-historial/{unidad}', 'CadenaSuministrosController@getHistori
 
 
 Route::post('/user','UserController@store');
+Route::put('/user','UserController@update');
+Route::delete('/user/{id}','UserController@destroy');

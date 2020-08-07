@@ -58,7 +58,7 @@
                 </b-form-group>
             </b-col>
 
-            <b-col md="12" v-if="form.tipoUser === '1'">
+            <b-col md="12" v-if="form.tipoUser === '1' || form.tipoUser === 1">
                <b-form-group label="Permisos">
                   <b-form-checkbox-group
                     id="checkbox-group-1"
@@ -84,6 +84,7 @@
 <script>
 import Swal from 'sweetalert2'
   export default {
+    props:['dataForm'],
     data() {
       return {
         loading: false,
@@ -102,18 +103,49 @@ import Swal from 'sweetalert2'
         }
       }
     },
+    mounted(){
+      let {content, mode} = this.dataForm;
+      if(mode === 'edit'){
+        this.loadDataForm(content);
+        console.log(content)
+      }
+    },
     methods: {
+      loadDataForm(content){
+         this.form = {
+            ...content
+          }
+      },
       onSubmit(evt) {
         evt.preventDefault();
+        let {content, mode} = this.dataForm;
+        if(mode === 'create')
+          this.store()
+        else
+          this.update()
+      },
+      store(){
         this.loading = true;
-        // console.log(this.form);
         axios.post('/api/user', this.form).then( ({data}) => {
             this.$emit('click');
-            this.loading = false;
             this.$emit('store', data.user);
             Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
         }).catch( (error) => {
             Swal.fire('Error', 'Ha ocurrido un error', 'error');
+        }).finally( () => {
+          this.loading = false;
+        });
+      },
+      update(){
+        this.loading = true;
+        axios.put('/api/user', this.form).then( ({data}) => {
+            this.$emit('click');
+            this.$emit('update', this.form);
+            Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
+        }).catch( (error) => {
+            Swal.fire('Error', 'Ha ocurrido un error', 'error');
+        }).finally( () => {
+          this.loading = false;
         });
       },
       onReset(evt) {
