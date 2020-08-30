@@ -50,6 +50,14 @@ Vue.component('componente-historial-cadena', require('./components/empresa/caden
 
 
 
+Vue.component('componente-procesos', require('./components/empresa/procesos/Procesos.vue').default);
+Vue.component('form-proceso', require('./components/empresa/procesos/FormProceso.vue').default);
+Vue.component('form-subproceso', require('./components/empresa/procesos/FormSubProceso.vue').default);
+
+Vue.component('componente-mapa-procesos', require('./components/empresa/procesos/mapaProcesos/ComponentePadre.vue').default);
+Vue.component('mapa-macro', require('./components/empresa/procesos/mapaProcesos/MapaMacro.vue').default);
+Vue.component('mapa-detalle', require('./components/empresa/procesos/mapaProcesos/MapaDetalle.vue').default);
+Vue.component('mapa-constructor', require('./components/empresa/procesos/mapaProcesos/Constructor.vue').default);
 
 
 import 'bootstrap/dist/css/bootstrap.css' 

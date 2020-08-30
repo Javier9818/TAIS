@@ -16,14 +16,14 @@
                     <a href="/empresa/{{$empresa}}" class="{{ $isSelected('1', '1') ? 'active' : '' }}">Información</a>
                 </li>
                 @can('gestionar-clientes')
-                    <li>
+                    <!-- <li>
                         <a href="/empresa/{{$empresa}}/clientes" class="{{ $isSelected('1', '2') ? 'active' : '' }}">Clientes</a>
-                    </li>
+                    </li> -->
                 @endcan
                 @can('gestionar-proveedores')
-                    <li>
+                    <!-- <li>
                         <a href="/empresa/{{$empresa}}/proveedores" class="{{ $isSelected('1', '3') ? 'active' : '' }}">Proveedores</a>
-                    </li>
+                    </li> -->
                 @endcan
                 @can('gestionar-unidades-negocio')
                     <li>
@@ -39,12 +39,18 @@
                 </a>
                 <ul class="collapse list-unstyled {{ $isTab('2') ? 'show' : '' }}" id="pageSubmenu2">
                     <li>
+                        <a href="/empresa/{{$empresa}}/procesos" class="{{ $isSelected('2', '1') ? 'active' : '' }}">Procesos</a>
+                    </li>
+                    <li>
+                        <a href="/empresa/{{$empresa}}/mapa-procesos" class="{{ $isSelected('2', '2') ? 'active' : '' }}">Mapa de procesos</a>
+                    </li>
+                    <!-- <li>
                         <a href="/empresa/{{$empresa}}/administrar-cadena" class="{{ $isSelected('2', '1') ? 'active' : '' }}">Administrar</a>
                     </li>
                     <li>
                         <a href="/empresa/{{$empresa}}/generar-cadena" class="{{ $isSelected('2', '2') ? 'active' : '' }}">Generar</a>
-                    </li>
-                </ul>
+                    </li> -->
+                </ul> 
             @endcan
         </li>
     </ul>

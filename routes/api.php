@@ -78,3 +78,15 @@ Route::get('/cadena-historial/{unidad}', 'CadenaSuministrosController@getHistori
 Route::post('/user','UserController@store');
 Route::put('/user','UserController@update');
 Route::delete('/user/{id}','UserController@destroy');
+
+Route::get('/proceso/{unidad}','ProcesoController@show');
+Route::get('/proceso-unique/{unidad}/{mega}','ProcesoController@showUnique');
+Route::post('/proceso','ProcesoController@store');
+Route::put('/proceso/{id}','ProcesoController@update');
+
+Route::get('/subproceso/{unidad}/{proceso}','ProcesoController@getSubProcesos');
+Route::post('/subproceso','ProcesoController@storeSub');
+Route::put('/subproceso/{id}','ProcesoController@updateSub');
+
+
+Route::post('/mapa-proceso','MapaProcesoController@store');

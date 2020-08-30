@@ -1,41 +1,7 @@
 <template>
   <b-container fluid>
     <!-- User Interface controls -->
-    <b-row class="mb-3">
-      <b-col lg="6" class="my-1">
-        <b-form-group
-          label="Buscar"
-          label-cols-sm="3"
-          label-align-sm="right"
-          label-size="sm"
-          label-for="filterInput"
-          class="mb-0"
-        >
-          <b-input-group size="sm">
-            <b-form-input
-              v-model="filter"
-              type="search"
-              id="filterInput"
-              placeholder="Ingresa para buscar"
-            ></b-form-input>
-          </b-input-group>
-        </b-form-group>
-      </b-col>
-      <!-- <b-col lg="6" class="my-1">
-        <b-form-group
-          label="Buscar por"
-          label-cols-sm="3"
-          label-align-sm="right"
-          label-size="sm"
-          class="mb-0">
-          <b-form-checkbox-group v-model="filterOn" class="mt-1">
-            <b-form-checkbox value="name">Name</b-form-checkbox>
-            <b-form-checkbox value="age">Age</b-form-checkbox>
-            <b-form-checkbox value="isActive">Active</b-form-checkbox>
-          </b-form-checkbox-group>
-        </b-form-group>
-      </b-col> -->
-    </b-row>
+    
     <!-- Main table element -->
     <b-table
       show-empty

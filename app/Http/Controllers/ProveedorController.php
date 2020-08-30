@@ -41,15 +41,21 @@ class ProveedorController extends Controller
         $image = base64_decode($image);
         if($request->image != '') $res = Entidad::setImagen($image);
 
-        $empresa = Entidad::create([
-            "nombre" => $request->nombre,
-            "descripcion" => $request->descripcion,
-            "ruc" => $request->ruc,
-            "foto" => $res,
-            "celular" => $request->celular,
-            "email" => $request->email,
-            "empresa_id" => $request->empresa_id
-        ]);
+        $empresa = Entidad::where('ruc', $request->ruc)->get();
+        if(count($empresa) >0){
+            $empresa = $empresa[0];
+        }else{
+            $empresa = Entidad::create([
+                "nombre" => $request->nombre,
+                "descripcion" => $request->descripcion,
+                "ruc" => $request->ruc,
+                "foto" => $res,
+                "celular" => $request->celular,
+                "email" => $request->email,
+                "empresa_id" => $request->empresa_id
+            ]);
+        }
+        
         
         Proveedor::create([
             "id" => $empresa->id,
@@ -95,6 +101,8 @@ class ProveedorController extends Controller
         $res = null;
         if($request->foto != null && $request->image != null) $res = Entidad::setImagen($image, $request->foto);
         else if($request->image != null) $res = Entidad::setImagen($image);
+
+        
 
         $proveedor = Entidad::find($id)->update([
             "nombre" => $request->nombre,

@@ -29,6 +29,10 @@ Route::get('/empresa/{id}/generar-cadena', 'EmpresaController@showGenerarCadena'
 // Route::get('/aux',  function () {return view('welcome');});
 
 
+Route::get('/empresa/{id}/procesos', 'EmpresaController@showProcesos');
+Route::get('/empresa/{id}/mapa-procesos', 'MapaProcesosController@show');
+
+
 
 
 

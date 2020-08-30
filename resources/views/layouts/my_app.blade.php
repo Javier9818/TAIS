@@ -61,7 +61,23 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Page</a>
                             </li> -->
+                            @if (isset($unidades))
+                                <li class="nav-item ml-4">
+                                    Unidad de negocio
+                                    <select id="inputState" class="form-control">
+                                        @foreach ($unidades as $unidad)
+                                            @if(session('unidad') == $unidad->id)
+                                                <option selected  value={{$unidad->id}}>{{$unidad->producto}}</option>
+                                            @else
+                                                <option value={{$unidad->id}}>{{$unidad->producto}}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </li>
+                            @endif
                         </ul>
+
+
                     </div>
                 </div>
             </nav>

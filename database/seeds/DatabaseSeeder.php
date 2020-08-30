@@ -22,6 +22,10 @@ class DatabaseSeeder extends Seeder
         DB::insert('insert into scopes (id, description) values (?, ?)', [5, 'Unidades de negocio']);
 
 
+        DB::insert('insert into megaprocesos (id, nombre) values(?, ?)', [1, 'Proceso Estratégico']);
+        DB::insert('insert into megaprocesos (id, nombre) values(?, ?)', [2, 'Proceso Primario']);
+        DB::insert('insert into megaprocesos (id, nombre) values(?, ?)', [3, 'Proceso de Apoyo']);
+
         $persona = Person::create([
             "names" =>"Javier",
             "last_name_pat" => "Briceño",
@@ -37,5 +41,7 @@ class DatabaseSeeder extends Seeder
             "password" => Hash::make("72764269"),
             "person_id" => $persona->id
         ]);
+
+
     }
 }

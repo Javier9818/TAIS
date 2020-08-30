@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Cliente;
 use App\Empresa;
+use App\Proceso;
 use App\Proveedor;
 use App\UnidadNegocio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Mockery\Undefined;
 
 class EmpresaController extends Controller
 {
@@ -115,6 +117,32 @@ class EmpresaController extends Controller
         $empresa = Empresa::find($id);
         $unidades_negocio = UnidadNegocio::where('estado', true)->get();
         return view('empresa.generar', ["empresa" => $empresa, "unidades_negocio" => $unidades_negocio]);
+    }
+
+    public function showProcesos($id){
+        $this->authorize('gestionar-panel-empresa', $id);
+        //$this->authorize('gestionar-cadena');
+
+        $empresa = Empresa::find($id);
+        $unidades_negocio = UnidadNegocio::where('estado', true)->where('empresa_id', $id)->get();
+
+        if(count($unidades_negocio)>0){
+            if(session('unidad') == '')
+                session(['unidad' => $unidades_negocio[0]->id]);
+        }
+        else
+            return redirect('/empresa/'.$id.'/unidades-negocio')->withErrors(['unidad-error' => 'No se encontraron unidades de negocio habilitadas']);
+        
+        
+        $procesos = DB::table('procesos')
+                    ->selectRaw('procesos.*, GROUP_CONCAT(megaprocesos.id) as megaproceso, GROUP_CONCAT(megaprocesos.nombre) as megaprocesos_names')
+                    ->join('megaproceso_procesos', 'procesos.id', '=', 'megaproceso_procesos.proceso_id')
+                    ->join('megaprocesos', 'megaproceso_procesos.megaproceso_id', '=', 'megaprocesos.id')
+                    ->where('unidad_negocio_id', session('unidad'))
+                    ->where('proceso_padre', null)
+                    ->groupBy('procesos.id')
+                    ->get();
+        return view('empresa.procesos.procesos', ["empresa" => $empresa, "unidades" => $unidades_negocio, "procesos" => $procesos]);
     }
 
     /**
