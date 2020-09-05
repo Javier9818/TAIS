@@ -6,14 +6,15 @@ function initDetalle(nodeDataArray, linkDataArray) {
     myDiagram =
       $(go.Diagram, "mapaDetalleDiv",  // create a Diagram for the DIV HTML element
         {
+          isReadOnly: true,
           // allow double-click in background to create a new node
-          "clickCreatingTool.archetypeNodeData": { text: "Node", color: "white" },
+          // "clickCreatingTool.archetypeNodeData": { text: "Node", color: "white" },
 
           // allow Ctrl-G to call groupSelection()
-          "commandHandler.archetypeGroupData": { text: "Group", isGroup: true, color: "blue" },
+          // "commandHandler.archetypeGroupData": { text: "Group", isGroup: true, color: "blue" },
 
           // enable undo & redo
-          "undoManager.isEnabled": true
+          // "undoManager.isEnabled": true
         });
 
     // Define the appearance and behavior for Nodes:
@@ -88,8 +89,8 @@ function initDetalle(nodeDataArray, linkDataArray) {
             fill: "white", // the default fill, if there is no data bound value
             portId: "", cursor: "pointer",  // the Shape is the port, not the whole Node
             // allow all kinds of links from and to this port
-            fromLinkable: true, fromLinkableSelfNode: true, fromLinkableDuplicates: true,
-            toLinkable: true, toLinkableSelfNode: true, toLinkableDuplicates: true
+            fromLinkable: false, fromLinkableSelfNode: false, fromLinkableDuplicates: false,
+            toLinkable: false, toLinkableSelfNode: false, toLinkableDuplicates: false
           },
           new go.Binding("fill", "color")),
         $(go.TextBlock,
@@ -98,7 +99,7 @@ function initDetalle(nodeDataArray, linkDataArray) {
             stroke: '#333',
             margin: 6,  // make some extra space for the shape around the text
             isMultiline: false,  // don't allow newlines in text
-            editable: true  // allow in-place editing by user
+            editable: false  // allow in-place editing by user
           },
           new go.Binding("text", "text").makeTwoWay()),  // the label shows the node data's text
         { // this tooltip Adornment is shared by all nodes
@@ -108,7 +109,7 @@ function initDetalle(nodeDataArray, linkDataArray) {
                 new go.Binding("text", "", nodeInfo))
             ),
           // this context menu Adornment is shared by all nodes
-          contextMenu: partContextMenu
+          //contextMenu: partContextMenu
         }
       );
 
@@ -121,7 +122,7 @@ function initDetalle(nodeDataArray, linkDataArray) {
     // The link shape and arrowhead have their stroke brush data bound to the "color" property
     myDiagram.linkTemplate =
       $(go.Link,
-        { toShortLength: 3, relinkableFrom: true, relinkableTo: true },  // allow the user to relink existing links
+        { toShortLength: 3, relinkableFrom: false, relinkableTo: false },  // allow the user to relink existing links
         $(go.Shape,
           { strokeWidth: 2 },
           new go.Binding("stroke", "color")),
@@ -135,7 +136,7 @@ function initDetalle(nodeDataArray, linkDataArray) {
                 new go.Binding("text", "", linkInfo))
             ),
           // the same context menu Adornment is shared by all links
-          contextMenu: partContextMenu
+          //contextMenu: partContextMenu
         }
       );
 
@@ -177,8 +178,8 @@ function initDetalle(nodeDataArray, linkDataArray) {
               
               portId: "", cursor: "pointer",  // the Shape is the port, not the whole Node
               // allow all kinds of links from and to this port
-              fromLinkable: true, fromLinkableSelfNode: true, fromLinkableDuplicates: true,
-              toLinkable: true, toLinkableSelfNode: true, toLinkableDuplicates: true
+              fromLinkable: false, fromLinkableSelfNode: false, fromLinkableDuplicates: false,
+              toLinkable: false, toLinkableSelfNode: false, toLinkableDuplicates: false
             }),
           $(go.Placeholder, { margin: 10, background: "transparent" })  // represents where the members are
         ),
@@ -190,7 +191,7 @@ function initDetalle(nodeDataArray, linkDataArray) {
                 new go.Binding("text", "", groupInfo).ofObject())
             ),
           // the same context menu Adornment is shared by all groups
-          contextMenu: partContextMenu
+          //contextMenu: partContextMenu
         }
       );
 
@@ -210,15 +211,15 @@ function initDetalle(nodeDataArray, linkDataArray) {
     // provide a context menu for the background of the Diagram, when not over any Part
     myDiagram.contextMenu =
       $("ContextMenu",
-        makeButton("Paste",
-          function(e, obj) { e.diagram.commandHandler.pasteSelection(e.diagram.toolManager.contextMenuTool.mouseDownPoint); },
-          function(o) { return o.diagram.commandHandler.canPasteSelection(o.diagram.toolManager.contextMenuTool.mouseDownPoint); }),
-        makeButton("Undo",
-          function(e, obj) { e.diagram.commandHandler.undo(); },
-          function(o) { return o.diagram.commandHandler.canUndo(); }),
-        makeButton("Redo",
-          function(e, obj) { e.diagram.commandHandler.redo(); },
-          function(o) { return o.diagram.commandHandler.canRedo(); })
+        // makeButton("Paste",
+        //   function(e, obj) { e.diagram.commandHandler.pasteSelection(e.diagram.toolManager.contextMenuTool.mouseDownPoint); },
+        //   function(o) { return o.diagram.commandHandler.canPasteSelection(o.diagram.toolManager.contextMenuTool.mouseDownPoint); }),
+        // makeButton("Undo",
+        //   function(e, obj) { e.diagram.commandHandler.undo(); },
+        //   function(o) { return o.diagram.commandHandler.canUndo(); }),
+        // makeButton("Redo",
+        //   function(e, obj) { e.diagram.commandHandler.redo(); },
+        //   function(o) { return o.diagram.commandHandler.canRedo(); })
       );
 
     // Create the Diagram's Model:

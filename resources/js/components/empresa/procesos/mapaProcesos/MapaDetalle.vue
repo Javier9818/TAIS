@@ -70,16 +70,50 @@
                 { key: -50, text: "", color: "white", isGroup: true },
                 
             ];
-             axios.get(`/api/proceso/${unidad}`).then(({data}) => {
-                let {procesos} = data
-                procesos.forEach( (item) => {
+             axios.get(`/api/procesos-graph/${unidad}`).then(({data}) => {
+                let {groups, nodos} = data
+                this.linkDataArray = data.links
+                groups.forEach( (item) => {
+                    switch (item.megaproceso_id) {
+                        case 1:
+                            this.nodeDataArray.push({
+                                key:item.id,
+                                text:item.nombre,
+                                color:"blue",
+                                group:-1,
+                                isGroup: true
+                            })
+                            break;
+                        case 2:
+                            this.nodeDataArray.push({
+                                key:item.id,
+                                text:item.nombre,
+                                color:"#2b48b3",
+                                group:-2,
+                                isGroup: true
+                            })
+                            break;
+                        case 3:
+                            this.nodeDataArray.push({
+                                key:item.id,
+                                text:item.nombre,
+                                color:"grey",
+                                group:-3,
+                                isGroup: true
+                            })
+                            break;
+                    }
+                    
+                });
+
+                 nodos.forEach( (item) => {
                     switch (item.megaproceso_id) {
                         case 1:
                             this.nodeDataArray.push({
                                 key:item.id,
                                 text:item.nombre,
                                 color:"lightblue",
-                                group:-1
+                                group:-1,
                             })
                             break;
                         case 2:
@@ -87,7 +121,7 @@
                                 key:item.id,
                                 text:item.nombre,
                                 color:"lightgreen",
-                                group:-2
+                                group:-2,
                             })
                             break;
                         case 3:
@@ -95,12 +129,21 @@
                                 key:item.id,
                                 text:item.nombre,
                                 color:"yellow",
-                                group:-3
+                                group:-3,
                             })
                             break;
+                        default:
+                            this.nodeDataArray.push({
+                                key:item.id,
+                                text:item.nombre,
+                                color:"pink",
+                                group:item.proceso_padre,
+                            })
+                          break;
                     }
                     
                 });
+
             }).then(()=>{
                 initDetalle(this.nodeDataArray, this.linkDataArray);
             });

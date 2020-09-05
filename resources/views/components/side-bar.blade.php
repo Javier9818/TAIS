@@ -44,6 +44,9 @@
                     <li>
                         <a href="/empresa/{{$empresa}}/mapa-procesos" class="{{ $isSelected('2', '2') ? 'active' : '' }}">Mapa de procesos</a>
                     </li>
+                    <li>
+                        <a href="/empresa/{{$empresa}}/priorizacion" class="{{ $isSelected('2', '3') ? 'active' : '' }}">Priorización de procesos</a>
+                    </li>
                     <!-- <li>
                         <a href="/empresa/{{$empresa}}/administrar-cadena" class="{{ $isSelected('2', '1') ? 'active' : '' }}">Administrar</a>
                     </li>

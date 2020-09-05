@@ -19,6 +19,7 @@ class CreateUnidadNegociosTable extends Migration
             $table->string('descripcion');
             $table->boolean('estado')->default(true);
             $table->integer('empresa_id');
+            $table->longText('priorizacion')->nullable();
             $table->timestamps();
         });
     }

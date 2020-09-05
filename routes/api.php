@@ -80,6 +80,7 @@ Route::put('/user','UserController@update');
 Route::delete('/user/{id}','UserController@destroy');
 
 Route::get('/proceso/{unidad}','ProcesoController@show');
+Route::get('/procesos-graph/{unidad}','ProcesoController@showProcessGraphComplete');
 Route::get('/proceso-unique/{unidad}/{mega}','ProcesoController@showUnique');
 Route::post('/proceso','ProcesoController@store');
 Route::put('/proceso/{id}','ProcesoController@update');
@@ -90,3 +91,15 @@ Route::put('/subproceso/{id}','ProcesoController@updateSub');
 
 
 Route::post('/mapa-proceso','MapaProcesoController@store');
+Route::get('/mapa-proceso/subproceso/{unidad}/{proceso}','MapaProcesoController@getSubProcesosGraph');
+
+Route::post('/criterio/{unidad}','PriorizacionController@storeCriterio');
+Route::put('/criterio','PriorizacionController@updateCriterio');
+Route::get('/criterio/{unidad}','PriorizacionController@showCriterios');
+
+Route::get('/escala/{criterio}','PriorizacionController@showEscalas');
+Route::post('/escala','PriorizacionController@storeEscala');
+Route::put('/escala','PriorizacionController@updateEscala');
+
+Route::get('/criterios-matriz/{unidad}','PriorizacionController@getCriteriosForMatriz');
+Route::post('/matriz-priorizacion','PriorizacionController@setMatriz');

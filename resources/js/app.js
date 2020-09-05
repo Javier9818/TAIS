@@ -59,6 +59,12 @@ Vue.component('mapa-macro', require('./components/empresa/procesos/mapaProcesos/
 Vue.component('mapa-detalle', require('./components/empresa/procesos/mapaProcesos/MapaDetalle.vue').default);
 Vue.component('mapa-constructor', require('./components/empresa/procesos/mapaProcesos/Constructor.vue').default);
 
+Vue.component('componente-priorizacion', require('./components/empresa/priorizacion/ComponentePadre.vue').default);
+Vue.component('componente-criterio', require('./components/empresa/priorizacion/criterio/ComponenteCriterio.vue').default);
+Vue.component('criterios', require('./components/empresa/priorizacion/criterio/Criterios.vue').default);
+Vue.component('escalas', require('./components/empresa/priorizacion/criterio/Escalas.vue').default);
+Vue.component('matriz-priorizacion', require('./components/empresa/priorizacion/matriz/matriz.vue').default);
+Vue.component('matriz-table', require('./components/empresa/priorizacion/matriz/matriz-table.vue').default);
 
 import 'bootstrap/dist/css/bootstrap.css' 
 import 'bootstrap-vue/dist/bootstrap-vue.css'

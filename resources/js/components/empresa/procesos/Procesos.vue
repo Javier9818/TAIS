@@ -43,43 +43,49 @@
                 ></b-pagination>
             </b-col>
         </div>
-        <div class="col-6" v-if="procesoSelected!==null">
-            <h5>SubProcesos de "{{nombreProcesoSelected}}"</h5> <button class="btn btn-sm btn-danger float-right mb-1" @click="newSubProceso()" >Nuevo</button>
-            <b-table
-            show-empty
-            small
-            stacked="md"
-            :items="subprocesos"
-            :fields="fieldSub"
-            :current-page="currentPage"
-            :per-page="perPage"
-            :filter="filter"
-            :filterIncludedFields="filterOn"
-            :sort-by.sync="sortBy"
-            :sort-desc.sync="sortDesc"
-            :sort-direction="sortDirection"
-            @filtered="onFiltered"
-            >
-            <template v-slot:cell(actions)="row">
-                <b-button size="sm" @click="infoSub(row.item, row.index, $event.target)" class="mr-1 btn-success">
-                    <i class="fas fa-pencil-alt"></i>
-                </b-button>
-                <b-button size="sm" @click="desactivate(row.item.id, row.item.estado)" class="btn-danger">
-                    <i class="fas fa-trash-alt"></i>
-                </b-button>
-            </template>
-            </b-table>
-            <b-col sm="7" md="6" class="my-1">
-                <b-pagination
-                v-model="currentPage"
-                :total-rows="totalRows"
-                :per-page="perPage"
-                align="fill"
-                size="sm"
-                class="my-0"
-                ></b-pagination>
-            </b-col>
+        
+        <div class="col-6">
+          <b-overlay :show="loadingSubs">
+            <div v-if="procesoSelected!==null">
+              <h5>SubProcesos de "{{nombreProcesoSelected}}"</h5> <button class="btn btn-sm btn-danger float-right mb-1" @click="newSubProceso()" >Nuevo</button>
+              <b-table
+              show-empty
+              small
+              stacked="md"
+              :items="subprocesos"
+              :fields="fieldSub"
+              :current-page="currentPage"
+              :per-page="perPage"
+              :filter="filter"
+              :filterIncludedFields="filterOn"
+              :sort-by.sync="sortBy"
+              :sort-desc.sync="sortDesc"
+              :sort-direction="sortDirection"
+              @filtered="onFiltered"
+              >
+              <template v-slot:cell(actions)="row">
+                  <b-button size="sm" @click="infoSub(row.item, row.index, $event.target)" class="mr-1 btn-success">
+                      <i class="fas fa-pencil-alt"></i>
+                  </b-button>
+                  <b-button size="sm" @click="desactivate(row.item.id, row.item.estado)" class="btn-danger">
+                      <i class="fas fa-trash-alt"></i>
+                  </b-button>
+              </template>
+              </b-table>
+              <b-col sm="7" md="6" class="my-1">
+                  <b-pagination
+                  v-model="currentPage"
+                  :total-rows="totalRows"
+                  :per-page="perPage"
+                  align="fill"
+                  size="sm"
+                  class="my-0"
+                  ></b-pagination>
+              </b-col>
+            </div>
+          </b-overlay>
         </div>
+        
     </div>
     
 
@@ -103,6 +109,7 @@ import Swal from 'sweetalert2'
       return {
         items: [],
         procesoSelected:null,
+        loadingSubs:false,
         nombreProcesoSelected:null,
         subprocesos:[],
         fields: [
@@ -155,8 +162,11 @@ import Swal from 'sweetalert2'
     },
     methods: {
         async listSub(id, nombre){
+            this.loadingSubs = true;
             await axios.get(`/api/subproceso/${unidad}/${id}`).then(({data})=>{
                 this.subprocesos = data.subprocesos;
+            }).then(()=>{
+              this.loadingSubs = false;
             });
             this.procesoSelected = id;
             this.nombreProcesoSelected = nombre;

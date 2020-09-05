@@ -92,7 +92,7 @@
             this.loadingMapa = true;
             this.maestro = id;
             let sub_procesos = [], enlaces_ = [];
-            axios.get(`/api/subproceso/${unidad}/${id}`).then(({data}) => {
+            axios.get(`/api/mapa-proceso/subproceso/${unidad}/${id}`).then(({data}) => {
                 let {subprocesos} = data;
                 this.subprocesos = subprocesos;
                 sub_procesos = data.graph ? JSON.parse(data.graph.objeto).nodeDataArray : [];

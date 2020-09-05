@@ -24,7 +24,7 @@
     <script>
         let unidad = @json(session('unidad'));
     </script>
-    <script src="/assets/js/macromapa.js"></script>
+    <!-- <script src="/assets/js/macromapa.js"></script> -->
     <script src="/assets/js/detallemapa.js"></script>
     <script src="/assets/js/constructor.js"></script>
 

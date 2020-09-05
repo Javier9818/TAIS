@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\MapaProcesoDetalle;
 use App\Proceso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -62,26 +63,8 @@ class ProcesoController extends Controller
     }
 
     public function getSubProcesos($unidad, $proceso_id){
-        // $subprocesos = Proceso::where('unidad_negocio_id', $unidad)->where('proceso_padre', $proceso_id)->get();
-       
-        // return response()->json(["subprocesos" => $subprocesos]);
-
-        $subprocesos = DB::table('procesos')
-        ->selectRaw('procesos.*')
-        ->where('unidad_negocio_id', $unidad)->where('proceso_padre', $proceso_id)->where('estado', 1)
-        ->whereNotExists(function ($query) {
-            $query->select(DB::raw(1))
-                  ->from('mapa_proceso_detalle')
-                  ->whereRaw('mapa_proceso_detalle.proceso_from = procesos.id');
-        })->get();
-
-        
-        $graph = DB::table('mapa_proceso')->selectRaw('mapa_proceso.*')
-        ->where('proceso_maestro', $proceso_id)
-        ->where('mega', false)
-        ->first();
-
-        return response()->json(["subprocesos" => $subprocesos, "graph" => $graph]);
+        $subprocesos = Proceso::where('unidad_negocio_id', $unidad)->where('proceso_padre', $proceso_id)->get();
+        return response()->json(["subprocesos" => $subprocesos]);
     }
 
     /**
@@ -104,17 +87,45 @@ class ProcesoController extends Controller
         return response()->json(["procesos" => $procesos]);
     }
 
+    public function showProcessGraphComplete($unidad)
+    {
+        $groups = DB::table('procesos')
+            ->selectRaw('procesos.*, megaproceso_procesos.megaproceso_id as megaproceso_id')
+            ->leftJoin('megaproceso_procesos', 'procesos.id', '=', 'megaproceso_procesos.proceso_id')
+            ->whereRaw('unidad_negocio_id = ? and procesos.estado = 1', [$unidad])
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('procesos as p')
+                    ->whereRaw('p.proceso_padre = procesos.id');
+        })
+        ->get();
+
+        $nodos = DB::table('procesos')
+            ->selectRaw('procesos.*, megaproceso_procesos.megaproceso_id as megaproceso_id')
+            ->leftJoin('megaproceso_procesos', 'procesos.id', '=', 'megaproceso_procesos.proceso_id')
+            ->whereRaw('unidad_negocio_id = ? and procesos.estado = 1', [$unidad])
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('procesos as p')
+                    ->whereRaw('p.proceso_padre = procesos.id');
+        })
+        ->get();
+
+        $links = MapaProcesoDetalle::whereRaw('proceso_to > 0')->selectRaw('proceso_from as "from", proceso_to as "to"')->get();
+        return response()->json(["groups" => $groups, "nodos" => $nodos, "links" => $links]);
+    }
+
     public function showUnique($unidad, $mega)
     {
         $isMega = $mega < 0 ? true : false;
         $mega = $mega < 0 ? $mega*-1 : $mega;
         
-        $query = DB::table('procesos')
+        $query = DB::table('procesos')   //PROCESO * MEGAPROCESO
         ->selectRaw('procesos.id, procesos.nombre, GROUP_CONCAT(megaprocesos.id) as megaprocesos')
         ->join('megaproceso_procesos', 'procesos.id', '=', 'megaproceso_procesos.proceso_id')
         ->join('megaprocesos', 'megaproceso_procesos.megaproceso_id', '=', 'megaprocesos.id')
         ->where('unidad_negocio_id', $unidad)->where('proceso_padre', null)->where('megaprocesos.id', $mega)->where('estado', 1)
-        ->groupByRaw('procesos.id, procesos.nombre');
+        ->groupByRaw('procesos.id, procesos.nombre, megaprocesos.id');
 
         $procesos = $query->get();
         $procesos_graph = $query->whereNotExists(function ($query) use($mega){
