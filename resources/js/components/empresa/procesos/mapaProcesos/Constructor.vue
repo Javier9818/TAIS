@@ -176,7 +176,7 @@
     watch:{
       content: function(newValue){
           console.log(newValue)
-        load(newValue);
+            load (newValue);
       },
       meta: function(newValue){
         console.log(newValue)

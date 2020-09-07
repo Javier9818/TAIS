@@ -47,6 +47,15 @@
                     <li>
                         <a href="/empresa/{{$empresa}}/priorizacion" class="{{ $isSelected('2', '3') ? 'active' : '' }}">Priorización de procesos</a>
                     </li>
+                    <li>
+                        <a href="/empresa/{{$empresa}}/caracterizacion" class="{{ $isSelected('2', '4') ? 'active' : '' }}">Caracterizacion</a>
+                    </li>
+                    <li>
+                        <a href="/empresa/{{$empresa}}/diagrama-flujo" class="{{ $isSelected('2', '5') ? 'active' : '' }}">Diagrama de flujo</a>
+                    </li>
+                    <li>
+                        <a href="/empresa/{{$empresa}}/diagrama-seguimiento" class="{{ $isSelected('2', '6') ? 'active' : '' }}">Diagrama de seguimiento</a>
+                    </li>
                     <!-- <li>
                         <a href="/empresa/{{$empresa}}/administrar-cadena" class="{{ $isSelected('2', '1') ? 'active' : '' }}">Administrar</a>
                     </li>

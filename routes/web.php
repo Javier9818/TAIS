@@ -32,6 +32,9 @@ Route::get('/empresa/{id}/generar-cadena', 'EmpresaController@showGenerarCadena'
 Route::get('/empresa/{id}/procesos', 'EmpresaController@showProcesos');
 Route::get('/empresa/{id}/mapa-procesos', 'MapaProcesoController@show');
 Route::get('/empresa/{id}/priorizacion', 'PriorizacionController@show');
+Route::get('/empresa/{id}/caracterizacion', 'CaracterizacionController@show');
+Route::get('/empresa/{id}/diagrama-flujo', 'FlujoController@show');
+Route::get('/empresa/{id}/diagrama-seguimiento', 'SeguimientoController@show');
 
 
 

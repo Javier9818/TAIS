@@ -143,6 +143,11 @@ class ProcesoController extends Controller
         return response()->json(["procesos" => $procesos, "procesos_graph" => $procesos_graph, "graph" => $graph]);
     }
 
+    public function getProcesosPrio($unidad){
+        $procesos = Proceso::where('unidad_negocio_id', $unidad)->where('flag_prio', true)->get();
+        return response()->json(["procesos" => $procesos]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

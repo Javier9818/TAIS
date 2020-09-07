@@ -81,6 +81,7 @@ Route::delete('/user/{id}','UserController@destroy');
 
 Route::get('/proceso/{unidad}','ProcesoController@show');
 Route::get('/procesos-graph/{unidad}','ProcesoController@showProcessGraphComplete');
+Route::get('/procesos-prio/{unidad}','ProcesoController@getProcesosPrio');
 Route::get('/proceso-unique/{unidad}/{mega}','ProcesoController@showUnique');
 Route::post('/proceso','ProcesoController@store');
 Route::put('/proceso/{id}','ProcesoController@update');
@@ -103,3 +104,16 @@ Route::put('/escala','PriorizacionController@updateEscala');
 
 Route::get('/criterios-matriz/{unidad}','PriorizacionController@getCriteriosForMatriz');
 Route::post('/matriz-priorizacion','PriorizacionController@setMatriz');
+
+Route::get('/seguimiento/{proceso}/{unidad}','SeguimientoController@getSeguimiento');
+Route::get('/rol/{unidad}','SeguimientoController@getRoles');
+Route::post('/seguimiento','SeguimientoController@setSeguimiento');
+Route::delete('/seguimiento/{id}','SeguimientoController@deleteSeguimiento');
+
+Route::post('/caracterizacion','DocumentController@setCaracterizacion');
+Route::get('/caracterizacion/{proceso}','DocumentController@getCaracterizacion');
+Route::delete('/caracterizacion/{id}','DocumentController@deleteCaracterizacion');
+
+Route::post('/diagrama-flujo','DocumentController@setDiagramaFlujo');
+Route::get('/diagrama-flujo/{proceso}','DocumentController@getDiagramaFlujo');
+Route::delete('/diagrama-flujo/{id}','DocumentController@deleteDiagramaFlujo');
