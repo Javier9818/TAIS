@@ -1,5 +1,6 @@
 <template>
-  <div class="row">
+ <form @submit.prevent="save">
+    <div class="row">
     <div class="col-6 col-lg-6">
       <h4>Procesos priorizados: </h4>
       <b-table striped hover :items="priority_process_temp" small>
@@ -8,8 +9,8 @@
     <div class="col-6" v-if="editable">
         <b-form-group label="Número de procesos a priorizar">
             <input type="number" class="form-group" v-model="PC.cant" @change="pre">
-            <b-overlay :show="load">
-              <button class=" btn btn-primary"   @click="save()" :disabled="!disabled">Guardar</button>
+            <b-overlay :show="load"> 
+              <button class=" btn btn-primary" type="submit" :disabled="!(PC.process.length > 0 && PC.criterio.length > 0 && PC.cant >0)">Guardar</button>
             </b-overlay>
         </b-form-group>
       
@@ -43,7 +44,7 @@
                 <!--Procesos x Criterios-->
                 <td v-for="(item2, index) in sortItems(item.idprocess)" :key="index">                  
                   <!-- <b-form-spinbutton id="demo-sb" @change="sortPriority()" :min="item2.min" :max="item2.max" v-model="PC.items[(searchItem(item2))].point" ></b-form-spinbutton> -->
-                  <select name="scale" id="sclae" v-model="PC.items[(searchItem(item2))].point" @change="sortPriority(PC.cant)" :disabled="!editable">
+                  <select name="scale" id="sclae" v-model="PC.items[(searchItem(item2))].point" @change="sortPriority(PC.cant)" :disabled="!editable" required>
                       <option :value="null" disabled >Elegir</option>
                       <option :value="v.puntaje" v-for="v in item2.scales" :key="v.id" >{{v.descripcion}}</option>
                   </select>
@@ -56,8 +57,8 @@
       <div id='prue'>
         </div>   
     </div>
-    
   </div>
+ </form>
 </template>
 
 <script> 
@@ -71,11 +72,6 @@ export default {
       load:false,
       cant:0,
       items: [
-        { weight:5, description:'Muy bueno'},
-        { weight:4, description:'bueno'},
-        { weight:3, description:'regular'},
-        { weight:2, description:'malo'},
-        { weight:1, description:'muy malo'}, 
       ],
       show:true,
       PC:{

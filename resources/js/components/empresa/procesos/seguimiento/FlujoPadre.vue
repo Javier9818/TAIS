@@ -27,7 +27,7 @@
               </div>
               <div class="col-md-11">
                 <b-form-group label="Descripcion">
-                    <b-input v-model="form.descripcion" ></b-input>
+                    <b-input v-model="form.descripcion" required></b-input>
                 </b-form-group>
               </div>
             </div>

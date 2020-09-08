@@ -1,8 +1,17 @@
 <template>
   <div>
-    <div class="row justify-content-end mr-5">
-        <button class="btn btn-sm btn-danger" @click="pdfGenerate"><i class="fas fa-file-pdf"></i> PDF</button>
-        <button class="btn btn-sm btn-success" @click="imageGenerate"><i class="fas fa-image"></i> PNG</button>
+    <div class="row">
+    
+    </div>
+    <div class="row justify-content-end mr-5 mb-2">
+        <div class="col-4">
+          <input type="text" placeholder="Guardar versión" v-model="version">
+          <button class="btn btn-sm btn-warning" @click="submitVersion">Registrar</button>
+        </div>
+        <div class="col-2">
+            <button class="btn btn-sm btn-danger" @click="pdfGenerate"><i class="fas fa-file-pdf"></i> PDF</button>
+            <button class="btn btn-sm btn-success" @click="imageGenerate"><i class="fas fa-image"></i> PNG</button>
+        </div>
     </div>
      <div class="row justify-content-center">
         <div id="mapaDetalleDiv" style="border: solid 1px grey; width: 90%; height: 600px"></div>
@@ -12,10 +21,12 @@
 
 <script>
   import jsPDF from 'jspdf';
+import Swal from 'sweetalert2';
   export default {
     props:['title'],
     data() {
       return {
+        version:'',
         nodeDataArray: [{ key: 1, text: "Alpha", color: "lightblue" },
         { key: 2, text: "Beta", color: "orange" },
         { key: 3, text: "Gamma", color: "lightgreen", group: 5 },
@@ -147,6 +158,25 @@
             }).then(()=>{
                 initDetalle(this.nodeDataArray, this.linkDataArray);
             });
+        },
+        submitVersion(){
+          if(this.version !== '')
+            axios.post(`/api/version`,{
+              unidad, 
+              version: this.version,
+              mapaProceso: JSON.stringify({
+                nodeDataArray: this.nodeDataArray,
+                linkDataArray: this.linkDataArray
+              })
+            }).then( ({data}) => {
+              if(data.error)
+                Swal.fire('Error!', data.message, 'error');
+              else
+                Swal.fire('Exito!', 'La versión de la gestión de procesos se registró correctamente', 'success');
+              this.version = ''
+            });
+          else
+            Swal.fire('Error!', 'Ingrese una descripción de la versión', 'error');
         }
     },
     mounted(){

@@ -117,3 +117,7 @@ Route::delete('/caracterizacion/{id}','DocumentController@deleteCaracterizacion'
 Route::post('/diagrama-flujo','DocumentController@setDiagramaFlujo');
 Route::get('/diagrama-flujo/{proceso}','DocumentController@getDiagramaFlujo');
 Route::delete('/diagrama-flujo/{id}','DocumentController@deleteDiagramaFlujo');
+
+Route::post('/version','MapaProcesoController@setVersion');
+
+//Route::get('/version/{unidad}','MapaProcesoController@setVersion');

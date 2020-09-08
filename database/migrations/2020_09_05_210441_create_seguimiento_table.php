@@ -20,6 +20,7 @@ class CreateSeguimientoTable extends Migration
             $table->integer('flujo');
             $table->decimal('tiempo', 12, 2);
             $table->integer('proceso_id');
+            $table->integer('version_id')->nullable();
             $table->timestamps();
         });
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Empresa;
 use App\MapaProceso;
 use App\MapaProcesoDetalle;
+use App\Proceso;
 use App\UnidadNegocio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -75,5 +76,31 @@ class MapaProcesoController extends Controller
         ->first();
 
         return response()->json(["subprocesos" => $subprocesos, "graph" => $graph]);
+    }
+
+    public function setVersion(Request $request){
+        $proceso = new Proceso();
+
+        if(!$proceso->verifyPriorizacion($request->unidad))//Return true if is correct
+            return response()->json(["error" => true, "message"=>"No se han priorizado los procesos actuales"]);
+        
+        $verifyCaract = $proceso->verifyDocuments($request->unidad, 0);  //Return true if is correct, or object if exists error
+        if($verifyCaract !== true)
+            return response()->json(["error" => true, "message"=>"No se ha registrado la caracterización del proceso '$verifyCaract->nombre'"]);
+
+        
+        $verifyFlujo =  $proceso->verifyDocuments($request->unidad, 1);
+        if($verifyFlujo !== true)
+            return response()->json(["error" => true, "message"=>"No se ha registrado el diagrama de flujo del proceso '$verifyFlujo->nombre'"]);
+
+        $verifySeguimientos =  $proceso->verifySeguimientos($request->unidad);
+        if($verifySeguimientos !== true)
+        return response()->json(["error" => true, "message"=>"No se ha registrado el seguimiento del proceso '$verifySeguimientos->nombre'"]);
+
+
+
+        $proceso->newVersion($request);
+        return response()->json(["error" => false, "message" => "Registro exitoso"]);
+        
     }
 }

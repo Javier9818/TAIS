@@ -13,7 +13,7 @@ export default {
          process:[],
          criterio:[],
          items:[],
-         cant:2
+         cant:0
       },
     }
   },
