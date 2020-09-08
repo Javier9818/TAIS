@@ -64,15 +64,19 @@
                             @if (isset($unidades))
                                 <li class="nav-item ml-4">
                                     Unidad de negocio
-                                    <select id="inputState" class="form-control">
-                                        @foreach ($unidades as $unidad)
-                                            @if(session('unidad') == $unidad->id)
-                                                <option selected  value={{$unidad->id}}>{{$unidad->producto}}</option>
-                                            @else
-                                                <option value={{$unidad->id}}>{{$unidad->producto}}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>
+                                    <form id="unidad-form" action="/unidad-negocio-changue" method="POST">
+                                        @csrf
+                                        <select id="inputState" class="form-control" id="unidad" name="unidad" onchange="event.preventDefault();
+                                            document.getElementById('unidad-form').submit();">
+                                                @foreach ($unidades as $unidad)
+                                                    @if(session('unidad') == $unidad->id)
+                                                        <option selected  value={{$unidad->id}}>{{$unidad->producto}}</option>
+                                                    @else
+                                                        <option value={{$unidad->id}}>{{$unidad->producto}}</option>
+                                                    @endif
+                                                @endforeach
+                                        </select>
+                                    </form>
                                 </li>
                             @endif
                         </ul>

@@ -28,12 +28,17 @@ class SeguimientoController extends Controller
         return view('empresa.procesos.diagrama_seguimiento', ["empresa" => $empresa,"unidades" => $unidades_negocio ]);
     }
 
-    public function getSeguimiento($proceso, $unidad){
-        $seguimiento = DB::table('seguimiento')->join('rol', 'rol.id', '=', 'seguimiento.rol_id')
+    public function getSeguimiento($proceso, $version){
+      
+        $query = DB::table('seguimiento')->join('rol', 'rol.id', '=', 'seguimiento.rol_id')
                     ->selectRaw('seguimiento.*, rol.descripcion as rol_new, rol.id as rol')
-                    ->where('seguimiento.proceso_id', $proceso)
-                    ->where('seguimiento.version_id', null)
-                    ->get();
+                    ->where('seguimiento.proceso_id', $proceso);
+        
+        if($version > 0)
+            $seguimiento = $query->whereRaw('seguimiento.version_id = ?', [$version])->get();
+        else
+            $seguimiento = $query->whereRaw('seguimiento.version_id IS NULL')->get();
+                    
 
         return response()->json(["seguimiento" => $seguimiento]);
     }

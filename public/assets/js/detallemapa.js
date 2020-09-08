@@ -239,3 +239,7 @@ function initDetalle(nodeDataArray, linkDataArray) {
     // ];
     myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
   }
+
+  function updateDetalle(nodeDataArray, linkDataArray){
+    myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+  }

@@ -1,11 +1,13 @@
 <template>
   <div>
     <div class="row">
-    
+        <div class="col-4">
+            <select-version @chagueVersion='handleVersion'></select-version>
+        </div>
     </div>
     <div class="row justify-content-end mr-5 mb-2">
-        <div class="col-4">
-          <input type="text" placeholder="Guardar versión" v-model="version">
+        <div class="col-4" v-if="version_act === true">
+          <input type="text" placeholder="Guardar versión">
           <button class="btn btn-sm btn-warning" @click="submitVersion">Registrar</button>
         </div>
         <div class="col-2">
@@ -27,18 +29,9 @@ import Swal from 'sweetalert2';
     data() {
       return {
         version:'',
-        nodeDataArray: [{ key: 1, text: "Alpha", color: "lightblue" },
-        { key: 2, text: "Beta", color: "orange" },
-        { key: 3, text: "Gamma", color: "lightgreen", group: 5 },
-        { key: 4, text: "Delta", color: "green", group: 5, isGroup: true },
-        { key: 5, text: "Epsilon", color: "green", isGroup: true },
-        { key: 6, text: "Brice", color: "orange", group:4 }],
-        linkDataArray: [
-        // { from: 1, to: 2, color: "blue" },
-        // { from: 2, to: 2 },
-        // { from: 3, to: 4, color: "green" },
-        // { from: 3, to: 1, color: "purple" }
-        ],
+        version_act:true,
+        nodeDataArray: [],
+        linkDataArray: [],
         image: null
       }
     },
@@ -48,7 +41,7 @@ import Swal from 'sweetalert2';
             size : new go.Size (842,595)
         })
         var a = document.createElement('a');
-        a.download = `Mapa de procesos`;
+        a.download = `Mapa de procesos ${this.version_act === true ? '- Version actual':'-'+ this.version_act.descripcion}`;
         a.target = '_blank';
         a.href= imagenImp.src;
         a.click();
@@ -62,11 +55,11 @@ import Swal from 'sweetalert2';
         var alto = doc.internal.pageSize.getHeight();
         doc.setFontType('bold');
         doc.setFontSize(16);
-        doc.text(largo/3+17, 45, `${this.title}`);
+        doc.text(largo/3+17, 45, `Mapa de procesos ${this.version_act === true ? '- Version actual':'-'+ this.version_act.descripcion}`);
         doc.addImage(imagenImp, 'jpg', 30, 90, 742, 495);
         doc.save(`${this.title}`);
       },
-       loadData(){
+      loadData(){
             this.nodeDataArray = [
                 { key: -1, text: "Procesos Estratégicos", color: "black", isGroup: true },
                 { key: -5, text: "", color: "white", isGroup: true },
@@ -159,7 +152,7 @@ import Swal from 'sweetalert2';
                 initDetalle(this.nodeDataArray, this.linkDataArray);
             });
         },
-        submitVersion(){
+      submitVersion(){
           if(this.version !== '')
             axios.post(`/api/version`,{
               unidad, 
@@ -177,7 +170,19 @@ import Swal from 'sweetalert2';
             });
           else
             Swal.fire('Error!', 'Ingrese una descripción de la versión', 'error');
-        }
+        },
+      handleVersion(obj){
+        if(obj !== undefined){
+          let data = JSON.parse(obj.mapa_proceso)
+          this.version_act = obj
+          updateDetalle(data.nodeDataArray, data.linkDataArray);
+        }else{
+          updateDetalle(this.nodeDataArray, this.linkDataArray);
+          this.version_act = true;
+        } 
+
+          
+      }
     },
     mounted(){
       //initDetalle(this.nodeDataArray, this.linkDataArray);

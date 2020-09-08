@@ -17,11 +17,6 @@
                     <mapa-constructor></mapa-constructor>
                 </b-card-text>
             </b-tab>
-            <b-tab title="Versiones" lazy>
-                <b-card-text>
-                    Versiones
-                </b-card-text>
-            </b-tab>
         </b-tabs>
     </b-card>
   </div>

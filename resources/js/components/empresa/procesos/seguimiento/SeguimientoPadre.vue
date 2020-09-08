@@ -3,25 +3,13 @@
       <selector-proceso @changue-process='setProcess'></selector-proceso>
         <div class="row justify-content-around">
           <div class="col-md-4">
-              <b-form-group label="Version">
-                  <b-form-select 
-                    v-model="version" 
-                    :options="versiones"
-                    value-field="id"
-                    text-field="nombre"
-                    required
-                  >
-                  <template v-slot:first>
-                      <b-form-select-option :value="null">-- Version Actual --</b-form-select-option>
-                  </template>
-                </b-form-select>
-              </b-form-group>
+              <select-version @chagueVersion='handleVersion'></select-version>
           </div><div class="col-md-4"></div>
         </div>
 
 
-        <div class="container">
-          <b-button class="btn btn-success btn-sm float-right mb-2" @click="openModal" v-if="process">Agregar</b-button>
+        <div class="container" v-if="process">
+          <b-button class="btn btn-success btn-sm float-right mb-2" @click="openModal" v-if="version == null">Agregar</b-button>
           <b-table
               show-empty
               small
@@ -37,7 +25,7 @@
                   <img :src="`/assets/img/${row.item.flujo}.png`" alt="">
             </template>
 
-              <template v-slot:cell(actions)="row">
+              <template v-slot:cell(actions)="row"  v-if="version == null">
                   <b-button size="sm" @click="info(row.item, row.index)" class="mr-1">
                       Editar
                   </b-button>
@@ -45,7 +33,39 @@
                     <i class="fas fa-trash-alt"></i>
                   </b-button>
               </template>
-            </b-table>
+          </b-table>
+
+        <div class="row justify-content-around">
+           <table class="table col-4">
+            <thead>
+              <tr>
+                <th scope="col">Rol</th>
+                <th scope="col">Tiempo (minutos)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for=" rol in resumenRoles" :key="rol.id">
+                <td v-if="rol.cant > 0">{{rol.descripcion}}</td>
+                <td v-if="rol.cant > 0">{{rol.cant}} min</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table col-4">
+            <thead>
+              <tr>
+                <th scope="col">Operación</th>
+                <th scope="col">Tiempo (minutos)</th>
+              </tr>
+            </thead>
+            <tbody>
+               <tr v-for=" rol in resumenOperaciones" :key="rol.id">
+                <td>{{rol.nombre}}</td>
+                <td>{{rol.cant}} min</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
             <b-modal id="modal-1" title="Nueva actividad" size="xl" hide-footer>
               <b-overlay :show="loadModal">
@@ -74,7 +94,7 @@
                         </b-form-select>
                       </div>
                       <div class="col-md-6">
-                          <b-form-group label="Tiempo (Horas)">
+                          <b-form-group label="Tiempo (minutos)">
                             <b-input type="text" v-model="form.tiempo" required></b-input>
                             <p v-if="!$v.form.tiempo.decimalPositive" class="help text-danger">Este campo debe ser numérico</p>
                           </b-form-group>
@@ -100,7 +120,6 @@
               </b-overlay>
             </b-modal>
         </div>
-        {{resumenRoles}}
   </section>
 </template>
 
@@ -143,7 +162,7 @@ import {nameObjects, decimalPositive} from '../../../utils/expresiones'
          { key: 'actividad', label: 'Actividad', sortable: true, class: 'text-center' },
          { key: 'rol_new', label: 'Rol', sortable: true },
          { key: 'flujo', label: 'Flujo' },
-         { key: 'tiempo', label: 'Tiempo (Horas)' },
+         { key: 'tiempo', label: 'Tiempo (minutos)' },
          { key: 'actions', label: 'Opciones' }
         ],
         form:{
@@ -169,7 +188,10 @@ import {nameObjects, decimalPositive} from '../../../utils/expresiones'
      setProcess(id){
        this.resetResumen()
        this.process = id
-       axios.get(`/api/seguimiento/${id}/${unidad}`).then(({data}) => {
+       this.loadSeguimiento(id, this.version)
+     },
+     loadSeguimiento(id, version){
+      axios.get(`/api/seguimiento/${id}/${version}`).then(({data}) => {
           this.items = data.seguimiento;
           this.loadResumen(data.seguimiento)
        });
@@ -242,6 +264,11 @@ import {nameObjects, decimalPositive} from '../../../utils/expresiones'
           {id:5, nombre: 'Almacenaje', cant: 0},
           {id:6, nombre: 'Actividad-Combinada', cant: 0},
        ]
+     },
+     handleVersion(obj){
+       this.resetResumen()
+       this.version = obj ? obj.id : null;
+       this.loadSeguimiento(this.process, obj ? obj.id : null)
      }
     },
     mounted(){

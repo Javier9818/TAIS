@@ -105,7 +105,7 @@ Route::put('/escala','PriorizacionController@updateEscala');
 Route::get('/criterios-matriz/{unidad}','PriorizacionController@getCriteriosForMatriz');
 Route::post('/matriz-priorizacion','PriorizacionController@setMatriz');
 
-Route::get('/seguimiento/{proceso}/{unidad}','SeguimientoController@getSeguimiento');
+Route::get('/seguimiento/{proceso}/{version}','SeguimientoController@getSeguimiento');
 Route::get('/rol/{unidad}','SeguimientoController@getRoles');
 Route::post('/seguimiento','SeguimientoController@setSeguimiento');
 Route::delete('/seguimiento/{id}','SeguimientoController@deleteSeguimiento');
@@ -119,5 +119,6 @@ Route::get('/diagrama-flujo/{proceso}','DocumentController@getDiagramaFlujo');
 Route::delete('/diagrama-flujo/{id}','DocumentController@deleteDiagramaFlujo');
 
 Route::post('/version','MapaProcesoController@setVersion');
+Route::get('/version/{unidad}','MapaProcesoController@getVersion');
 
 //Route::get('/version/{unidad}','MapaProcesoController@setVersion');

@@ -7,6 +7,7 @@ use App\MapaProceso;
 use App\MapaProcesoDetalle;
 use App\Proceso;
 use App\UnidadNegocio;
+use App\Version;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -102,5 +103,10 @@ class MapaProcesoController extends Controller
         $proceso->newVersion($request);
         return response()->json(["error" => false, "message" => "Registro exitoso"]);
         
+    }
+
+    public function getVersion($unidad){
+        $versiones = Version::where('unidad_negocio_id', $unidad)->get();
+        return response()->json(["versiones" => $versiones]);
     }
 }

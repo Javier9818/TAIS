@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,10 @@ Route::get('/empresa/{id}/diagrama-flujo', 'FlujoController@show');
 Route::get('/empresa/{id}/diagrama-seguimiento', 'SeguimientoController@show');
 
 
+Route::post('/unidad-negocio-changue', function(Request $request){
+    session(['unidad' => $request->unidad]);
+    return redirect()->back();  
+});
 
 
 
