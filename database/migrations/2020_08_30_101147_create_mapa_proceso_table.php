@@ -17,7 +17,7 @@ class CreateMapaProcesoTable extends Migration
             $table->id();
             $table->integer('unidad_negocio_id');
             $table->integer('proceso_maestro');
-            $table->longText('objeto');
+            $table->longText('objeto')->nullable();
             $table->boolean('mega');
             $table->timestamps();
         });

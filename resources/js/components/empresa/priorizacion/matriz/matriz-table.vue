@@ -1,6 +1,11 @@
 <template>
  <form @submit.prevent="save">
     <div class="row">
+      <div class="col-md-5">
+        <select-version @chagueVersion='handleVersion'></select-version>
+      </div>
+    </div>
+    <div class="row">
     <div class="col-6 col-lg-6">
       <h4>Procesos priorizados: </h4>
       <b-table striped hover :items="priority_process_temp" small>
@@ -11,9 +16,9 @@
             <input type="number" class="form-group" v-model="PC.cant" @change="pre">
             <b-overlay :show="load"> 
               <button class=" btn btn-primary" type="submit" :disabled="!(PC.process.length > 0 && PC.criterio.length > 0 && PC.cant >0)">Guardar</button>
+              <a class=" btn btn-danger" @click="deleteMatriz" :disabled="!(PC.process.length > 0 && PC.criterio.length > 0)">Eliminar</a>
             </b-overlay>
         </b-form-group>
-      
     </div>    
     <div class="col-12 mt-3" id='tabla-priorizacion'>
       <b-overlay :show="show" rounded="sm">
@@ -65,10 +70,11 @@
 import Swal from 'sweetalert2';
  
 export default {
-  props:['table', 'editable'],
+  props:['table'],
   data()
   {
     return{
+      editable:true,
       load:false,
       cant:0,
       items: [
@@ -87,11 +93,13 @@ export default {
   },
   methods:
   {    
-    refresh()
+    refresh(data)
     {
       this.show=true 
+      this.priority_process = []
       setTimeout(() => { 
-        this.table.process.forEach(element => {
+        
+        data.process.forEach(element => {
           this.priority_process.push(
             {
               idprocess:element.idprocess, 
@@ -100,8 +108,8 @@ export default {
             }
           )
         });     
-        this.sortPriority(this.table.cant | 0) 
-        this.PC={...this.table, cant: this.table.cant}
+        this.sortPriority(data.cant | 0) 
+        this.PC={...data, cant: data.cant}
         this.show=false
       },2000);
     },
@@ -187,13 +195,32 @@ export default {
     },
     pre(){
       this.sortPriority(this.PC.cant)
+    },
+    handleVersion(obj){
+      if(obj){
+        this.refresh(JSON.parse(obj.priorizacion))
+        this.editable = false;
+      }
+      else{
+        this.refresh(this.table)
+        this.editable = true
+      }
+    },
+    deleteMatriz(){
+      axios.delete(`/api/matriz-priorizacion/${unidad}`).then(()=>{
+          Swal.fire('Éxito!', 'Los datos de priorización se eliminaron correctamente', 'success').then(()=>{
+            location.reload()
+          });
+      });
     }
   }, 
   watch:{
+    table(obj){
+      this.refresh(obj)
+    }
   },
-  mounted()
-  {
-    this.refresh()
+  mounted(){
+    this.refresh(this.table)
   }
 }
 </script>

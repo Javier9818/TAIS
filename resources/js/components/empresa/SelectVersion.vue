@@ -6,7 +6,6 @@
                 :options="versiones"
                 value-field="id"
                 text-field="descripcion"
-                required
                 @change="versionSelected"
                 >
                 <template v-slot:first>

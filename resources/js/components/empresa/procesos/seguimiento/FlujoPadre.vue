@@ -90,6 +90,8 @@ import Swal from 'sweetalert2';
        this.process = id
        this.enableRed = true;
        this.enable = true;
+       this.file = null
+       this.reset()
        axios.get(`/api/diagrama-flujo/${id}`).then(({data}) => {
           let {diagramas} = data
           diagramas.forEach((c)=>{
@@ -97,7 +99,7 @@ import Swal from 'sweetalert2';
             if(c.version === null && c.flag_red === 0) this.enable = false;
           });
           this.items = diagramas;
-          this.reset()
+         
        });
      },
      getFile(e){

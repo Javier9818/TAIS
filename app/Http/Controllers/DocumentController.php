@@ -40,6 +40,7 @@ class DocumentController extends Controller
                             ->selectRaw('documento.*, documento.nombre as file_name, procesos.nombre as proceso, version.descripcion as version')
                             ->where('procesos.id', '=', $proceso_id)
                             ->where('documento.type', '=', 0)
+                            ->orderBy('created_at', 'desc')
                             ->get();
         
         return response()->json(["caracterizaciones" => $caracterizaciones]);

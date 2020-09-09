@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\MapaProcesoDetalle;
 use App\Proceso;
+use App\UnidadNegocio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -62,8 +63,14 @@ class ProcesoController extends Controller
         return response()->json(["proceso" => $proceso]);
     }
 
+    public function getAllSubProcesos($unidad, $proceso_id){
+        $subprocesos = Proceso::where('unidad_negocio_id', $unidad)->where('proceso_padre', $proceso_id)
+                        ->orderBy('estado', 'desc')->get();
+        return response()->json(["subprocesos" => $subprocesos]);
+    }
+
     public function getSubProcesos($unidad, $proceso_id){
-        $subprocesos = Proceso::where('unidad_negocio_id', $unidad)->where('proceso_padre', $proceso_id)->get();
+        $subprocesos = Proceso::where('unidad_negocio_id', $unidad)->where('proceso_padre', $proceso_id)->where('estado', 1)->get();
         return response()->json(["subprocesos" => $subprocesos]);
     }
 
@@ -81,6 +88,7 @@ class ProcesoController extends Controller
         ->join('megaprocesos', 'megaproceso_procesos.megaproceso_id', '=', 'megaprocesos.id')
         ->where('unidad_negocio_id', $unidad)
         ->where('proceso_padre', null)
+        ->where('estado', true)
         ->orderBy('megaprocesos.id', 'asc')
         ->get();
 
@@ -197,8 +205,44 @@ class ProcesoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, $unidad)
     {
-        //
+        $unidad = UnidadNegocio::find($unidad);
+        if($unidad->priorizacion !== null)
+            return response()->json(["error" => true, "message" => "Los procesos listados, se encuentran registrados en la matriz de priorizacion.", "proceso" =>[]]);
+
+
+        $proceso = Proceso::find($id);
+        $proceso_mapa = MapaProcesoDetalle::where('proceso_from', $id)->exists();
+        if($proceso_mapa)
+            return response()->json(["error" => true, "message" => "El proceso  '$proceso->nombre' actualmente se encuentra registrado en el constructor de mapa de procesos", "proceso" =>[]]);
+       
+        else{
+            DB::update('UPDATE procesos SET estado = ? WHERE proceso_padre = ?', [!$proceso->estado, $proceso->id]);
+            $proceso->estado = !$proceso->estado;
+            $proceso->save();
+        }
+
+        // if($proceso->flag_prio === 1)
+        // return response()->json(["error" => true, "message" => "El proceso  '$proceso->nombre' actualmente se encuentra priorizado", "proceso" =>[]]);
+        return response()->json(["error" => false, "message" => "ok", "proceso" =>$proceso]);
+    }
+
+    public function destroySub($id, $unidad)
+    {
+        $proceso = Proceso::find($id);
+        $proceso_mapa = MapaProcesoDetalle::where('proceso_from', $id)->exists();
+        if($proceso_mapa)
+            return response()->json(["error" => true, "message" => "El proceso  '$proceso->nombre' actualmente se encuentra registrado en el constructor de mapa de procesos", "proceso" =>[]]);
+       
+        else{
+            DB::update('UPDATE procesos SET estado = ? WHERE proceso_padre = ?', [!$proceso->estado, $proceso->id]);
+            $proceso->estado = !$proceso->estado;
+            $proceso->save();
+        }
+
+        // if($proceso->flag_prio === 1)
+        // return response()->json(["error" => true, "message" => "El proceso  '$proceso->nombre' actualmente se encuentra priorizado", "proceso" =>[]]);
+        return response()->json(["error" => false, "message" => "ok", "proceso" =>$proceso]);
     }
 }

@@ -48,7 +48,7 @@ class Proceso extends Model
 
     public function verifyDocument($procesos, $type){
         foreach ($procesos as $key => $value) {
-            $documento = DB::table('documento as d')->whereRaw('d.type = ? and d.proceso_id = ?', [$type, $value->id])->exists();
+            $documento = DB::table('documento as d')->whereRaw('d.type = ? and d.proceso_id = ? and d.version_id IS NULL', [$type, $value->id])->exists();
             if(!$documento) 
                 return $value;
          }
@@ -83,6 +83,7 @@ class Proceso extends Model
 
     public function newVersion($request){
         $unidad_negocio = UnidadNegocio::find($request->unidad);
+        
         $version = Version::create([
             "unidad_negocio_id" => $request->unidad,
             "mapa_proceso" => $request->mapaProceso,
@@ -92,6 +93,9 @@ class Proceso extends Model
 
         DB::update('UPDATE seguimiento SET version_id = ? WHERE version_id IS NULL', [$version->id]);
         DB::update('UPDATE documento SET version_id = ? WHERE version_id IS NULL', [$version->id]);
+        DB::update('UPDATE procesos SET flag_prio = ? WHERE flag_prio = 1 AND unidad_negocio_id = ? ', [0, $request->unidad]);
+        DB::update('UPDATE mapa_proceso SET objeto = null WHERE  unidad_negocio_id = ? ', [$request->unidad]);
+        
         
         $unidad_negocio->priorizacion = null;
         $unidad_negocio->save();

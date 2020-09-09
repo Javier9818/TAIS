@@ -20,15 +20,19 @@
             >
 
             <template v-slot:cell(nombre)="row">
-                <a href="javascript::void(0)" @click="listSub(row.item.id, row.item.nombre)" >{{row.item.nombre}}</a>
+                <a href="javascript::void(0)" @click="listSub(row.item.id, row.item.nombre)" v-if="row.item.estado === 1">{{row.item.nombre}}</a>
+                <p v-else>{{row.item.nombre}}</p>
             </template>
 
             <template v-slot:cell(actions)="row">
-                <b-button size="sm" @click="info(row.item, row.index, $event.target)" class="mr-1 btn-success">
+                <b-button size="sm" @click="info(row.item, row.index, $event.target)" class="mr-1 btn-success" v-if="row.item.estado === 1">
                     <i class="fas fa-pencil-alt"></i>
                 </b-button>
-                <b-button size="sm" @click="desactivate(row.item.id, row.item.estado)" class="btn-danger">
+                <b-button size="sm" @click="desactivate(row.item.id)" class="btn-danger" v-if="row.item.estado === 1">
                     <i class="fas fa-trash-alt"></i>
+                </b-button>
+                <b-button size="sm" @click="desactivate(row.item.id)" class="btn-warning" v-else>
+                    Activar
                 </b-button>
             </template>
             </b-table>
@@ -67,9 +71,12 @@
                   <b-button size="sm" @click="infoSub(row.item, row.index, $event.target)" class="mr-1 btn-success">
                       <i class="fas fa-pencil-alt"></i>
                   </b-button>
-                  <b-button size="sm" @click="desactivate(row.item.id, row.item.estado)" class="btn-danger">
-                      <i class="fas fa-trash-alt"></i>
-                  </b-button>
+                  <b-button size="sm" @click="desactivateSub(row.item.id)" class="btn-danger" v-if="row.item.estado === 1">
+                    <i class="fas fa-trash-alt"></i>
+                </b-button>
+                <b-button size="sm" @click="desactivateSub(row.item.id)" class="btn-warning" v-else>
+                    Activar
+                </b-button>
               </template>
               </b-table>
               <b-col sm="7" md="6" class="my-1">
@@ -163,7 +170,7 @@ import Swal from 'sweetalert2'
     methods: {
         async listSub(id, nombre){
             this.loadingSubs = true;
-            await axios.get(`/api/subproceso/${unidad}/${id}`).then(({data})=>{
+            await axios.get(`/api/subproceso-all/${unidad}/${id}`).then(({data})=>{
                 this.subprocesos = data.subprocesos;
             }).then(()=>{
               this.loadingSubs = false;
@@ -183,35 +190,57 @@ import Swal from 'sweetalert2'
             this.infoModalSub.title = `Registrar subproceso`,
             this.$root.$emit('bv::show::modal', 'formSubProceso')
         },
-        desactivate(id, estado){
-            axios.delete(`/api/unidad-negocio/${id}`).then( ({data}) => {
-                Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
-                this.items.map((item) => {
-                    if(item.id === id) item.estado = estado === 1 ? 0 : 1;
-                });
-            }).catch(()=>{ire('Error', 'Ha ocurrido algún error', 'error');});
+        desactivate(id){
+            axios.delete(`/api/proceso/${id}/${unidad}`).then( ({data}) => {
+                let {proceso, error, message} = data;
+                let items = this.items;
+                this.listSub(0,'')
+                if(error)
+                  Swal.fire('Error', message, 'error');
+                else{
+                  let index = items.findIndex((item) => { return item.id === id })
+                  this.items.splice(index, 1, {...items[index], estado: items[index].estado === 1 ? 0 : 1})
+                  
+                  Swal.fire('Éxito', 'Se cambió el estado del proceso', 'success');
+                }
+                
+            }).catch(()=>{Swal.fire('Error', 'Ha ocurrido algún error', 'error');});
+        },
+        desactivateSub(id){
+            axios.delete(`/api/subproceso/${id}/${unidad}`).then( ({data}) => {
+                let {proceso, error, message} = data;
+                let items = this.subprocesos;
+                if(error)
+                  Swal.fire('Error', message, 'error');
+                else{
+                  let index = items.findIndex((item) => { return item.id === id })
+                  this.subprocesos.splice(index, 1, {...items[index], estado: items[index].estado === 1 ? 0 : 1})
+                  
+                  Swal.fire('Éxito', 'Se cambió el estado del proceso', 'success');
+                }
+                
+            }).catch(()=>{Swal.fire('Error', 'Ha ocurrido algún error', 'error');});
         },
         redirect(id){
             location.href=`/empresa/${id}`
         },
-       store: function(data) {
-            
-           this.items = [{...data, estado:true}, ...this.items]
-       },
-       storeSub: function(data) {
-           this.subprocesos = [{...data}, ...this.subprocesos]
-       },
-       update: function(data) {
-           this.items.map( (item) => {
-               if(item.id === data.id) {
-                 item.nombre = data.nombre
-                 item.descripcion = data.descripcion
-                 item.megaprocesos_names = data.megaproceso.toString();
-                 item.megaproceso = data.megaproceso.toString();
-              };
-           });
-       },
-       updateSub: function(data) {
+        store: function(data) {
+            this.items = [{...data, estado:1}, ...this.items]
+        },
+        storeSub: function(data) {
+            this.subprocesos = [{...data}, ...this.subprocesos]
+        },
+        update: function(data) {
+            this.items.map( (item) => {
+                if(item.id === data.id) {
+                  item.nombre = data.nombre
+                  item.descripcion = data.descripcion
+                  item.megaprocesos_names = data.megaproceso.toString();
+                  item.megaproceso = data.megaproceso.toString();
+                };
+            });
+        },
+        updateSub: function(data) {
          this.subprocesos.map( (item) => {
               if(item.id === data.id) {
                 item.nombre = data.nombre
@@ -219,23 +248,23 @@ import Swal from 'sweetalert2'
             };
         });
        },
-      info(item, index, button) {
+        info(item, index, button) {
         this.infoModal.content = {...item, megaproceso: (item.megaproceso).split(',')}
         this.infoModal.mode = 'edit'
         this.infoModal.title = `Editar proceso`,
         this.$root.$emit('bv::show::modal', 'formProceso', button)
       },
-       infoSub(item, index, button) {
+        infoSub(item, index, button) {
         this.infoModalSub.content = {...item}
         this.infoModalSub.mode = 'edit'
         this.infoModalSub.title = `Editar subproceso`,
         this.$root.$emit('bv::show::modal', 'formSubProceso', button)
       },
-      resetInfoModal() {
+        resetInfoModal() {
         this.infoModal.title = ''
         this.infoModal.content = ''
       },
-      onFiltered(filteredItems) {
+        onFiltered(filteredItems) {
         // Trigger pagination to update the number of buttons/pages due to filtering
         this.totalRows = filteredItems.length
         this.currentPage = 1

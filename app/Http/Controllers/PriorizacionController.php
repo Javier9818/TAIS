@@ -93,7 +93,7 @@ class PriorizacionController extends Controller
     }
     
     public function getCriteriosForMatriz($unidad){
-        $procesos = Proceso::where('unidad_negocio_id', $unidad)->where('proceso_padre', null)->select(['id as  idprocess','nombre as name'])->get();
+        $procesos = Proceso::where('unidad_negocio_id', $unidad)->where('proceso_padre', null)->where('estado', 1)->select(['id as  idprocess','nombre as name'])->get();
         $criterios = DB::table('criterios')
                     ->join('escalas', 'escalas.criterio_id', '=', 'criterios.id')
                     ->selectRaw("criterios.id as idcriterio, criterios.peso as weight, criterios.nombre as name, GROUP_CONCAT(CONCAT(escalas.id, '-',escalas.descripcion,'-',escalas.puntaje)) as escala")
@@ -119,5 +119,13 @@ class PriorizacionController extends Controller
         }
 
         return response()->json(["response" => "Registro exitoso"]);
+    }
+
+    public function deleteMatriz($unidad){
+        UnidadNegocio::find($unidad)->update([
+            "priorizacion" => null
+        ]);
+        DB::update('UPDATE procesos SET flag_prio = ? WHERE flag_prio = 1 AND unidad_negocio_id = ? ', [0, $unidad]);    
+        return response()->json(["error" => false, "message" => "ok"]);
     }
 }

@@ -84,11 +84,14 @@ Route::get('/procesos-graph/{unidad}','ProcesoController@showProcessGraphComplet
 Route::get('/procesos-prio/{unidad}','ProcesoController@getProcesosPrio');
 Route::get('/proceso-unique/{unidad}/{mega}','ProcesoController@showUnique');
 Route::post('/proceso','ProcesoController@store');
+Route::delete('/proceso/{id}/{unidad}','ProcesoController@destroy');
 Route::put('/proceso/{id}','ProcesoController@update');
 
 Route::get('/subproceso/{unidad}/{proceso}','ProcesoController@getSubProcesos');
+Route::get('/subproceso-all/{unidad}/{proceso}','ProcesoController@getAllSubProcesos');
 Route::post('/subproceso','ProcesoController@storeSub');
 Route::put('/subproceso/{id}','ProcesoController@updateSub');
+Route::delete('/subproceso/{id}/{unidad}','ProcesoController@destroySub');
 
 
 Route::post('/mapa-proceso','MapaProcesoController@store');
@@ -104,6 +107,7 @@ Route::put('/escala','PriorizacionController@updateEscala');
 
 Route::get('/criterios-matriz/{unidad}','PriorizacionController@getCriteriosForMatriz');
 Route::post('/matriz-priorizacion','PriorizacionController@setMatriz');
+Route::delete('/matriz-priorizacion/{unidad}','PriorizacionController@deleteMatriz');
 
 Route::get('/seguimiento/{proceso}/{version}','SeguimientoController@getSeguimiento');
 Route::get('/rol/{unidad}','SeguimientoController@getRoles');

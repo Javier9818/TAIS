@@ -7,7 +7,7 @@
     </div>
     <div class="row justify-content-end mr-5 mb-2">
         <div class="col-4" v-if="version_act === true">
-          <input type="text" placeholder="Guardar versión">
+          <input type="text" placeholder="Guardar versión" v-model="version">
           <button class="btn btn-sm btn-warning" @click="submitVersion">Registrar</button>
         </div>
         <div class="col-2">
