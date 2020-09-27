@@ -64,6 +64,7 @@ class DocumentController extends Controller
                             ->selectRaw('documento.*, documento.nombre as file_name, procesos.nombre as proceso, version.descripcion as version')
                             ->where('procesos.id', '=', $proceso_id)
                             ->where('documento.type', '=', 1)
+                            ->orderBy('documento.created_at', 'desc')
                             ->get();
         
         return response()->json(["diagramas" => $diagramas]);
@@ -91,5 +92,16 @@ class DocumentController extends Controller
         
         }else return response()->json([], 500);
             
+    }
+
+    public function deleteDiagramaFlujo($id){
+        $documento = Documento::find($id);
+        
+        if($documento->nombre != null)
+            Storage::disk('public')->delete("diagrama-flujos/$documento->nombre");
+        
+        $documento->delete();
+        
+        return response()->json(["message" => "Eliminación exitosa"]);
     }
 }

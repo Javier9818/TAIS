@@ -72,5 +72,60 @@ class AuthServiceProvider extends ServiceProvider
             }
             return false;
         });
+        
+
+        Gate::define('gestionar-procesos', function($user){
+            $permisos = $user->permisoUser;
+            foreach ($permisos as $key => $permiso) {
+                if($permiso->id === 5)
+                return true;
+            }
+            return false;
+        });
+
+        Gate::define('gestionar-mapa-procesos', function($user){
+            $permisos = $user->permisoUser;
+            foreach ($permisos as $key => $permiso) {
+                if($permiso->id === 6)
+                return true;
+            }
+            return false;
+        });
+
+        Gate::define('gestionar-priorizacion', function($user){
+            $permisos = $user->permisoUser;
+            foreach ($permisos as $key => $permiso) {
+                if($permiso->id === 7)
+                return true;
+            }
+            return false;
+        });
+
+        Gate::define('gestionar-caracterizacion', function($user){
+            $permisos = $user->permisoUser;
+            foreach ($permisos as $key => $permiso) {
+                if($permiso->id === 8)
+                return true;
+            }
+            return false;
+        });
+
+        Gate::define('gestionar-diagrama-flujo', function($user){
+            $permisos = $user->permisoUser;
+            foreach ($permisos as $key => $permiso) {
+                if($permiso->id === 9)
+                return true;
+            }
+            return false;
+        });
+
+        Gate::define('gestionar-diagrama-seguimiento', function($user){
+            $permisos = $user->permisoUser;
+            foreach ($permisos as $key => $permiso) {
+                if($permiso->id === 10)
+                return true;
+            }
+            return false;
+        });
     }
 }

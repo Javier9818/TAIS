@@ -136,13 +136,27 @@ import {text, nombreText} from '../../../utils/expresiones'
           this.form = {...data};
       },
       deleteCriterio(id){
-          alert(id)
-      }
-    },
-    mounted(){
+        axios.delete(`/api/criterio/${id}/${unidad}`).then(({data}) => {
+            let {error, message} = data
+            if(error === true){
+              Swal.fire('Error!', message, 'error')
+            }
+            else{
+              this.loadCriterios()
+              Swal.fire('Exito!', 'Eliminación exitosa', 'success')
+            }
+
+        });
+      },
+      loadCriterios(){
         axios.get(`/api/criterio/${unidad}`).then(({data}) => {
             this.criterios = data.criterios;
         });
+      }
+    },
+
+    mounted(){
+        this.loadCriterios()
     }
   }
 </script>

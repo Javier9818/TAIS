@@ -42,13 +42,16 @@ class EmpresaController extends Controller
      */
     public function store(Request $request)
     {
-        $empresa = Empresa::create([
-            "ruc" => $request->ruc,
-            "nombre" => $request->nombre,
-            "direccion" => $request->direccion,
-            "descripcion" => $request->descripcion
-        ]);
-        return response()->json(["empresa" => $empresa], 200);
+        if(Empresa::where('ruc', $request->ruc)->exists())
+            return response()->json(["error" => true, "message" => "El RUC ingresado ya está siendo utilizado"], 200);
+        else
+            $empresa = Empresa::create([
+                "ruc" => $request->ruc,
+                "nombre" => $request->nombre,
+                "direccion" => $request->direccion,
+                "descripcion" => $request->descripcion
+            ]);
+        return response()->json(["error" => false, "message" => "ok", "empresa" => $empresa], 200);
     }
 
     /**

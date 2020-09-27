@@ -89,10 +89,15 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
       store(){
         this.loading = true;
         axios.post('/api/empresa', this.form).then( ({data}) => {
+            let {empresa, error, message} = data
+            if(error === true)
+              Swal.fire('Error', message, 'error')
+            else{
+              this.loading = false;
+              this.$emit('store', empresa);
+              Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
+            }
             this.$emit('click');
-            this.loading = false;
-            this.$emit('store', data.empresa);
-            Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
         }).catch( () => {Swal.fire('Error', 'Ha sucedido un error', 'error');});
       },
       update(){

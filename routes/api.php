@@ -100,10 +100,12 @@ Route::get('/mapa-proceso/subproceso/{unidad}/{proceso}','MapaProcesoController@
 Route::post('/criterio/{unidad}','PriorizacionController@storeCriterio');
 Route::put('/criterio','PriorizacionController@updateCriterio');
 Route::get('/criterio/{unidad}','PriorizacionController@showCriterios');
+Route::delete('/criterio/{id}/{unidad}','PriorizacionController@deleteCriterio');
 
 Route::get('/escala/{criterio}','PriorizacionController@showEscalas');
 Route::post('/escala','PriorizacionController@storeEscala');
 Route::put('/escala','PriorizacionController@updateEscala');
+Route::delete('/escala/{id}/{unidad}','PriorizacionController@deleteEscala');
 
 Route::get('/criterios-matriz/{unidad}','PriorizacionController@getCriteriosForMatriz');
 Route::post('/matriz-priorizacion','PriorizacionController@setMatriz');

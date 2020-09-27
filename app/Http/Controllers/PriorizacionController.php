@@ -128,4 +128,22 @@ class PriorizacionController extends Controller
         DB::update('UPDATE procesos SET flag_prio = ? WHERE flag_prio = 1 AND unidad_negocio_id = ? ', [0, $unidad]);    
         return response()->json(["error" => false, "message" => "ok"]);
     }
+
+    public function deleteCriterio($id, $unidad){
+        if(UnidadNegocio::whereRaw('priorizacion IS NOT NULL and id = ?', [$unidad])->exists())
+            return response()->json(["error" => true, "message" => "Existe una priorización registrada"]);
+        else
+            Criterio::find($id)->delete();
+        
+        return response()->json(["error" => false, "message" => "ok"]);
+    }
+
+    public function deleteEscala($id, $unidad){
+        if(UnidadNegocio::whereRaw('priorizacion IS NOT NULL and id = ?', [$unidad])->exists())
+            return response()->json(["error" => true, "message" => "Existe una priorización registrada"]);
+        else
+            Escala::find($id)->delete();
+        
+        return response()->json(["error" => false, "message" => "ok"]);
+    }
 }

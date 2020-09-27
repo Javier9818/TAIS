@@ -36,6 +36,7 @@ Route::get('/empresa/{id}/priorizacion', 'PriorizacionController@show');
 Route::get('/empresa/{id}/caracterizacion', 'CaracterizacionController@show');
 Route::get('/empresa/{id}/diagrama-flujo', 'FlujoController@show');
 Route::get('/empresa/{id}/diagrama-seguimiento', 'SeguimientoController@show');
+Route::get('/empresa/{id}/gestion-indicadores', 'IndicadorController@show');
 
 
 Route::post('/unidad-negocio-changue', function(Request $request){

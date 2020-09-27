@@ -32,30 +32,47 @@
                 @endcan
             </ul>
 
-            @can('gestionar-cadena')
+           
                 <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="{{ $isTab('2') ? 'true' : 'false' }}" class="dropdown-toggle">
                     <i class="fas fa-copy"></i>
-                    Cadena de Suministro
+                    Cadena
                 </a>
                 <ul class="collapse list-unstyled {{ $isTab('2') ? 'show' : '' }}" id="pageSubmenu2">
+                    @can('gestionar-procesos')
                     <li>
                         <a href="/empresa/{{$empresa}}/procesos" class="{{ $isSelected('2', '1') ? 'active' : '' }}">Procesos</a>
                     </li>
+                    @endcan
+                    @can('gestionar-mapa-procesos')
                     <li>
                         <a href="/empresa/{{$empresa}}/mapa-procesos" class="{{ $isSelected('2', '2') ? 'active' : '' }}">Mapa de procesos</a>
                     </li>
+                    @endcan
+                    @can('gestionar-priorizacion')
                     <li>
                         <a href="/empresa/{{$empresa}}/priorizacion" class="{{ $isSelected('2', '3') ? 'active' : '' }}">Priorización de procesos</a>
                     </li>
+                    @endcan
+                    @can('gestionar-caracterizacion')
                     <li>
                         <a href="/empresa/{{$empresa}}/caracterizacion" class="{{ $isSelected('2', '4') ? 'active' : '' }}">Caracterizacion</a>
                     </li>
+                    @endcan
+                    @can('gestionar-diagrama-flujo')
                     <li>
                         <a href="/empresa/{{$empresa}}/diagrama-flujo" class="{{ $isSelected('2', '5') ? 'active' : '' }}">Diagrama de flujo</a>
                     </li>
+                    @endcan
+                    @can('gestionar-diagrama-seguimiento')
                     <li>
                         <a href="/empresa/{{$empresa}}/diagrama-seguimiento" class="{{ $isSelected('2', '6') ? 'active' : '' }}">Diagrama de seguimiento</a>
                     </li>
+                    @endcan
+                    @can('gestionar-diagrama-seguimiento')
+                    <li>
+                        <a href="/empresa/{{$empresa}}/gestion-indicadores" class="{{ $isSelected('2', '7') ? 'active' : '' }}">Gestión de indicadores</a>
+                    </li>
+                    @endcan
                     <!-- <li>
                         <a href="/empresa/{{$empresa}}/administrar-cadena" class="{{ $isSelected('2', '1') ? 'active' : '' }}">Administrar</a>
                     </li>
@@ -63,7 +80,7 @@
                         <a href="/empresa/{{$empresa}}/generar-cadena" class="{{ $isSelected('2', '2') ? 'active' : '' }}">Generar</a>
                     </li> -->
                 </ul> 
-            @endcan
+            
         </li>
     </ul>
 

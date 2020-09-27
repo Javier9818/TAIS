@@ -58,6 +58,7 @@ import {text, nombreText} from '../../../utils/expresiones'
     data() {
       return {
         escalas:[],
+        idCriterio: 0,
         escalaSelected: null,
         fieldsEscalas: [
          { key: 'descripcion', label: 'Escala', sortable: true },
@@ -124,16 +125,29 @@ import {text, nombreText} from '../../../utils/expresiones'
           this.form = {...data};
       },
       deleteCriterio(id){
-          alert(id)
+        axios.delete(`/api/escala/${id}/${unidad}`).then(({data}) => {
+            let {error, message} = data
+            if(error === true){
+              Swal.fire('Error!', message, 'error')
+            }
+            else{
+              this.loadEscalas(this.idCriterio)
+              Swal.fire('Exito!', 'Eliminación exitosa', 'success')
+            }
+        });
+      },
+      loadEscalas(id){
+        axios.get(`/api/escala/${id}`).then(({data}) => {
+            this.escalas = data.escalas;
+        });
+        this.idCriterio = id
+        this.resetCriterios();
       }
     },
     mounted(){},
     watch:{
         criterio(id){
-            axios.get(`/api/escala/${id}`).then(({data}) => {
-                this.escalas = data.escalas;
-            });
-            this.resetCriterios();
+            this.loadEscalas(id)
         }
     }
   }

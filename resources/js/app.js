@@ -70,8 +70,10 @@ Vue.component('caracterizacion-padre', require('./components/empresa/procesos/se
 Vue.component('flujo-padre', require('./components/empresa/procesos/seguimiento/FlujoPadre.vue').default);
 Vue.component('seguimiento-padre', require('./components/empresa/procesos/seguimiento/SeguimientoPadre.vue').default);
 Vue.component('selector-proceso', require('./components/empresa/procesos/selector-proceso.vue').default);
-
 Vue.component('select-version', require('./components/empresa/SelectVersion.vue').default);
+Vue.component('componente-gestion-indicadores', require('./components/empresa/procesos/indicadores/ComponenteGestionIndicadores.vue').default);
+Vue.component('componente-indicadores', require('./components/empresa/procesos/indicadores/ComponenteIndicadores.vue').default);
+Vue.component('form-indicador', require('./components/empresa/procesos/indicadores/FormIndicador.vue').default);
 import 'bootstrap/dist/css/bootstrap.css' 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
