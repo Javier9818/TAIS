@@ -74,7 +74,7 @@
                     </div>
                     <div class="col-md-1">
                       <b-form-group id="input-group-9" label="-" label-for="">
-                        <button type="button" class="btn btn-success btn-sm" @click="addList()" :disabled="!$v.variable.letterOrWord || !$v.nombreVar.nombreText"  >>></button>
+                        <button type="button" class="btn btn-success btn-sm" @click="addList()" :disabled=" nombreVar.length ===  0 || variable.length ===  0 || !$v.variable.letterOrWord || !$v.nombreVar.nombreText"  >>></button>
                       </b-form-group>
                     </div>
                     <div class="col-md-5">
@@ -109,8 +109,8 @@ import {text, nombreText, letterOrWord} from '../../../utils/expresiones'
     data() {
       return {
         loading:false,
-        variable: null,
-        nombreVar:null,
+        variable: '',
+        nombreVar:'',
         formulaRegex:true,
         form: {
           nombre:'',
@@ -175,9 +175,10 @@ import {text, nombreText, letterOrWord} from '../../../utils/expresiones'
     },
     methods: {
         onSubmit(){
+          let {mode} = this.dataForm
            this.$v.$touch()
            if(!this.$v.$invalid && this.formulaRegex){
-             alert('asas')
+             mode === 'create' ?  this.$emit('store', this.form) : this.$emit('update', this.form);
            }else{
              alert('Los datos ingresados son incorrectos!')
            }
@@ -208,10 +209,16 @@ import {text, nombreText, letterOrWord} from '../../../utils/expresiones'
             nombreVar,
           })
           setTimeout(()=>{
-            this.variable = null,
-            this.nombreVar = null
+            this.variable = '',
+            this.nombreVar = ''
           }, 500)
         }
+    },
+    mounted(){
+      let {mode, content} = this.dataForm
+      if(mode === 'edit'){
+        this.form = content
+      }
     }
   }
 </script>

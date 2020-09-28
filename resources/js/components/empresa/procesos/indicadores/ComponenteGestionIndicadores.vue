@@ -10,7 +10,7 @@
           <b-card no-body>
             <b-tabs pills card lazy>
                 <b-tab title="Indicadores de desempeño" active style="background: rgb(212 207 207)">
-                    <componente-indicadores></componente-indicadores>
+                    <componente-indicadores :idProceso='idProceso'></componente-indicadores>
                 </b-tab>
                 <b-tab title="Mapa estratégico" lazy>
                     <b-card-text>

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Empresa;
+use App\Indicador;
 use App\UnidadNegocio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class IndicadorController extends Controller
 {
@@ -20,5 +22,27 @@ class IndicadorController extends Controller
             return redirect('/empresa/'.$empresa_id.'/unidades-negocio')->withErrors(['unidad-error' => 'No se encontraron unidades de negocio habilitadas']);
     
         return view('Empresa.procesos.indicadores', ["empresa" => $empresa,"unidades" => $unidades_negocio ]);
+    }
+
+    public function store(Request $request){
+        $indicador = Indicador::create([
+            "proceso_id" => $request->idProceso,
+            "descripcion" => $request->data
+        ]);
+
+        return response()->json(["indicador" => $indicador]);
+    }
+
+    public function update(Request $request, $id){
+        $indicador = Indicador::find($id)->update([
+            "descripcion" => $request->data
+        ]);;
+
+        return response()->json(["indicador" => $indicador]);
+    }
+
+    public function showData($idProceso){
+        $indicadores = Indicador::where('proceso_id', $idProceso)->get();
+        return response()->json(["indicadores" => $indicadores]);
     }
 }
