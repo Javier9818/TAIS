@@ -40,6 +40,12 @@ import {text, nombreText} from '../../utils/expresiones'
     data() {
       return {
         loading: false,
+        perspectivas:[
+          'Financiero',
+          'Clientes',
+          'Procesos Internos',
+          'Aprendizaje y Crecimiento',
+        ],
         form: {
           nombre:'',
           descripcion:'',
@@ -76,7 +82,7 @@ import {text, nombreText} from '../../utils/expresiones'
           Swal.fire('Error', 'Por favor aseguresé de llenar correctamente los campos', 'error');
       },
       store(){
-        axios.post(`/api/proceso`, {...this.form, unidad}).then( ({data}) => {
+        axios.post(`/api/proceso`, {...this.form, unidad, perspectivas: JSON.stringify(this.perspectivas)}).then( ({data}) => {
             this.$emit('click');
             this.loading = false;
             this.$emit('store', {

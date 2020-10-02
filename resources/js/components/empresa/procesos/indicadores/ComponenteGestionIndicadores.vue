@@ -13,14 +13,10 @@
                     <componente-indicadores :idProceso='idProceso'></componente-indicadores>
                 </b-tab>
                 <b-tab title="Mapa estratégico" lazy>
-                    <b-card-text>
-                        
-                    </b-card-text>
+                  <componente-mapa-estrategico :idProceso='idProceso'></componente-mapa-estrategico>
                 </b-tab>
-                <b-tab title="Tablero de comnado" lazy>
-                    <b-card-text>
-                        
-                    </b-card-text>
+                <b-tab title="Tablero de comando" lazy>
+                  <componente-tablero-comando :idProceso='idProceso'></componente-tablero-comando>
                 </b-tab>
             </b-tabs>
         </b-card>

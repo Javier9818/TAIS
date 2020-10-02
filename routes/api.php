@@ -131,4 +131,11 @@ Route::post('/indicador','IndicadorController@store');
 Route::get('/indicador/{idProceso}','IndicadorController@showData');
 Route::put('/indicador/{id}','IndicadorController@update');
 
+Route::get('/perspectivas/{idProceso}','MapaEstrategicoController@getPerspectivas');
+
+Route::post('/objetivo-mapa','MapaEstrategicoController@setObjetivo');
+Route::get('/objetivo-mapa/{idProceso}','MapaEstrategicoController@getObjetivos');
+Route::put('/objetivo-mapa/{id}','MapaEstrategicoController@updateObjetivo');
+
+
 //Route::get('/version/{unidad}','MapaProcesoController@setVersion');

@@ -41,7 +41,8 @@ class ProcesoController extends Controller
         $proceso = Proceso::create([
             "nombre" => $request->nombre,
             "descripcion" => $request->descripcion,
-            "unidad_negocio_id" => $request->unidad
+            "unidad_negocio_id" => $request->unidad,
+            "perspectivas" => $request->perspectivas
         ]);
 
         foreach ($request->megaproceso as $key => $value) {
@@ -57,7 +58,8 @@ class ProcesoController extends Controller
             "nombre" => $request->nombre,
             "descripcion" => $request->descripcion,
             "unidad_negocio_id" => $request->unidad,
-            "proceso_padre" => $request->proceso
+            "proceso_padre" => $request->proceso,
+            "perspectivas" => $request->perspectivas
         ]);
 
         return response()->json(["proceso" => $proceso]);

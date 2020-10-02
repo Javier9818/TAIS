@@ -32,6 +32,12 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
     data() {
       return {
         loading: false,
+        perspectivas:[
+          'Financiero',
+          'Clientes',
+          'Procesos Internos',
+          'Aprendizaje y Crecimiento',
+        ],
         form: {
           nombre:'',
           descripcion:''
@@ -67,7 +73,7 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
       },
       store(){
         let { content} = this.dataForm;
-        axios.post(`/api/subproceso`, {...this.form, unidad, proceso: content.proceso}).then( ({data}) => {
+        axios.post(`/api/subproceso`, {...this.form, unidad, proceso: content.proceso, perspectivas: JSON.stringify(this.perspectivas)}).then( ({data}) => {
             this.$emit('click');
             this.loading = false;
             this.$emit('store', data.proceso);
