@@ -1,7 +1,7 @@
 <template>
 <b-container fluid> 
     <div class="row">
-        <div class="col-12">
+        <div class="col-12" v-if="idProceso">
             <h5>Objetivos</h5> 
             <button class="btn btn-sm btn-primary float-right mb-1 mr-1" @click="nuevoObjetivo()">Nuevo</button>
             <button class="btn btn-sm btn-danger float-right mb-1 mr-1" @click="verMapa()">Ver Gráfico</button>
@@ -33,8 +33,12 @@
       <form-objetivo @click="$bvModal.hide('formObjetivo')" @store="store" @update="update" :payload="modalObjetivo"></form-objetivo>
     </b-modal>
 
-    <b-modal id="crudPerspectica" :title="modalObjetivo.title" size="lg" scrollable hide-footer>
-      <!-- <form-subproceso @click="$bvModal.hide('crudPerspectica')" @store="storeSub" @update="updateSub" :dataForm="modalObjetivo"></form-subproceso> -->
+    <b-modal id="crudPerspectica" title="Perspectivas" size="lg" scrollable hide-footer>
+      <crud-perspectiva @click="$bvModal.hide('crudPerspectica')" @store="storeP" @update="updateP" :perspectivas="perspectivas" :idProceso="idProceso"></crud-perspectiva>
+    </b-modal>
+
+    <b-modal id="mapaGraph" :title="modalMapa.title" size="lg" scrollable hide-footer>
+      <mapa-estrategico :objetivos="objetivos" :perspectivas="perspectivas"></mapa-estrategico>
     </b-modal>
 
   </b-container>
@@ -55,6 +59,9 @@
             perspectivas:[],
             objetivos:[]
         },
+        modalMapa:{
+            title: ''
+        },
         fields: [
          { key: 'perspectiva', label: 'Perspectiva', sortable: true },
          { key: 'nombre', label: 'Nombre', sortable: true },
@@ -73,10 +80,11 @@
             this.$root.$emit('bv::show::modal', 'formObjetivo')
         },
         verMapa(){
-
+            this.modalMapa.title = 'Mapa estratégico'
+            this.$root.$emit('bv::show::modal', 'mapaGraph')
         },
         verPerspectivas(){
-
+            this.$root.$emit('bv::show::modal', 'crudPerspectica')
         },
         editaObjetivo(item){
             let { modalObjetivo, perspectivas, objetivos } = this
@@ -121,6 +129,12 @@
                 this.$root.$emit('bv::hide::modal', 'formObjetivo')
                 Swal.fire('Exito!!', 'Actualización exitosa', 'success');
             });
+        },
+        storeP(payload){
+
+        },
+        updateP(payload){
+
         }
     },
     mounted(){

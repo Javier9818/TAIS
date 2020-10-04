@@ -13,6 +13,21 @@ class MapaEstrategicoController extends Controller
         return response()->json(["perspectivas" => $perspectivas]);
     }
 
+    public function setPerspectiva(Request $request){
+        $exitsObjetivos = Objetivo::where('proceso_id', $request->idProceso)->exists();
+        // $exitsObjetivos = false;
+        if($exitsObjetivos)
+            return response()->json(["error" => true , "message" => "Existen registros de items en el mapa"]);
+        else{
+            $proceso = Proceso::where('id', $request->idProceso)->first();
+            $proceso->perspectivas = $request->data;
+            $proceso->save();
+        }
+        
+        return response()->json(["error" => false , "message" => "okey"]);
+    }
+
+
     public function setObjetivo(Request $request){
         $objetivo = Objetivo::create([
             "proceso_id" => $request->idProceso,

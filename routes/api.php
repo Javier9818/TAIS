@@ -132,6 +132,7 @@ Route::get('/indicador/{idProceso}','IndicadorController@showData');
 Route::put('/indicador/{id}','IndicadorController@update');
 
 Route::get('/perspectivas/{idProceso}','MapaEstrategicoController@getPerspectivas');
+Route::post('/perspectiva','MapaEstrategicoController@setPerspectiva');
 
 Route::post('/objetivo-mapa','MapaEstrategicoController@setObjetivo');
 Route::get('/objetivo-mapa/{idProceso}','MapaEstrategicoController@getObjetivos');

@@ -77,6 +77,8 @@ Vue.component('form-indicador', require('./components/empresa/procesos/indicador
 Vue.component('componente-mapa-estrategico', require('./components/empresa/procesos/indicadores/ComponenteMapaEstrategico.vue').default);
 Vue.component('componente-tablero-comando', require('./components/empresa/procesos/indicadores/ComponenteTableroComando.vue').default);
 Vue.component('form-objetivo', require('./components/empresa/procesos/indicadores/FormObjetivo.vue').default);
+Vue.component('crud-perspectiva', require('./components/empresa/procesos/indicadores/ComponentePerspectiva.vue').default);
+Vue.component('mapa-estrategico', require('./components/empresa/procesos/indicadores/MapaEstrategico.vue').default);
 
 import 'bootstrap/dist/css/bootstrap.css' 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
