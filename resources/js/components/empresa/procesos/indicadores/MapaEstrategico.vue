@@ -98,12 +98,12 @@ import jsPDF from 'jspdf';
              nodeDataArray.push({ key: objetivos[index].id, group: (objetivos[index].perspectiva + 1)  * -1, text: objetivos[index].nombre})
           }
           
-          // objetivos.forEach((e) => {
-          //   nodeDataArray.push({ key: e.id, group: (e.perspectiva + 1 ) * -1, text: e.nombre})
-          //   // e.efecto.forEach(ef => {
-          //   //   linkDataArray.push({ from: e.id, to: ef.id },);
-          //   // })
-          // });
+          objetivos.forEach((e) => {
+            // nodeDataArray.push({ key: e.id, group: (e.perspectiva + 1 ) * -1, text: e.nombre})
+            e.efecto.forEach(ef => {
+              linkDataArray.push({ from: e.id, to: ef.id },);
+            })
+          });
 
 
           setTimeout(() => {

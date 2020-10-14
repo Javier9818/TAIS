@@ -5,10 +5,13 @@
             <form @submit.prevent="onSubmit">
                 <b-form-group label="Nombre" label-for="nombre">
                     <input type="text" id="nombre" v-model="name" required>
-                    <button class="btn btn-sm btn-primary" type="submit" v-if="!edit">Insertar</button>
-                    <button class="btn btn-sm btn-primary" type="submit" v-if="edit">Actualizar</button>
+                    <button class="btn btn-sm btn-primary" type="submit" v-if="!edit" :disabled="!$v.name.repeat || !$v.name.minLength || !$v.name.text">Insertar</button>
+                    <button class="btn btn-sm btn-primary" type="submit" v-if="edit" :disabled="!$v.name.repeat || !$v.name.minLength || !$v.name.text">Actualizar</button>
                     <button class="btn btn-sm btn-danger" type="submit" v-if="edit" @click="edit = false; name=''; editId=null">Nuevo</button>
                 </b-form-group>
+                <p v-if="!$v.name.repeat" class="help text-danger">Este campo ya se encuetra registrado</p>
+                <p v-else-if="!$v.name.minLength" class="help text-danger">Este campo es inválido</p>
+                <p v-else-if="!$v.name.text" class="help text-danger">Este campo es inválido</p>
             </form>
         </div>
         <div class="col-12">
@@ -35,6 +38,9 @@
 
 <script>
   import Swal from 'sweetalert2'
+  import {validationMixin} from 'vuelidate'
+  import {required, minLength, maxValue, helpers} from 'vuelidate/lib/validators'
+  import {text, nombreText, letterOrWord} from '../../../utils/expresiones'
   export default {
     props:['perspectivas', 'idProceso'],
     data() {
@@ -49,6 +55,16 @@
          { key: 'actions', label: 'Opciones' }
         ]
       }
+    },
+    validations:{
+        name:{
+          text,
+          minLength: minLength(3),
+          repeat(value){
+            let {dataP} = this
+            return dataP.find(e => e.value === value) ? false : true;
+          }
+        }
     },
     methods: {
       onSubmit(){

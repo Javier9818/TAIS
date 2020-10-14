@@ -78,7 +78,12 @@ Vue.component('componente-mapa-estrategico', require('./components/empresa/proce
 Vue.component('componente-tablero-comando', require('./components/empresa/procesos/indicadores/ComponenteTableroComando.vue').default);
 Vue.component('form-objetivo', require('./components/empresa/procesos/indicadores/FormObjetivo.vue').default);
 Vue.component('crud-perspectiva', require('./components/empresa/procesos/indicadores/ComponentePerspectiva.vue').default);
+Vue.component('crud-varaible', require('./components/empresa/procesos/indicadores/ComponenteVariable.vue').default);
 Vue.component('mapa-estrategico', require('./components/empresa/procesos/indicadores/MapaEstrategico.vue').default);
+Vue.component('data-fuente-component', require('./components/empresa/procesos/indicadores/ComponenteDataFuente.vue').default);
+Vue.component('form-data-fuente', require('./components/empresa/procesos/indicadores/FormDataFuente.vue').default);
+
+Vue.component('chart-component', require('./components/empresa/procesos/indicadores/ComponenteChart.vue').default);
 
 import 'bootstrap/dist/css/bootstrap.css' 
 import 'bootstrap-vue/dist/bootstrap-vue.css'

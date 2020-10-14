@@ -21,7 +21,8 @@ class CreateProcesosTable extends Migration
             $table->integer('unidad_negocio_id');
             $table->boolean('flag_prio')->default(false);
             $table->boolean('estado')->default(true);
-            $table->longText('perspectivas');
+            $table->longText('perspectivas')->nullable();
+            $table->longText('variables_control')->nullable();
             $table->timestamps();
         });
     }

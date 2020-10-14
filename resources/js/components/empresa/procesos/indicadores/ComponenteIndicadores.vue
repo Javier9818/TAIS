@@ -1,6 +1,9 @@
 <template>
     <section>
-        <div class="row justify-content-end mr-2" @click="nuevoIndicador" v-if="idProceso"><button class="btn btn-sm btn-danger">Nuevo</button></div>
+        <div class="row justify-content-end mr-2" v-if="idProceso">
+            <button class="btn btn-sm btn-warning mr-2" v-b-modal.crudVariable>Variables de control</button>
+            <button class="btn btn-sm btn-danger" @click="nuevoIndicador">Nuevo</button>
+        </div>
         <div class="row">
             <div class="col-md-6" v-for="(item, index) in indicadores" :key="index">
                 <b-card>
@@ -36,7 +39,11 @@
         </div>
 
         <b-modal id="formIndicador" :title="info.title" size="lg" scrollable hide-footer>
-            <form-indicador @click="$bvModal.hide('formIndicador')" @store="storeSub" @update="updateSub" :dataForm="info"></form-indicador>
+            <form-indicador @click="$bvModal.hide('formIndicador')" @store="storeSub" @update="updateSub" :dataForm="info" :variables="variables"></form-indicador>
+        </b-modal>
+
+        <b-modal id="crudVariable" title="Variables de control" size="lg" scrollable hide-footer>
+            <crud-varaible @click="$bvModal.hide('crudVariable')" :variables="variables" :idProceso="idProceso" :indicadores="indicadores" @handleVars="handleVars"></crud-varaible>
         </b-modal>
     </section>
 </template>
@@ -48,6 +55,7 @@
     data() {
       return {
         indicadores:[], 
+        variables:[],
         info:{
             title:'',
             content:null,
@@ -56,6 +64,9 @@
       }
     },
     methods:{
+        handleVars(value){
+           this.variables = value
+        },
         nuevoIndicador(){
             this.info.title = 'Nuevo indicador'
             this.info.content = {}
@@ -82,6 +93,7 @@
                 data.indicadores.forEach(e => {
                     this.indicadores.push({...JSON.parse(e.descripcion), id: e.id});
                 });
+                this.variables = JSON.parse(data.proceso.variables_control || '[]')
             });
         },
         updateSub(dataIndicador){

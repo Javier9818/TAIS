@@ -75,6 +75,7 @@
     watch:{
       proceso(id){
         this.$emit('changue-process', id);
+        this.subproceso = null;
       },
       subproceso(id){
         this.$emit('changue-process', id);

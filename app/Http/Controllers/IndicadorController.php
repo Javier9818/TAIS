@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Empresa;
 use App\Indicador;
+use App\Proceso;
 use App\UnidadNegocio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -43,6 +44,15 @@ class IndicadorController extends Controller
 
     public function showData($idProceso){
         $indicadores = Indicador::where('proceso_id', $idProceso)->get();
-        return response()->json(["indicadores" => $indicadores]);
+        $proceso = Proceso::find($idProceso);
+        return response()->json(["indicadores" => $indicadores, "proceso" => $proceso]);
+    }
+
+    public function setVariables(Request $request){
+        $proceso = Proceso::find($request->idProceso);
+        $proceso->variables_control = $request->data;
+        $proceso->save();
+
+        return response()->json(["message" => "ok", "error" => false]);
     }
 }

@@ -142,6 +142,7 @@
     },
     watch:{
         idProceso(id){
+            this.objetivos = []
             this.getPerpesctivas(id)
         }
     }

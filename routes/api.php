@@ -128,6 +128,7 @@ Route::post('/version','MapaProcesoController@setVersion');
 Route::get('/version/{unidad}','MapaProcesoController@getVersion');
 
 Route::post('/indicador','IndicadorController@store');
+Route::post('/variables','IndicadorController@setVariables');
 Route::get('/indicador/{idProceso}','IndicadorController@showData');
 Route::put('/indicador/{id}','IndicadorController@update');
 

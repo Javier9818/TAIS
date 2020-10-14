@@ -60,21 +60,27 @@
 
                     <hr class="col-10">
 
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <b-form-group id="input-group-7" label="Variable" label-for="variable">
-                            <b-form-input id="variable" v-model="variable" type="text"  ></b-form-input>
+                            <select class="form-control" name="cbVars" id="cbVars" v-model="selectVar">
+                                <option :value="null" disabled>-- Seleccione una opción --</option>
+                                <option v-for="(item, index) in variablesCopy" :key="index" :value="index">
+                                  {{item.variable}} - {{item.nombreVar}}
+                                </option>
+                            </select>
+                            <!-- <b-form-input id="variable" v-model="variable" type="text"  ></b-form-input> -->
                             <p v-if="!$v.variable.letterOrWord" class="help text-danger">Este campo solo puede contener una palabra o letra</p>
                         </b-form-group>
                     </div>
-                    <div class="col-md-3">
+                    <!-- <div class="col-md-3">
                         <b-form-group id="input-group-8" label="Nombre" label-for="nombreVar">
                             <b-form-input id="nombreVar" v-model="nombreVar" type="text"  ></b-form-input>
                             <p v-if="!$v.nombreVar.nombreText" class="help text-danger">Este campo no es válido</p>
                         </b-form-group>
-                    </div>
+                    </div> -->
                     <div class="col-md-1">
                       <b-form-group id="input-group-9" label="-" label-for="">
-                        <button type="button" class="btn btn-success btn-sm" @click="addList()" :disabled=" nombreVar.length ===  0 || variable.length ===  0 || !$v.variable.letterOrWord || !$v.nombreVar.nombreText"  >>></button>
+                        <button type="button" class="btn btn-success btn-sm" @click="addList()" :disabled="selectVar===null"  >>></button>
                       </b-form-group>
                     </div>
                     <div class="col-md-5">
@@ -104,10 +110,12 @@ import {validationMixin} from 'vuelidate'
 import {required, numeric, minValue, maxValue, maxLength, minLength, email, helpers} from 'vuelidate/lib/validators'
 import {text, nombreText, letterOrWord} from '../../../utils/expresiones'
   export default {
-    props:['dataForm'],
+    props:['dataForm', 'variables'],
     mixins: [validationMixin],
     data() {
       return {
+        variablesCopy: [],
+        selectVar:null,
         loading:false,
         variable: '',
         nombreVar:'',
@@ -200,17 +208,20 @@ import {text, nombreText, letterOrWord} from '../../../utils/expresiones'
           }
         },
         removeList(index){
-          this.form.listVar.splice(index,1)
+          let { variablesCopy, form} = this
+          variablesCopy.push(form.listVar[index])
+          setTimeout(()=>{
+            form.listVar.splice(index,1)
+          }, 500)
+          
         },
         addList(){
-          let { variable, nombreVar, form} = this
-          form.listVar.push({
-            variable,
-            nombreVar,
-          })
+          let { variablesCopy, form, selectVar} = this
+          let aux = selectVar
+          form.listVar.push(variablesCopy[selectVar])
           setTimeout(()=>{
-            this.variable = '',
-            this.nombreVar = ''
+            this.selectVar = null;
+            variablesCopy.splice(aux, 1);
           }, 500)
         }
     },
@@ -219,6 +230,9 @@ import {text, nombreText, letterOrWord} from '../../../utils/expresiones'
       if(mode === 'edit'){
         this.form = content
       }
+      let {variablesCopy, variables} = this
+      this.variablesCopy = variables.slice(0, variables.length)
+      console.log(variables.slice(0, variables.length-1))
     }
   }
 </script>

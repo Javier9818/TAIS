@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class Proceso extends Model
 {
-    protected $fillable = ['nombre', 'descripcion', 'unidad_negocio_id', 'proceso_padre', 'flag_prio', 'estado', 'perspectivas'];
+    protected $fillable = ['nombre', 'descripcion', 'unidad_negocio_id', 'proceso_padre', 'flag_prio', 'estado', 'perspectivas', 'variables_control'];
     protected $table = 'procesos';
 
 
