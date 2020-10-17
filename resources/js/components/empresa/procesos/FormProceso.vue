@@ -41,10 +41,10 @@ import {text, nombreText} from '../../utils/expresiones'
       return {
         loading: false,
         perspectivas:[
-          'Financiero',
-          'Clientes',
-          'Procesos Internos',
           'Aprendizaje y Crecimiento',
+          'Procesos Internos',
+          'Clientes     .',
+          'Financiero',
         ],
         form: {
           nombre:'',

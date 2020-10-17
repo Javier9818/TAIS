@@ -16,14 +16,14 @@
                     <a href="/empresa/{{$empresa}}" class="{{ $isSelected('1', '1') ? 'active' : '' }}">Información</a>
                 </li>
                 @can('gestionar-clientes')
-                    <!-- <li>
+                    <li>
                         <a href="/empresa/{{$empresa}}/clientes" class="{{ $isSelected('1', '2') ? 'active' : '' }}">Clientes</a>
-                    </li> -->
+                    </li>
                 @endcan
                 @can('gestionar-proveedores')
-                    <!-- <li>
+                    <li>
                         <a href="/empresa/{{$empresa}}/proveedores" class="{{ $isSelected('1', '3') ? 'active' : '' }}">Proveedores</a>
-                    </li> -->
+                    </li>
                 @endcan
                 @can('gestionar-unidades-negocio')
                     <li>
@@ -35,9 +35,15 @@
            
                 <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="{{ $isTab('2') ? 'true' : 'false' }}" class="dropdown-toggle">
                     <i class="fas fa-copy"></i>
-                    Cadena
+                    Cadena de Suministro
                 </a>
                 <ul class="collapse list-unstyled {{ $isTab('2') ? 'show' : '' }}" id="pageSubmenu2">
+                    <li>
+                        <a href="/empresa/{{$empresa}}/administrar-cadena" class="{{ $isSelected('2', '20') ? 'active' : '' }}">Administrar cadena</a>
+                    </li>
+                    <li>
+                        <a href="/empresa/{{$empresa}}/generar-cadena" class="{{ $isSelected('2', '30') ? 'active' : '' }}">Generar cadena</a>
+                    </li>
                     @can('gestionar-procesos')
                     <li>
                         <a href="/empresa/{{$empresa}}/procesos" class="{{ $isSelected('2', '1') ? 'active' : '' }}">Procesos</a>
@@ -73,12 +79,6 @@
                         <a href="/empresa/{{$empresa}}/gestion-indicadores" class="{{ $isSelected('2', '7') ? 'active' : '' }}">Gestión de indicadores</a>
                     </li>
                     @endcan
-                    <!-- <li>
-                        <a href="/empresa/{{$empresa}}/administrar-cadena" class="{{ $isSelected('2', '1') ? 'active' : '' }}">Administrar</a>
-                    </li>
-                    <li>
-                        <a href="/empresa/{{$empresa}}/generar-cadena" class="{{ $isSelected('2', '2') ? 'active' : '' }}">Generar</a>
-                    </li> -->
                 </ul> 
             
         </li>

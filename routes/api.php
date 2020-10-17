@@ -138,6 +138,7 @@ Route::post('/perspectiva','MapaEstrategicoController@setPerspectiva');
 Route::post('/objetivo-mapa','MapaEstrategicoController@setObjetivo');
 Route::get('/objetivo-mapa/{idProceso}','MapaEstrategicoController@getObjetivos');
 Route::put('/objetivo-mapa/{id}','MapaEstrategicoController@updateObjetivo');
+Route::delete('/objetivo-mapa/{id}','MapaEstrategicoController@deleteObjetivo');
 
 
 //Route::get('/version/{unidad}','MapaProcesoController@setVersion');

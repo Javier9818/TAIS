@@ -120,7 +120,7 @@ import {text, nombreText, letterOrWord, decimal, textOracion} from '../../../uti
                 this.dataFuente = dataF
             }
             else{
-                var dataF = orderData([...dataFuente, form])
+                var dataF = orderData([...dataFuente, {...form}])
                 variables[index] = { ...variables[index], dataFuente: dataF}
                 this.dataFuente = dataF
             }

@@ -33,10 +33,10 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
       return {
         loading: false,
         perspectivas:[
-          'Financiero',
-          'Clientes',
-          'Procesos Internos',
           'Aprendizaje y Crecimiento',
+          'Procesos Internos',
+          'Clientes     .',
+          'Financiero',
         ],
         form: {
           nombre:'',

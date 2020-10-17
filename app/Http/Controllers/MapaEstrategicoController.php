@@ -49,4 +49,9 @@ class MapaEstrategicoController extends Controller
 
         return response()->json(["objetivo" => $objetivo]);
     }
+
+    public function deleteObjetivo($id){
+        Objetivo::find($id)->delete();
+        return response()->json(["message" => "okey"]);
+    }
 }

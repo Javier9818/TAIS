@@ -17,7 +17,7 @@
                 <b-button size="sm" @click="editaObjetivo(row.item)" class="mr-1 btn-success">
                     <i class="fas fa-pencil-alt"></i>
                 </b-button>
-                <b-button size="sm" @click="eliminaObjetivo(row.item.id)" class="btn-danger">
+                <b-button size="sm" @click="eliminaObjetivo(row.item.id, row.index)" class="btn-danger">
                    <i class="fas fa-trash"></i>
                 </b-button>
             </template>
@@ -95,8 +95,11 @@
             modalObjetivo.objetivos = objetivos
             this.$root.$emit('bv::show::modal', 'formObjetivo')
         },
-        eliminaObjetivo(){
-
+        eliminaObjetivo(id, index){
+            axios.delete(`/api/objetivo-mapa/${id}`).then(({data}) => {
+                this.objetivos.splice(index,1)
+                Swal.fire('Exito!!', 'Borrado exitoso', 'success');
+            });
         },
         getPerpesctivas(idProceso){
             axios.get(`/api/perspectivas/${idProceso}`).then(({data}) => {

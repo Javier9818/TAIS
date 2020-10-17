@@ -4,7 +4,7 @@
 @endsection
 
 @section('sidenav')
-<x-side-bar tab="2" selected='1' empresa="{{$empresa->id}}"/>
+<x-side-bar tab="2" selected='20' empresa="{{$empresa->id}}"/>
 @endsection
 
 @section('content')

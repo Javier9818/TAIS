@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         DB::insert('insert into scopes (id, description) values (?, ?)', [1, 'Gestionar Empresa']);
-        //DB::insert('insert into scopes (id, description) values (?, ?)', [2, 'Gestionar Proveedores']);
-        //DB::insert('insert into scopes (id, description) values (?, ?)', [3, 'Gestionar Clientes']);
-       //DB::insert('insert into scopes (id, description) values (?, ?)', [4, 'Gestionar Cadena de Suministro']);
+        DB::insert('insert into scopes (id, description) values (?, ?)', [2, 'Gestionar Proveedores']);
+        DB::insert('insert into scopes (id, description) values (?, ?)', [3, 'Gestionar Clientes']);
+       DB::insert('insert into scopes (id, description) values (?, ?)', [4, 'Gestionar Cadena de Suministro']);
         DB::insert('insert into scopes (id, description) values (?, ?)', [5, 'Gestión de procesos']);
         DB::insert('insert into scopes (id, description) values (?, ?)', [6, 'Gestión de mapa de procesos']);
         DB::insert('insert into scopes (id, description) values (?, ?)', [7, 'Gestión de priorización']);
