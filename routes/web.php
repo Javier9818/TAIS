@@ -44,5 +44,15 @@ Route::post('/unidad-negocio-changue', function(Request $request){
     return redirect()->back();  
 });
 
+//GERENCIA DE SISTEMAS
+Route::get('/empresa/{id}/objetivos-estrategicos', 'ObjetivoEstrategicoController@index');
 
+Route::get('/empresa/{id}/objetivos-metas-empresariales', 'MetasEmpresarialesController@index');
+Route::post('/version', 'MetasEmpresarialesController@setVersion');
 
+Route::get('/empresa/{id}/objetivos-control', 'ObjetivoControlController@index');
+
+Route::get('/transacciones', 'CascadaMetasController@getTransacciones');
+
+Route::get('/empresa/{id}/alineamiento-resultante', 'CascadaMetasController@indexAlienamientoResultante');
+Route::get('/empresa/{id}/objetivos-control-resultante', 'CascadaMetasController@indexControlResultante');

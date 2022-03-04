@@ -37,6 +37,24 @@ class AuthServiceProvider extends ServiceProvider
             return ($user->isCustomer && $user->empresa_id == $idEmpresa);
         });
 
+        Gate::define('gestionar-objetivos-estrategicos', function($user){
+            $permisos = $user->permisoUser;
+            foreach ($permisos as $key => $permiso) {
+                if($permiso->id === 2)
+                return true;
+            }
+            return false;
+        });
+
+        Gate::define('gestionar-cascada-metas', function($user){
+            $permisos = $user->permisoUser;
+            foreach ($permisos as $key => $permiso) {
+                if($permiso->id === 3)
+                return true;
+            }
+            return false;
+        });
+
         Gate::define('gestionar-clientes', function($user){
             $permisos = $user->permisoUser;
             foreach ($permisos as $key => $permiso) {

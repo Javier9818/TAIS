@@ -104,6 +104,7 @@
                 $('#sidebar').toggleClass('active');
             });
         });
+        let userID = @json(Auth::id());
     </script>
     @yield('scripts')
 </body>

@@ -2,13 +2,8 @@
   <div>
     <b-overlay :show="loading" rounded="sm">
     <b-form @submit.prevent="onSubmit" @reset="onReset" id="form">
-      <b-form-group id="input-group-1" label="RUC" label-for="ruc">
-        <b-form-input id="ruc" v-model="form.ruc" type="number" required placeholder="Ingrese el RUC"></b-form-input>
-        <p v-if="$v.form.ruc.$error" class="help text-danger">Este campo es inválido</p>
-      </b-form-group>
-
-      <b-form-group id="input-group-2" label="Nombre*" label-for="nombre">
-        <b-form-input id="nombre" v-model="form.nombre" type="text" required placeholder="Ingrese el nombre de la empresa"></b-form-input>
+      <b-form-group id="input-group-1" label="Nombre" label-for="nombre">
+        <b-form-input id="nombre" v-model="form.nombre" type="text" required placeholder="Ingrese el nombre"></b-form-input>
         <p v-if="$v.form.nombre.$error" class="help text-danger">Este campo es inválido</p>
       </b-form-group>
 
@@ -17,23 +12,13 @@
        <p v-if="$v.form.descripcion.$error" class="help text-danger">Este campo es inválido</p>
       </b-form-group>
 
-      <b-form-group id="input-group-2" label="Teléfono o celular*" label-for="nombre">
-        <b-form-input id="nombre" v-model="form.celular" type="number" required placeholder="Ingrese el teléfono o celular de la empresa"></b-form-input>
-        <p v-if="$v.form.celular.$error" class="help text-danger">Este campo es inválido</p>
+      <b-form-group label="Perspectiva">
+          <b-form-radio-group id="checkbox-group-2" v-model="form.perspectiva_fk" name="flavour-2" >
+              <b-form-radio v-for="(perspectiva, index) in perspectivas" :value="perspectiva.id" :key="index" required>
+                {{perspectiva.nombre}}
+              </b-form-radio>
+          </b-form-radio-group>
       </b-form-group>
-
-      <b-form-group id="input-group-2" label="Email*" label-for="nombre">
-        <b-form-input id="nombre" v-model="form.email" type="email" required placeholder="Ingrese el email de la empresa"></b-form-input>
-        <p v-if="$v.form.email.$error" class="help text-danger">Este campo es inválido</p>  
-      </b-form-group>
-      <b-form-group id="input-group-5" label="Foto" label-for="foto">
-        <b-aspect :aspect="3" v-if="form.foto !== null && !edit">
-          <b-img :src="form.foto ? '/storage/images/entidad/'+form.foto : '/assets/img/empty.jpg'" fluid alt="Responsive image" width="70%"></b-img>
-          <a href="javascript:void(0)" @click="edit=true">Cambiar</a>
-        </b-aspect>
-         <input type="file" name="image" @change="getImage" accept="image/*" v-else>
-      </b-form-group>
-
       <b-button type="submit" variant="primary">{{dataForm.mode === 'create' ? 'Registrar' : 'Actualizar'}}</b-button>
       <b-button variant="danger" @click="$emit('click')">Cancelar</b-button>
     </b-form>
@@ -56,14 +41,13 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
       return {
         loading: false,
         edit:false,
+        perspectivas:[],
         form: {
-          image:null,
-          ruc:'',
           nombre:'',
           descripcion:'',
-          celular: '',
-          email: '',
-          empresa_id: empresa.id,
+          perspectiva_fk:'',
+          empresaID: empresa.id,
+          userID: userID
         }
       }
     },
@@ -72,54 +56,23 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
         },
      validations:{
           form:{
-            ruc:{
-              required,
-              numeric,
-              minLength: minLength(11),
-              maxLength: maxLength(11)
-            },
             nombre:{
               required,
-              nombreText,
+              text,
               minLength: minLength(2),
-            },
-            celular:{
-              required,
-              numeric,
-              minLength: minLength(6),
-              maxLength: maxLength(11)
             },
             descripcion:{
               required,
               text,
               minLength: minLength(4),
-            },
-            email:{
-              required,
-              email
             }
           }
     },
     mounted(){
         if(this.dataForm.mode === 'edit'){this.form = {...this.dataForm.content}}
+        this.perspectivas = perspectivas
     },
     methods: {
-      getImage(e){
-        let image = e.target.files[0];
-        let reader = new FileReader();
-        reader.readAsDataURL(image);
-        reader.onload = e => {
-            this.form.image = e.target.result;
-        }
-        this.loaded = true;
-    }, 
-     onChange (image) {
-      if (image) {
-         this.image = image;
-      } else {
-          console.log('FileReader API not supported: use the <form>, Luke!')
-      }
-      },
       onSubmit(evt) {
         evt.preventDefault();
         this.$v.$touch()
@@ -131,19 +84,23 @@ const nombreText = helpers.regex('alpha', /^[a-zA-Z0-9À-ÿ\u00f1\u00d1\s]*$/)
         }
       },
       store(){
-        axios.post(`/api/${this.entidad}`, this.form).then( ({data}) => {
+        axios.post(`/api/objetivo-estrategico`, this.form).then( ({data}) => {
             this.$emit('click');
             this.loading = false;
-            this.$emit('store', data.entidad);
-            Swal.fire('Éxito', 'Se han guardado los cambios', 'success');
+            this.$emit('store', data.objetivo);
+            Swal.fire('Éxito', 'Se han guardado los cambios', 'success').then( () => {
+              location.reload()
+            });
         });
       },
       update(){
-        axios.put(`/api/${this.entidad}/${this.dataForm.content.id}`, this.form).then( ({data}) => {
+        axios.put(`/api/objetivo-estrategico/${this.dataForm.content.id}`, {...this.form, userID:userID}).then( ({data}) => {
             this.$emit('click');
             this.loading = false;
             this.$emit('update', this.form);
-            Swal.fire('Éxito', 'Se han actualizado los cambios', 'success');
+            Swal.fire('Éxito', 'Se han actualizado los cambios', 'success').then( () => {
+              location.reload()
+            });
         });
       },
       onReset(evt) {

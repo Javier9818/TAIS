@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Auditoria;
 use App\Cliente;
 use App\Empresa;
 use App\Proceso;
 use App\Proveedor;
 use App\UnidadNegocio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Mockery\Undefined;
 
@@ -21,6 +23,7 @@ class EmpresaController extends Controller
     public function index()
     {
         $empresas = Empresa::orderBy('created_at','desc')->get();
+        session(['version' => '1']);
         return view('admin.home', ["empresas" => $empresas]);
     }
 
@@ -50,6 +53,14 @@ class EmpresaController extends Controller
                 "nombre" => $request->nombre,
                 "direccion" => $request->direccion,
                 "descripcion" => $request->descripcion
+            ]);
+
+            Auditoria::create([
+                "tabla" => "Empresa",
+                "accion" => "Registro",
+                "terminal" => "127.0.0.1",
+                "navegador" => "Chrome 87",
+                "user_fk" => $request->userID ?? 1
             ]);
         return response()->json(["error" => false, "message" => "ok", "empresa" => $empresa], 200);
     }
@@ -175,6 +186,14 @@ class EmpresaController extends Controller
             "descripcion" => $request->descripcion
         ]);
 
+        Auditoria::create([
+            "tabla" => "Empresa",
+            "accion" => "Edición",
+            "terminal" => "127.0.0.1",
+            "navegador" => "Chrome 87",
+            "user_fk" => $request->userID ?? 1
+        ]);
+
         return response()->json(["message"=>"Registrado correctamente"], 200);
     }
 
@@ -189,6 +208,14 @@ class EmpresaController extends Controller
         $empresa = Empresa::find($id);
         $empresa->estado = !$empresa->estado;
         $empresa->save();
+
+        Auditoria::create([
+            "tabla" => "Empresa",
+            "accion" => "Eliminación",
+            "terminal" => "127.0.0.1",
+            "navegador" => "Chrome 87",
+            "user_fk" => Auth::id() ?? 1
+        ]);
 
         return response()->json(["Messagge" => $empresa],200);
     }

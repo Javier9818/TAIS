@@ -29,6 +29,7 @@ Vue.component('table-empresa', require('./components/admin/TableEmpresa.vue').de
 Vue.component('form-empresa', require('./components/admin/FormEmpresa.vue').default);
 Vue.component('table-users', require('./components/admin/TableUsers.vue').default);
 Vue.component('form-user', require('./components/admin/FormUser.vue').default);
+Vue.component('table-transacciones', require('./components/admin/TableTransacciones.vue').default);
 
 Vue.component('table-entidades', require('./components/empresa/TableEntidades.vue').default);
 Vue.component('form-entidad', require('./components/empresa/FormEntidad.vue').default);
@@ -84,6 +85,12 @@ Vue.component('data-fuente-component', require('./components/empresa/procesos/in
 Vue.component('form-data-fuente', require('./components/empresa/procesos/indicadores/FormDataFuente.vue').default);
 
 Vue.component('chart-component', require('./components/empresa/procesos/indicadores/ComponenteChart.vue').default);
+
+Vue.component('cascada-metas', require('./components/empresa/cascada_metas/ObjetivosMetas.vue').default);
+Vue.component('component-version', require('./components/empresa/cascada_metas/ComponentVersion.vue').default);
+Vue.component('objetivos-control', require('./components/empresa/cascada_metas/ObjetivosControl.vue').default);
+Vue.component('matriz-alineamiento', require('./components/empresa/cascada_metas/Matriz_alineamiento.vue').default);
+Vue.component('matriz-control', require('./components/empresa/cascada_metas/Matriz_control.vue').default);
 
 import 'bootstrap/dist/css/bootstrap.css' 
 import 'bootstrap-vue/dist/bootstrap-vue.css'

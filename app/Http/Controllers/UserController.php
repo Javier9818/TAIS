@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Auditoria;
 use App\Empresa;
 use App\Person;
 use App\Scope;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -76,7 +78,13 @@ class UserController extends Controller
         foreach ($request->scopes as $key => $value) {
             DB::insert('insert into scope_user(scope_id, user_id) values (?, ?)', [$value, $user->id]);
         }
-
+        Auditoria::create([
+            "tabla" => "users",
+            "accion" => "Registro",
+            "terminal" => "127.0.0.1",
+            "navegador" => "Chrome 87",
+            "user_fk" => $request->userID ?? 1
+        ]);
         $request->id = $user->id;
         return response()->json(["user" => $request->all()], 200);
     }
@@ -140,6 +148,13 @@ class UserController extends Controller
             DB::insert('insert into scope_user(scope_id, user_id) values (?, ?)', [$value, $request->id]);
         }
 
+        Auditoria::create([
+            "tabla" => "users",
+            "accion" => "Edición",
+            "terminal" => "127.0.0.1",
+            "navegador" => "Chrome 87",
+            "user_fk" => $request->userID ?? 1
+        ]);
         return response()->json(["user" => $request->all()], 200);
     }
 
@@ -157,7 +172,13 @@ class UserController extends Controller
         $persona->delete();
         $user->delete();
         DB::table('scope_user')->where('user_id', "=", $id) ->delete();
-
+        Auditoria::create([
+            "tabla" => "users",
+            "accion" => "Eliminación",
+            "terminal" => "127.0.0.1",
+            "navegador" => "Chrome 87",
+            "user_fk" => Auth::id() ?? 1
+        ]);
         return response()->json(["message" => true], 200);
     }
 }

@@ -45,7 +45,8 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
           ruc:'',
           nombre:'',
           direccion:'',
-          descripcion:''
+          descripcion:'',
+          userID:userID
         },
       }
     },
@@ -102,7 +103,7 @@ const nombreText = helpers.regex('alpha', /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/)
       },
       update(){
           this.loading = true;
-          axios.put(`/api/empresa/${empresa.id}`, this.form).then( ({data}) => {
+          axios.put(`/api/empresa/${empresa.id}`, {...this.form, userID}).then( ({data}) => {
               this.$emit('click');
               this.loading = false;
               this.$emit('store', data.empresa);

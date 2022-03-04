@@ -99,7 +99,8 @@ import Swal from 'sweetalert2'
           password:'',
           tipoUser:null,
           empresa: null,
-          scopes:[]
+          scopes:[],
+          userID: userID
         }
       }
     },
@@ -138,7 +139,7 @@ import Swal from 'sweetalert2'
       },
       update(){
         this.loading = true;
-        axios.put('/api/user', this.form).then( ({data}) => {
+        axios.put('/api/user', {...this.form, userID: userID}).then( ({data}) => {
             this.$emit('click');
             this.$emit('update', this.form);
             Swal.fire('Éxito', 'Se han guardado los cambios', 'success');

@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use phpDocumentor\Reflection\Types\Resource_;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,30 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+//GERENCIA DE OPERACIONES =====================================
+
+Route::post('/objetivo-estrategico', 'ObjetivoEstrategicoController@store');
+Route::put('/objetivo-estrategico/{objetivoID}', 'ObjetivoEstrategicoController@update');
+Route::post('/prioridad-objetivo', 'ObjetivoEstrategicoController@cambiarPrioridad');
+
+Route::get('/metas-empresariales-by-perspectiva/{perspectiva_fk}/{empresa_fk}/{objetivo_fk}', 'MetasEmpresarialesController@metasByPerspectiva');
+Route::post('/meta-empresarial-empresa', 'MetasEmpresarialesController@setMetaEmpresarialEmpresa');
+
+Route::post('/correr-cascada', 'CascadaMetasController@correrCascada');
+
+Route::get('/iniciativa/{controlEmpresaID}', 'ObjetivoControlController@getIniciativas');
+Route::post('/iniciativa/{controlEmpresaID}', 'ObjetivoControlController@setIniciativas');
+Route::put('/iniciativa', 'ObjetivoControlController@updateIniciativas');
+Route::delete('/iniciativa/{iniciativaID}', 'ObjetivoControlController@deleteIniciativas');
+Route::get('/grado-implementacion/{controlEmpresaID}', 'ObjetivoControlController@getGradosImplementacion');
+Route::post('/grado-implementacion/{controlEmpresaID}', 'ObjetivoControlController@setGradosImplementacion');
+Route::put('/grado-implementacion', 'ObjetivoControlController@updateGradosImplementacion');
+Route::delete('/grado-implementacion/{gradoID}', 'ObjetivoControlController@deleteGradosImplementacion');
+
+Route::get('/transacciones/{accion}', 'CascadaMetasController@getTransaccionesByAccion');
+
+//GERENCIA DE OPERACIONES =====================================
 
 
 Route::post('/empresa','EmpresaController@store');
@@ -140,5 +165,9 @@ Route::get('/objetivo-mapa/{idProceso}','MapaEstrategicoController@getObjetivos'
 Route::put('/objetivo-mapa/{id}','MapaEstrategicoController@updateObjetivo');
 Route::delete('/objetivo-mapa/{id}','MapaEstrategicoController@deleteObjetivo');
 
+Route::resource('employees', 'EmployeeController');
+Route::resource('productos', 'ProductoController');
+Route::resource('categorias', 'CategoriaController');
+Route::resource('unidades', 'UnidadesController');
 
 //Route::get('/version/{unidad}','MapaProcesoController@setVersion');

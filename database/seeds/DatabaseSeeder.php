@@ -16,15 +16,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         DB::insert('insert into scopes (id, description) values (?, ?)', [1, 'Gestionar Empresa']);
-        DB::insert('insert into scopes (id, description) values (?, ?)', [2, 'Gestionar Proveedores']);
-        DB::insert('insert into scopes (id, description) values (?, ?)', [3, 'Gestionar Clientes']);
-       DB::insert('insert into scopes (id, description) values (?, ?)', [4, 'Gestionar Cadena de Suministro']);
-        DB::insert('insert into scopes (id, description) values (?, ?)', [5, 'Gestión de procesos']);
-        DB::insert('insert into scopes (id, description) values (?, ?)', [6, 'Gestión de mapa de procesos']);
-        DB::insert('insert into scopes (id, description) values (?, ?)', [7, 'Gestión de priorización']);
-        DB::insert('insert into scopes (id, description) values (?, ?)', [8, 'Gestión de caracterización']);
-        DB::insert('insert into scopes (id, description) values (?, ?)', [9, 'Gestión de diagrama de flujo']);
-        DB::insert('insert into scopes (id, description) values (?, ?)', [10, 'Gestión de diagrama de seguimiento']);
+        DB::insert('insert into scopes (id, description) values (?, ?)', [2, 'Gestionar objetivos estratégicos']);
+        DB::insert('insert into scopes (id, description) values (?, ?)', [3, 'Gestionar cascada de metas']);
+        // DB::insert('insert into scopes (id, description) values (?, ?)', [4, 'Gestionar Cadena de Suministro']);
+        // DB::insert('insert into scopes (id, description) values (?, ?)', [5, 'Gestión de procesos']);
+        // DB::insert('insert into scopes (id, description) values (?, ?)', [6, 'Gestión de mapa de procesos']);
+        // DB::insert('insert into scopes (id, description) values (?, ?)', [7, 'Gestión de priorización']);
+        // DB::insert('insert into scopes (id, description) values (?, ?)', [8, 'Gestión de caracterización']);
+        // DB::insert('insert into scopes (id, description) values (?, ?)', [9, 'Gestión de diagrama de flujo']);
+        // DB::insert('insert into scopes (id, description) values (?, ?)', [10, 'Gestión de diagrama de seguimiento']);
 
 
         DB::insert('insert into megaprocesos (id, nombre) values(?, ?)', [1, 'Proceso Estratégico']);
@@ -47,6 +47,7 @@ class DatabaseSeeder extends Seeder
             "person_id" => $persona->id
         ]);
 
-
+        $this->call(PerspectivaSeeder::class);
+        $this->call(CobitSeeder::class);
     }
 }

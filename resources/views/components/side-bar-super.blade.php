@@ -16,6 +16,11 @@
                 <i class="fas fa-briefcase"></i>
                 Usuarios
             </a>
+
+            <a href="/transacciones"  class="{{ $isTab('3') ? 'active' : '' }}">
+                <i class="fas fa-briefcase"></i>
+                Transacciones
+            </a>
             
         </li>
     </ul>

@@ -15,36 +15,42 @@
                 <li>
                     <a href="/empresa/{{$empresa}}" class="{{ $isSelected('1', '1') ? 'active' : '' }}">Información</a>
                 </li>
-                @can('gestionar-clientes')
+                @can('gestionar-objetivos-estrategicos')
                     <li>
-                        <a href="/empresa/{{$empresa}}/clientes" class="{{ $isSelected('1', '2') ? 'active' : '' }}">Clientes</a>
-                    </li>
-                @endcan
-                @can('gestionar-proveedores')
-                    <li>
-                        <a href="/empresa/{{$empresa}}/proveedores" class="{{ $isSelected('1', '3') ? 'active' : '' }}">Proveedores</a>
-                    </li>
-                @endcan
-                @can('gestionar-unidades-negocio')
-                    <li>
-                        <a href="/empresa/{{$empresa}}/unidades-negocio" class="{{ $isSelected('1', '4') ? 'active' : '' }}">Unidades de negocio</a>
+                        <a href="/empresa/{{$empresa}}/objetivos-estrategicos" class="{{ $isSelected('1', '2') ? 'active' : '' }}">Objetivos Estratégicos</a>
                     </li>
                 @endcan
             </ul>
 
-           
-                <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="{{ $isTab('2') ? 'true' : 'false' }}" class="dropdown-toggle">
+            @can('gestionar-cascada-metas')
+            <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="{{ $isTab('2') ? 'true' : 'false' }}" class="dropdown-toggle">
                     <i class="fas fa-copy"></i>
-                    Cadena de Suministro
+                    Cascada de metas
                 </a>
                 <ul class="collapse list-unstyled {{ $isTab('2') ? 'show' : '' }}" id="pageSubmenu2">
                     <li>
+                        <a href="/empresa/{{$empresa}}/objetivos-metas-empresariales" class="{{ $isSelected('2', '1') ? 'active' : '' }}">OEN VS EG - COBIT 2019</a>
+                    </li>
+
+                    <li>
+                        <a href="/empresa/{{$empresa}}/alineamiento-resultante" class="{{ $isSelected('2', '2') ? 'active' : '' }}">EG vs AG - COBIT 2019</a>
+                    </li>
+
+                    <li>
+                        <a href="/empresa/{{$empresa}}/objetivos-control-resultante" class="{{ $isSelected('2', '3') ? 'active' : '' }}">AG vs Objetivos de control</a>
+                    </li>
+
+                    <li>
+                        <a href="/empresa/{{$empresa}}/objetivos-control" class="{{ $isSelected('2', '4') ? 'active' : '' }}">Objetivos de control</a>
+                    </li>
+                    
+                    <!-- <li>
                         <a href="/empresa/{{$empresa}}/administrar-cadena" class="{{ $isSelected('2', '20') ? 'active' : '' }}">Administrar cadena</a>
                     </li>
                     <li>
                         <a href="/empresa/{{$empresa}}/generar-cadena" class="{{ $isSelected('2', '30') ? 'active' : '' }}">Generar cadena</a>
-                    </li>
-                    @can('gestionar-procesos')
+                    </li> -->
+                    <!-- @can('gestionar-procesos')
                     <li>
                         <a href="/empresa/{{$empresa}}/procesos" class="{{ $isSelected('2', '1') ? 'active' : '' }}">Procesos</a>
                     </li>
@@ -78,8 +84,11 @@
                     <li>
                         <a href="/empresa/{{$empresa}}/gestion-indicadores" class="{{ $isSelected('2', '7') ? 'active' : '' }}">Gestión de indicadores</a>
                     </li>
-                    @endcan
+                    @endcan -->
                 </ul> 
+            @endcan    
+           
+                
             
         </li>
     </ul>
