@@ -32,18 +32,18 @@ class DatabaseSeeder extends Seeder
         DB::insert('insert into megaprocesos (id, nombre) values(?, ?)', [3, 'Proceso de Apoyo']);
 
         $persona = Person::create([
-            "names" =>"Javier",
-            "last_name_pat" => "Briceño",
-            "last_name_mat" => "Montaño",
+            "names" =>"Alexandra",
+            "last_name_pat" => "Guerra",
+            "last_name_mat" => "Avalos",
             "address" => "Ninguna",
         ]);
 
         User::create([
-            "email" => "jbriceno@unitru.edu.pe",
+            "email" => "aguerra@unitru.edu.pe",
             "isAdmin" => true,
             "isCustomer" => false,
             // "photo" => $request->descripcion,
-            "password" => Hash::make("72764269"),
+            "password" => Hash::make("939393073"),
             "person_id" => $persona->id
         ]);
 
